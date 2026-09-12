@@ -41,15 +41,18 @@ export const Navigation: React.FC = () => {
         <Link href="/" className="nav-brand" {...useCursorHandlers('link')}>
           ARYAN
         </Link>
-        <button 
-          className="nav-trigger" 
-          onClick={() => setIsOpen(!isOpen)}
-          aria-expanded={isOpen}
-          aria-controls="main-nav"
-          {...useCursorHandlers('link')}
-        >
-          {isOpen ? 'CLOSE' : 'MENU'}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <ThemeToggle />
+          <button 
+            className="nav-trigger" 
+            onClick={() => setIsOpen(!isOpen)}
+            aria-expanded={isOpen}
+            aria-controls="main-nav"
+            {...useCursorHandlers('link')}
+          >
+            {isOpen ? 'CLOSE' : 'MENU'}
+          </button>
+        </div>
       </header>
 
       <div 
@@ -73,10 +76,6 @@ export const Navigation: React.FC = () => {
             </Link>
           ))}
         </nav>
-        
-        <div style={{ marginTop: 'auto', paddingTop: 'var(--space-8)' }}>
-          <ThemeToggle />
-        </div>
       </div>
     </>
   );

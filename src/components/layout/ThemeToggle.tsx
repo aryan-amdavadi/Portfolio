@@ -22,10 +22,13 @@ export const ThemeToggle: React.FC = () => {
   };
 
   return (
-    <div>
-      <Button variant="outline" onClick={toggleTheme}>
-        {theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}
-      </Button>
-    </div>
+    <button 
+      onClick={toggleTheme}
+      className="theme-toggle-btn"
+      aria-label="Toggle Theme"
+      title="Toggle Theme"
+    >
+      {theme === 'dark' ? '☼' : '☾'}
+    </button>
   );
 };
