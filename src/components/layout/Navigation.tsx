@@ -48,6 +48,7 @@ export const Navigation: React.FC = () => {
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-controls="main-nav"
+            aria-label="Toggle navigation menu"
             {...useCursorHandlers('link')}
           >
             {isOpen ? 'CLOSE' : 'MENU'}

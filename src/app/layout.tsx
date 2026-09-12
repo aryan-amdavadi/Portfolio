@@ -8,8 +8,39 @@ const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mon
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
-  title: 'Aryan Amdavadi | Software Engineer',
-  description: 'I am a developer who solves real-world problems. Full-stack engineer moving toward AI engineering.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aryanamdavadi.com'),
+  title: {
+    default: 'Aryan Amdavadi | Software Engineer',
+    template: '%s | Aryan Amdavadi'
+  },
+  description: 'I build software around real-world problems. Full-stack engineer moving toward AI engineering.',
+  openGraph: {
+    title: 'Aryan Amdavadi | Software Engineer',
+    description: 'I build software around real-world problems. Full-stack engineer moving toward AI engineering.',
+    url: '/',
+    siteName: 'Aryan Amdavadi Portfolio',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Aryan Amdavadi | Software Engineer',
+    description: 'Full-stack engineer moving toward AI engineering.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({

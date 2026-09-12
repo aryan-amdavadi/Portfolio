@@ -59,12 +59,12 @@ export const ProjectShowcase: React.FC = () => {
                 </Link>
               )}
               {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" {...externalCursor}>
+                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Live demo for ${project.title}`} {...externalCursor}>
                   <Button variant="outline">LIVE</Button>
                 </a>
               )}
               {project.githubUrl && (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" {...externalCursor}>
+                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`GitHub repository for ${project.title}`} {...externalCursor}>
                   <Button variant="outline">GITHUB</Button>
                 </a>
               )}

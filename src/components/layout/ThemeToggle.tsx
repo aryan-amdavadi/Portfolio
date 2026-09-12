@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { EngineState } from '../../canvas/engine/EngineState';
+import { useCursorHandlers } from '@/hooks/useCursorState';
 
 export const ThemeToggle: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -35,10 +36,10 @@ export const ThemeToggle: React.FC = () => {
 
   return (
     <button 
-      onClick={toggleTheme}
+      onClick={toggleTheme} 
       className="theme-toggle-btn"
-      aria-label="Toggle Theme"
-      title="Toggle Theme"
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      {...useCursorHandlers('link')}
     >
       {theme === 'dark' ? '☼' : '☾'}
     </button>
