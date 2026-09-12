@@ -45,6 +45,11 @@ export class OrbitalNodes {
   }
 
   public update(time: number) {
+    // Theme colors
+    const isLight = EngineState.theme === 'light';
+    const targetColor = isLight ? new THREE.Color(0x283618) : new THREE.Color(0x1B3A4B);
+    this.material.color.lerp(targetColor, 0.05);
+
     // Sync overall opacity with EngineState
     this.mesh.visible = EngineState.orbitalNodesOpacity > 0.01;
     this.material.opacity = EngineState.orbitalNodesOpacity * 0.7; // Max opacity 0.7

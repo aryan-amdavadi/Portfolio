@@ -8,6 +8,9 @@
  */
 
 export const EngineState = {
+  // Theme State
+  theme: 'dark' as 'dark' | 'light',
+
   // Camera
   cameraZ: 8,
   

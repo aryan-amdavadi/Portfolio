@@ -38,7 +38,15 @@ export class PrimarySculpture {
    * @param pointer - normalized pointer coordinates (-1 to 1)
    */
   public update(time: number, pointer: { x: number, y: number }) {
-    // Combine baseline time rotation, pointer subtle movement, and scroll-driven rotation from EngineState
+    // Theme colors
+    const isLight = EngineState.theme === 'light';
+    const targetColor = isLight ? new THREE.Color(0x606C38) : new THREE.Color(0x006466);
+    
+    if (this.material) {
+      this.material.color.lerp(targetColor, 0.05);
+    }
+
+    // Shared transform logic applies universally to the root group, pointer subtle movement, and scroll-driven rotation from EngineState
     this.mesh.rotation.y = (time * 0.1) + (pointer.x * 0.1) + EngineState.sculptureRotY;
     this.mesh.rotation.x = (Math.sin(time * 0.2) * 0.1) + (pointer.y * 0.1) + EngineState.sculptureRotX;
     

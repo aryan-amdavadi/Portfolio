@@ -123,11 +123,38 @@ export class SceneDirector {
     this.lerpedPointer.x += (this.state.pointer.x - this.lerpedPointer.x) * lerpFactor;
     this.lerpedPointer.y += (this.state.pointer.y - this.lerpedPointer.y) * lerpFactor;
 
+    // Theme colors
+    const darkFogColor = new THREE.Color(0x312244);
+    const lightFogColor = new THREE.Color(0xFEFAE0);
+    
+    const darkDirColor = new THREE.Color(0x006466);
+    const lightDirColor = new THREE.Color(0x283618);
+    
+    const darkFillColor = new THREE.Color(0x4D194D);
+    const lightFillColor = new THREE.Color(0xDDA15E);
+    
+    const isLight = EngineState.theme === 'light';
+    const targetFog = isLight ? lightFogColor : darkFogColor;
+    const targetDir = isLight ? lightDirColor : darkDirColor;
+    const targetFill = isLight ? lightFillColor : darkFillColor;
+
     // Sync camera and environment from GSAP controlled EngineState
     this.camera.position.z = EngineState.cameraZ;
     if (this.scene.fog instanceof THREE.FogExp2) {
       this.scene.fog.density = EngineState.fogDensity;
+      this.scene.fog.color.lerp(targetFog, 0.05);
     }
+    
+    // Update lighting
+    this.scene.children.forEach(child => {
+      if (child instanceof THREE.DirectionalLight) {
+        if (child.intensity === 2) { // main dir light
+          child.color.lerp(targetDir, 0.05);
+        } else if (child.intensity === 3) { // fill light
+          child.color.lerp(targetFill, 0.05);
+        }
+      }
+    });
 
     // Update scene objects
     this.sculpture.update(elapsedTime, this.lerpedPointer);
