@@ -36,7 +36,8 @@
   border: none;
   cursor: pointer;
   text-transform: uppercase;
-  padding: var(--space-2) 0;
+  padding: var(--space-4); /* Larger touch target */
+  margin: calc(var(--space-4) * -1); /* Offset padding */
 }
 
 /* Cinematic Overlay */
@@ -133,7 +134,13 @@
 
 .nav-number {
   font-family: var(--font-mono);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--accent-base);
   letter-spacing: var(--tracking-wide);
+}
+
+@media (min-width: 768px) {
+  .nav-number {
+    font-size: var(--text-base);
+  }
 }

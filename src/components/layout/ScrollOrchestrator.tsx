@@ -35,126 +35,100 @@ export const ScrollOrchestrator = () => {
     EngineState.artifactsOpacity = 0;
     EngineState.activeArtifactIndex = -1;
 
-    // Create master ScrollTrigger timeline that controls the proxy EngineState object
-    timelineRef.current = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#main-content',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1, // Smooth scrubbing (1 second delay for smoothness)
-      }
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 769px)", () => {
+      // DESKTOP TIMELINE
+      timelineRef.current = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#main-content',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+        }
+      });
+
+      const tl = timelineRef.current;
+      
+      tl.to(EngineState, {
+        sculptureX: -6, cameraZ: 10, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 0)
+      .to(EngineState, {
+        sculptureX: -8, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power1.inOut"
+      }, 1)
+      .to(EngineState, {
+        sculptureX: 4, sculptureZ: -5, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
+      }, 2)
+      .to(EngineState, {
+        sculptureX: 6, sculptureY: 2, cameraZ: 6, orbitalNodesOpacity: 0, duration: 1, ease: "power1.inOut"
+      }, 3)
+      .to(EngineState, {
+        sculptureY: 0, sculptureZ: -15, fogDensity: 0.15, duration: 1, ease: "power3.inOut"
+      }, 4)
+      .to(EngineState, {
+        sculptureZ: 0, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 5)
+      .to(EngineState, {
+        sculptureX: -6, cameraZ: 12, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 6)
+      .to(EngineState, {
+        sculptureX: 4, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 7)
+      .to(EngineState, {
+        sculptureX: 6, sculptureZ: -2, cameraZ: 8, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 8)
+      .to(EngineState, {
+        sculptureX: 0, sculptureZ: 0, sculptureRotY: Math.PI * 4, fogDensity: 0.05, fragmentsOpacity: 0, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 9);
     });
 
-    const tl = timelineRef.current;
-    
-    // We'll map the total scroll duration (e.g. 100%) across the sections
-    // Section 1: Hero -> The Builder
-    tl.to(EngineState, {
-      sculptureX: -6, // Push further left off-screen to make room
-      cameraZ: 10,
-      sculptureRotY: Math.PI / 4,
-      orbitalNodesOpacity: 1,
-      duration: 1,
-      ease: "power1.inOut"
-    }, 0)
-    
-    // Section 2: The Builder -> The Problems
-    .to(EngineState, {
-      sculptureX: -8, // Slide even further away
-      sculptureRotX: Math.PI / 2,
-      sculptureRotY: Math.PI,
-      fogDensity: 0.1,
-      orbitalNodesOpacity: 0,
-      fragmentsOpacity: 1,
-      fragmentsScale: 1.5, // Expanded chaos
-      duration: 1,
-      ease: "power1.inOut"
-    }, 1)
+    mm.add("(max-width: 768px)", () => {
+      // MOBILE TIMELINE (Reduced lateral translation, deeper Z-axis)
+      timelineRef.current = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#main-content',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+        }
+      });
 
-    // Section 3: The Problems -> The Systems (SIGNATURE MOMENT)
-    // Fragments reorganize (scale down/implode) while relationships (nodes) emerge
-    .to(EngineState, {
-      sculptureX: 4, // Slide in from the right
-      sculptureZ: -5,
-      fragmentsScale: 0.1, // Implode
-      fragmentsOpacity: 0,
-      orbitalNodesScale: 1, // Emerge
-      orbitalNodesOpacity: 1,
-      duration: 1,
-      ease: "power2.inOut"
-    }, 2)
-
-    // Section 4: The Systems -> Projects
-    .to(EngineState, {
-      sculptureX: 6, // Slide out to the right
-      sculptureY: 2,
-      cameraZ: 6,
-      orbitalNodesOpacity: 0,
-      duration: 1,
-      ease: "power1.inOut"
-    }, 3)
-
-    // Section 5: Projects -> Thinking
-    .to(EngineState, {
-      sculptureY: 0,
-      sculptureZ: -15, // push way back
-      fogDensity: 0.15,
-      // Removed instant -1 reset to fix popping
-      duration: 1,
-      ease: "power3.inOut"
-    }, 4)
-
-    // Section 6: Thinking -> Toolset
-    .to(EngineState, {
-      sculptureZ: 0,
-      sculptureRotY: Math.PI * 2,
-      orbitalNodesOpacity: 1,
-      duration: 1,
-      ease: "power1.inOut"
-    }, 5)
-
-    // Section 7: Toolset -> About
-    .to(EngineState, {
-      sculptureX: -6, // Slide left
-      cameraZ: 12,
-      orbitalNodesOpacity: 0,
-      duration: 1,
-      ease: "power2.inOut"
-    }, 6)
-
-    // Section 8: About -> Currently Building
-    .to(EngineState, {
-      sculptureX: 4, // Slide right
-      sculptureRotX: 0,
-      fragmentsOpacity: 1,
-      duration: 1,
-      ease: "power1.inOut"
-    }, 7)
-
-    // Section 9: Currently Building -> Code
-    .to(EngineState, {
-      sculptureX: 6, // Slide out
-      sculptureZ: -2,
-      cameraZ: 8,
-      fragmentsOpacity: 0,
-      duration: 1,
-      ease: "power2.inOut"
-    }, 8)
-
-    // Section 10: Code -> Connect
-    .to(EngineState, {
-      sculptureX: 0, // Return center
-      sculptureZ: 0, 
-      sculptureRotY: Math.PI * 4,
-      fogDensity: 0.05, 
-      fragmentsOpacity: 0,
-      orbitalNodesOpacity: 0,
-      duration: 1,
-      ease: "power2.inOut"
-    }, 9);
+      const tl = timelineRef.current;
+      
+      tl.to(EngineState, {
+        sculptureX: -2, cameraZ: 14, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 0)
+      .to(EngineState, {
+        sculptureX: -2, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power1.inOut"
+      }, 1)
+      .to(EngineState, {
+        sculptureX: 2, sculptureZ: -8, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
+      }, 2)
+      .to(EngineState, {
+        sculptureX: 2, sculptureY: 2, cameraZ: 10, orbitalNodesOpacity: 0, duration: 1, ease: "power1.inOut"
+      }, 3)
+      .to(EngineState, {
+        sculptureY: 0, sculptureZ: -20, fogDensity: 0.15, duration: 1, ease: "power3.inOut"
+      }, 4)
+      .to(EngineState, {
+        sculptureZ: -4, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 5)
+      .to(EngineState, {
+        sculptureX: -2, cameraZ: 16, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 6)
+      .to(EngineState, {
+        sculptureX: 2, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power1.inOut"
+      }, 7)
+      .to(EngineState, {
+        sculptureX: 2, sculptureZ: -5, cameraZ: 12, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 8)
+      .to(EngineState, {
+        sculptureX: 0, sculptureZ: 0, sculptureRotY: Math.PI * 4, fogDensity: 0.05, fragmentsOpacity: 0, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
+      }, 9);
+    });
 
     return () => {
-      tl.kill();
+      mm.revert(); // Revert all matchMedia setups
     };
   }, [isReducedMotion]);
 

@@ -139,3 +139,23 @@
     pointer-events: auto;
   }
 }
+
+/* Touch Device Support */
+@media (hover: none) and (pointer: coarse) {
+  .project-showcase:hover .project-card {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .project-showcase .project-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .project-links {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    margin-top: var(--space-6);
+  }
+}
