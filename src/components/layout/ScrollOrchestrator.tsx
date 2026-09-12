@@ -138,8 +138,11 @@ export const ScrollOrchestrator = () => {
     // Section 10: Code -> Connect
     .to(EngineState, {
       sculptureX: 0, // Return center
+      sculptureZ: 0, 
       sculptureRotY: Math.PI * 4,
       fogDensity: 0.05, 
+      fragmentsOpacity: 0,
+      orbitalNodesOpacity: 0,
       duration: 1,
       ease: "power2.inOut"
     }, 9);

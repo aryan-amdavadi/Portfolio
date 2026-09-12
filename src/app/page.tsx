@@ -295,17 +295,32 @@ export default function Home() {
         </section>
 
         {/* 11. CONNECT */}
-        <section id="connect" className="scroll-section connect-section">
-          <div className="section-content align-center">
-            <span className="typography-technical text-muted">10 / CONNECT</span>
-            <h2 className="typography-display mt-4">Let&apos;s Build.</h2>
-            <div className="mt-8" style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center' }}>
+        <section id="connect" className="scroll-section connect-section" style={{ minHeight: '120vh' }}>
+          <div className="section-content align-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            <span className="typography-technical text-muted">10 / CONCLUSION</span>
+            <h2 className="typography-display mt-8" style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', lineHeight: 0.9 }}>
+              HAVE A PROBLEM?<br />
+              <span style={{ color: 'var(--accent-base)' }}>LET&apos;S BUILD IT.</span>
+            </h2>
+            
+            <div className="mt-16" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-8)' }}>
               <a href="mailto:contact@example.com" {...exploreCursor}>
-                <Button variant="primary">EMAIL ME</Button>
+                <Button variant="primary" style={{ padding: 'var(--space-4) var(--space-12)', fontSize: 'var(--text-lg)' }}>
+                  START A CONVERSATION
+                </Button>
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" {...useCursorHandlers('external')}>
-                <Button variant="outline">LINKEDIN</Button>
-              </a>
+              
+              <div style={{ display: 'flex', gap: 'var(--space-8)', marginTop: 'var(--space-4)' }}>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
+                  LINKEDIN
+                </a>
+                <a href="https://github.com/aryan-amdavadi" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
+                  GITHUB
+                </a>
+                <a href="mailto:contact@example.com" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...exploreCursor}>
+                  EMAIL
+                </a>
+              </div>
             </div>
           </div>
         </section>
