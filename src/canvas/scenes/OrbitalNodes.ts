@@ -46,10 +46,11 @@ export class OrbitalNodes {
 
   public update(time: number) {
     // Sync overall opacity with EngineState
-    this.material.opacity = EngineState.orbitalNodesOpacity;
     this.mesh.visible = EngineState.orbitalNodesOpacity > 0.01;
-
+    this.material.opacity = EngineState.orbitalNodesOpacity * 0.7; // Max opacity 0.7
     if (!this.mesh.visible) return;
+
+    this.mesh.scale.setScalar(EngineState.orbitalNodesScale);
 
     // Slowly rotate the entire system
     this.mesh.rotation.y = time * 0.05;

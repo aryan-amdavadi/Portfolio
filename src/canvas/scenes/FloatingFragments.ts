@@ -50,10 +50,12 @@ export class FloatingFragments {
   }
 
   public update(time: number) {
-    this.material.opacity = EngineState.fragmentsOpacity;
     this.mesh.visible = EngineState.fragmentsOpacity > 0.01;
+    this.material.opacity = EngineState.fragmentsOpacity * 0.8; // Max opacity 0.8
 
     if (!this.mesh.visible) return;
+
+    this.mesh.scale.setScalar(EngineState.fragmentsScale);
 
     // Slowly drift the field upwards and rotate
     this.mesh.position.y = Math.sin(time * 0.1) * 0.5;

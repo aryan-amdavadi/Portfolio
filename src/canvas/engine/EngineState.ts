@@ -23,9 +23,11 @@ export const EngineState = {
   fogDensity: 0.05,
   ambientIntensity: 0.5,
   
-  // Secondary Visual Systems
+  // Secondary Object Opacities & Scales
   orbitalNodesOpacity: 0,
+  orbitalNodesScale: 1,
   fragmentsOpacity: 0,
+  fragmentsScale: 1,
   artifactsOpacity: 0,
   activeArtifactIndex: -1, // -1: None, 0: SplitSphere, 1: Rapaport, 2: SecretSpeak, 3: Tabster, 4: PulseSync
   

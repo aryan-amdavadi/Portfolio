@@ -29,7 +29,9 @@ export const ScrollOrchestrator = () => {
     EngineState.cameraZ = 8;
     EngineState.fogDensity = 0.05;
     EngineState.orbitalNodesOpacity = 0;
+    EngineState.orbitalNodesScale = 0; // Starts collapsed
     EngineState.fragmentsOpacity = 0;
+    EngineState.fragmentsScale = 0; // Starts collapsed
     EngineState.artifactsOpacity = 0;
     EngineState.activeArtifactIndex = -1;
 
@@ -64,15 +66,19 @@ export const ScrollOrchestrator = () => {
       fogDensity: 0.1,
       orbitalNodesOpacity: 0,
       fragmentsOpacity: 1,
+      fragmentsScale: 1.5, // Expanded chaos
       duration: 1,
       ease: "power1.inOut"
     }, 1)
 
-    // Section 3: The Problems -> The Systems
+    // Section 3: The Problems -> The Systems (SIGNATURE MOMENT)
+    // Fragments reorganize (scale down/implode) while relationships (nodes) emerge
     .to(EngineState, {
       sculptureX: 4, // Slide in from the right
       sculptureZ: -5,
+      fragmentsScale: 0.1, // Implode
       fragmentsOpacity: 0,
+      orbitalNodesScale: 1, // Emerge
       orbitalNodesOpacity: 1,
       duration: 1,
       ease: "power2.inOut"
