@@ -11,18 +11,12 @@ export const ProjectShowcase: React.FC = () => {
   const exploreCursor = useCursorHandlers('explore');
   const externalCursor = useCursorHandlers('external');
 
-  const handleMouseEnter = (index: number) => {
-    // eslint-disable-next-line react-hooks/immutability
-    EngineState.activeArtifactIndex = index;
-    // eslint-disable-next-line react-hooks/immutability
-    EngineState.artifactsOpacity = 1;
+  const handleMouseEnter = () => {
+    // Artifacts removed as requested by user
   };
 
   const handleMouseLeave = () => {
-    // eslint-disable-next-line react-hooks/immutability
-    EngineState.activeArtifactIndex = -1;
-    // eslint-disable-next-line react-hooks/immutability
-    EngineState.artifactsOpacity = 0;
+    // Artifacts removed as requested by user
   };
 
   return (
@@ -32,7 +26,7 @@ export const ProjectShowcase: React.FC = () => {
           key={project.id} 
           className="project-card"
           onMouseEnter={() => {
-            handleMouseEnter(project.artifactIndex);
+            handleMouseEnter();
             exploreCursor.onMouseEnter();
           }}
           onMouseLeave={() => {

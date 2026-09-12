@@ -4,6 +4,7 @@ import WebGLCanvas from '@/canvas/WebGLCanvas';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
+import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
 
 export default function Home() {
   const exploreCursor = useCursorHandlers('explore');
@@ -129,25 +130,51 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. THINKING */}
+        {/* 6. THINKING / THE METHOD */}
         <section id="thinking" className="scroll-section">
-          <div className="section-content align-center">
-            <span className="typography-technical text-muted">05 / THINKING</span>
-            <h2 className="typography-h2 mt-4">Mental Models</h2>
-            <p className="typography-body-large mt-6 max-w-md mx-auto">
-              How I approach architecture, team dynamics, and continuous learning.
-            </p>
+          <div className="section-content align-left">
+            <span className="typography-technical text-muted">05 / THE METHOD</span>
+            <h2 className="typography-display mt-4">Engineering Process</h2>
+            
+            <div className="mt-8" style={{ display: 'grid', gap: 'var(--space-8)' }}>
+              <div>
+                <span className="typography-technical text-muted">01 UNDERSTAND</span>
+                <p className="typography-body mt-2 max-w-md">Identify the core constraints. What is the actual business problem? What are the edge cases?</p>
+              </div>
+              <div>
+                <span className="typography-technical text-muted">02 DECOMPOSE</span>
+                <p className="typography-body mt-2 max-w-md">Break monolithic challenges into independent, testable sub-systems.</p>
+              </div>
+              <div>
+                <span className="typography-technical text-muted">03 DESIGN</span>
+                <p className="typography-body mt-2 max-w-md">Architect for scale, latency, and maintainability. Choose tools based on empirical needs, not hype.</p>
+              </div>
+              <div>
+                <span className="typography-technical text-muted">04 ENGINEER</span>
+                <p className="typography-body mt-2 max-w-md">Build robust, typed, deterministic solutions. Manage state predictably.</p>
+              </div>
+              <div>
+                <span className="typography-technical text-muted">05 TEST</span>
+                <p className="typography-body mt-2 max-w-md">Verify critical paths aggressively. Rely on automated integration over manual checks.</p>
+              </div>
+              <div>
+                <span className="typography-technical text-muted">06 ITERATE</span>
+                <p className="typography-body mt-2 max-w-md">Deploy, monitor, and optimize based on real-world telemetry.</p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* 7. TOOLSET */}
-        <section id="toolset" className="scroll-section">
-          <div className="section-content align-left">
-            <span className="typography-technical text-muted">06 / TOOLSET</span>
-            <h2 className="typography-h2 mt-4">Technologies</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              TypeScript, Next.js, Python, Node, Three.js, PostgreSQL, Docker.
+        <section id="toolset" className="scroll-section" style={{ minHeight: '150vh' }}>
+          <div className="section-content align-right">
+            <span className="typography-technical text-muted">06 / THE TOOLSET</span>
+            <h2 className="typography-display mt-4">Proven Technologies</h2>
+            <p className="typography-body mt-6 max-w-md" style={{ marginLeft: 'auto' }}>
+              I have used these technologies to build production systems. Hover over a technology to see its application.
             </p>
+            
+            <InteractiveToolset />
           </div>
         </section>
 

@@ -9,6 +9,7 @@
 @import '../styles/components/scroll.css';
 @import '../styles/components/projects.css';
 @import '../styles/components/case-study.css';
+@import '../styles/components/toolset.css';
 
 /* CSS Reset */
 *, *::before, *::after {
