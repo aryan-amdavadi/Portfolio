@@ -3,16 +3,10 @@
 import WebGLCanvas from '@/canvas/WebGLCanvas';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
 
 export default function Home() {
   const exploreCursor = useCursorHandlers('explore');
-  const scrollProgress = useScrollProgress();
-
-  // Simple opacity fade based on scroll progress so the hero gracefully fades out
-  // The hero occupies the first 100vh. Scroll progress goes from 0 to 1 over the whole page.
-  // For a basic demo, we'll just fade out the text as we scroll down.
-  const heroOpacity = Math.max(0, 1 - scrollProgress * 5); // Fades out quickly
+  const linkCursor = useCursorHandlers('link');
 
   return (
     <>
@@ -20,21 +14,9 @@ export default function Home() {
       
       <main className="layer-ui">
         
-        {/* HERO SECTION */}
-        <section 
-          style={{ 
-            height: '100vh', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            justifyContent: 'center',
-            padding: '0 var(--container-padding)',
-            opacity: heroOpacity,
-            transition: 'opacity 0.1s linear', // smooth interpolation handled by state
-            position: 'relative'
-          }}
-        >
-          <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-            
+        {/* 1. HERO */}
+        <section className="scroll-section hero-section">
+          <div className="section-content">
             <div style={{ marginBottom: 'var(--space-8)' }}>
               <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-4)' }}>
                 FULL-STACK ENGINEER <br />
@@ -52,32 +34,126 @@ export default function Home() {
               <a href="#work" {...exploreCursor}>
                 <Button variant="primary">EXPLORE WORK</Button>
               </a>
-              <a href="#connect" {...useCursorHandlers('link')}>
+              <a href="#connect" {...linkCursor}>
                 <Button variant="outline">LET&apos;S BUILD</Button>
               </a>
             </div>
-
           </div>
         </section>
 
-        {/* NARRATIVE SCROLL SPACE (Next Section Placeholder) */}
-        <section id="work" className="container" style={{ minHeight: '150vh', paddingTop: '10vh' }}>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-4)', textAlign: 'center' }}>
-              01 / THE WORK
-            </span>
-            <h2 className="typography-h2" style={{ textAlign: 'center', marginBottom: 'var(--space-16)' }}>
-              Engineering as a Discipline
-            </h2>
-            <p className="typography-body-large" style={{ textAlign: 'center' }}>
-              (Scroll progressively transforms the environment. Case studies will appear here in Phase 6.)
+        {/* 2. THE BUILDER */}
+        <section id="builder" className="scroll-section">
+          <div className="section-content align-right">
+            <span className="typography-technical text-muted">01 / THE BUILDER</span>
+            <h2 className="typography-h2 mt-4">Engineering as a Discipline</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              Software is not just code; it is a mechanism for leverage. I focus on building robust, maintainable systems that scale with business needs.
             </p>
           </div>
         </section>
 
-        {/* Additional padding to allow scrolling */}
-        <section id="connect" className="container" style={{ minHeight: '100vh' }}>
-          {/* Connect Section Placeholder */}
+        {/* 3. THE PROBLEMS */}
+        <section id="problems" className="scroll-section">
+          <div className="section-content align-left">
+            <span className="typography-technical text-muted">02 / THE PROBLEMS</span>
+            <h2 className="typography-h2 mt-4">Deconstructing Complexity</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              Identifying the core constraints of a problem space before writing a single line of code. Complexity must be managed, never hidden.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. THE SYSTEMS */}
+        <section id="systems" className="scroll-section">
+          <div className="section-content align-right">
+            <span className="typography-technical text-muted">03 / THE SYSTEMS</span>
+            <h2 className="typography-h2 mt-4">Architecting Solutions</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              From high-throughput backends to fluid user interfaces, every component must serve the system&apos;s overarching purpose.
+            </p>
+          </div>
+        </section>
+
+        {/* 5. PROJECTS */}
+        <section id="work" className="scroll-section projects-section">
+          <div className="section-content">
+            <span className="typography-technical text-muted">04 / THE WORK</span>
+            <h2 className="typography-display mt-4">Projects</h2>
+            <p className="typography-body mt-6">
+              (Case studies will be populated in Phase 6)
+            </p>
+          </div>
+        </section>
+
+        {/* 6. THINKING */}
+        <section id="thinking" className="scroll-section">
+          <div className="section-content align-center">
+            <span className="typography-technical text-muted">05 / THINKING</span>
+            <h2 className="typography-h2 mt-4">Mental Models</h2>
+            <p className="typography-body-large mt-6 max-w-md mx-auto">
+              How I approach architecture, team dynamics, and continuous learning.
+            </p>
+          </div>
+        </section>
+
+        {/* 7. TOOLSET */}
+        <section id="toolset" className="scroll-section">
+          <div className="section-content align-left">
+            <span className="typography-technical text-muted">06 / TOOLSET</span>
+            <h2 className="typography-h2 mt-4">Technologies</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              TypeScript, Next.js, Python, Node, Three.js, PostgreSQL, Docker.
+            </p>
+          </div>
+        </section>
+
+        {/* 8. ABOUT */}
+        <section id="about" className="scroll-section">
+          <div className="section-content align-right">
+            <span className="typography-technical text-muted">07 / ABOUT</span>
+            <h2 className="typography-h2 mt-4">My Journey</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              A brief history of my engineering path and where I am headed next.
+            </p>
+          </div>
+        </section>
+
+        {/* 9. CURRENTLY BUILDING */}
+        <section id="currently-building" className="scroll-section">
+          <div className="section-content align-left">
+            <span className="typography-technical text-muted">08 / CURRENTLY BUILDING</span>
+            <h2 className="typography-h2 mt-4">Active Pursuits</h2>
+            <p className="typography-body-large mt-6 max-w-md">
+              Focusing on AI integration and high-performance WebGL architectures.
+            </p>
+          </div>
+        </section>
+
+        {/* 10. CODE */}
+        <section id="code" className="scroll-section">
+          <div className="section-content align-center">
+            <span className="typography-technical text-muted">09 / CODE</span>
+            <h2 className="typography-h2 mt-4">Open Source</h2>
+            <p className="typography-body-large mt-6 max-w-md mx-auto">
+              Contributions and public repositories.
+            </p>
+          </div>
+        </section>
+
+        {/* 11. CONNECT */}
+        <section id="connect" className="scroll-section connect-section">
+          <div className="section-content align-center">
+            <span className="typography-technical text-muted">10 / CONNECT</span>
+            <h2 className="typography-display mt-4">Let&apos;s Build.</h2>
+            <div className="mt-8" style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center' }}>
+              <a href="mailto:contact@example.com" {...exploreCursor}>
+                <Button variant="primary">EMAIL ME</Button>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" {...useCursorHandlers('external')}>
+                <Button variant="outline">LINKEDIN</Button>
+              </a>
+            </div>
+          </div>
         </section>
 
       </main>

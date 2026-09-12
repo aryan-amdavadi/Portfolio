@@ -6,6 +6,7 @@
 /* Component Styles */
 @import '../styles/components/cursor.css';
 @import '../styles/components/navigation.css';
+@import '../styles/components/scroll.css';
 
 /* CSS Reset */
 *, *::before, *::after {

@@ -1,0 +1,28 @@
+/**
+ * EngineState.ts
+ * 
+ * Global mutable state proxy for the 3D Engine.
+ * GSAP ScrollTrigger will animate these values directly.
+ * The SceneDirector reads these values in its RequestAnimationFrame loop.
+ * This completely decouples Scroll/Animation logic from React component re-renders.
+ */
+
+export const EngineState = {
+  // Camera
+  cameraZ: 8,
+  
+  // Primary Sculpture
+  sculptureX: 0,
+  sculptureY: 0,
+  sculptureZ: 0,
+  sculptureRotX: 0,
+  sculptureRotY: 0,
+  sculptureScale: 1,
+  
+  // Environment
+  fogDensity: 0.05,
+  ambientIntensity: 0.5,
+  
+  // DOM state sync (optional)
+  scrollProgress: 0,
+};

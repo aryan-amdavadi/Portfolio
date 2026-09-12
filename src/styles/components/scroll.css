@@ -1,0 +1,70 @@
+/* Scroll Section Typography and Layout Utilities */
+
+.scroll-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-8) var(--container-padding);
+  position: relative;
+  z-index: 1; /* Above canvas, below nav */
+}
+
+.section-content {
+  max-width: var(--container-max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-left .max-w-md {
+  margin-right: auto;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-right .max-w-md {
+  margin-left: auto;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mt-4 { margin-top: var(--space-4); }
+.mt-6 { margin-top: var(--space-6); }
+.mt-8 { margin-top: var(--space-8); }
+
+.max-w-md {
+  max-width: 32rem; /* 512px */
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+/* Specific Sections */
+.hero-section {
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.projects-section {
+  min-height: 150vh;
+  justify-content: flex-start;
+  padding-top: 20vh;
+}
+
+.connect-section {
+  min-height: 100vh;
+}
