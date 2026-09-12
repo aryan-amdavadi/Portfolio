@@ -45,10 +45,22 @@ export default function Home() {
         <section id="builder" className="scroll-section">
           <div className="section-content align-right">
             <span className="typography-technical text-muted">01 / THE BUILDER</span>
-            <h2 className="typography-h2 mt-4">Engineering as a Discipline</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              Software is not just code; it is a mechanism for leverage. I focus on building robust, maintainable systems that scale with business needs.
-            </p>
+            
+            <div className="mt-8">
+              <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-2)' }}>
+                FULL-STACK ENGINEERING
+              </span>
+              <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-2)' }}>
+                PRODUCT THINKING
+              </span>
+              <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-8)' }}>
+                AI ENGINEERING
+              </span>
+            </div>
+
+            <h2 className="typography-h2 mt-4 max-w-md mx-auto" style={{ marginRight: 0 }}>
+              I build software around real-world problems.
+            </h2>
           </div>
         </section>
 
@@ -56,10 +68,42 @@ export default function Home() {
         <section id="problems" className="scroll-section">
           <div className="section-content align-left">
             <span className="typography-technical text-muted">02 / THE PROBLEMS</span>
-            <h2 className="typography-h2 mt-4">Deconstructing Complexity</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              Identifying the core constraints of a problem space before writing a single line of code. Complexity must be managed, never hidden.
-            </p>
+            <h2 className="typography-display mt-4">
+              Problems I&apos;ve<br />Chosen To Solve
+            </h2>
+            
+            <ul className="typography-body-large mt-8" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                <span className="typography-technical text-muted">01</span>
+                Expense complexity
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                <span className="typography-technical text-muted">02</span>
+                Pricing & data complexity
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                <span className="typography-technical text-muted">03</span>
+                Commerce systems
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                <span className="typography-technical text-muted">04</span>
+                Procedural language
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                <span className="typography-technical text-muted">05</span>
+                Health monitoring
+              </li>
+            </ul>
+
+            <div className="mt-16" style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', opacity: 0.6 }}>
+              <span className="typography-technical">PROBLEM</span>
+              <span className="typography-technical">→</span>
+              <span className="typography-technical">DECOMPOSITION</span>
+              <span className="typography-technical">→</span>
+              <span className="typography-technical">ENGINEERING</span>
+              <span className="typography-technical">→</span>
+              <span className="typography-technical">SYSTEM</span>
+            </div>
           </div>
         </section>
 
