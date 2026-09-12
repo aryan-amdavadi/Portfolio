@@ -58,6 +58,38 @@ export class PrimarySculpture {
     this.mesh.scale.setScalar(EngineState.sculptureScale);
   }
 
+  /**
+   * FUTURE: Call this when the portrait GLB is ready
+   */
+  public loadPortraitModel(url: string) {
+    // Dynamic import to avoid bundling loaders if unused initially
+    Promise.all([
+      import('three/examples/jsm/loaders/GLTFLoader.js'),
+      import('three/examples/jsm/loaders/DRACOLoader.js')
+    ]).then(([{ GLTFLoader }, { DRACOLoader }]) => {
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/'); // Use CDN for draco decoders
+      
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+      
+      loader.load(url, (gltf) => {
+        // Swap out placeholder
+        this.mesh.remove(this.placeholderMesh);
+        
+        const model = gltf.scene;
+        // Apply our aesthetic material to the portrait
+        model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            (child as THREE.Mesh).material = this.material;
+          }
+        });
+        
+        this.mesh.add(model);
+      });
+    });
+  }
+
   public dispose() {
     this.placeholderMesh.geometry.dispose();
     this.material.dispose();

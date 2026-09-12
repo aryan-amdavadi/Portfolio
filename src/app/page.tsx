@@ -1,10 +1,13 @@
 'use client';
 
-import WebGLCanvas from '@/canvas/WebGLCanvas';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
 import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
+
+// Dynamically import heavy WebGL engine to avoid blocking initial render
+const WebGLCanvas = dynamic(() => import('@/canvas/WebGLCanvas'), { ssr: false });
 
 export default function Home() {
   const exploreCursor = useCursorHandlers('explore');

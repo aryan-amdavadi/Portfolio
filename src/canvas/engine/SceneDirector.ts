@@ -46,10 +46,15 @@ export class SceneDirector {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       alpha: true,
-      antialias: true,
+      antialias: tier >= 2, // Only antialias on mid/high-end
       powerPreference: 'high-performance'
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Adaptive Pixel Ratio based on Tier
+    let pixelRatio = 1;
+    if (tier === 2) pixelRatio = 1.5;
+    if (tier === 3) pixelRatio = Math.min(window.devicePixelRatio, 2);
+    this.renderer.setPixelRatio(pixelRatio);
     
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x312244, EngineState.fogDensity);
@@ -81,8 +86,17 @@ export class SceneDirector {
     this.scene.add(this.projectArtifacts.group);
 
     window.addEventListener('resize', this.onResize);
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
     this.onResize();
   }
+
+  private onVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      this.stop();
+    } else {
+      this.start();
+    }
+  };
 
   private onResize = () => {
     const width = window.innerWidth;
@@ -170,6 +184,7 @@ export class SceneDirector {
   public dispose() {
     this.stop();
     window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this.sculpture.dispose();
     this.orbitalNodes.dispose();
     this.floatingFragments.dispose();

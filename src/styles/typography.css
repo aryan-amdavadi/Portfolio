@@ -2,13 +2,14 @@
 
 :root {
   /* Sans-serif for UI, navigation, business-minded clarity */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-fallback: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Next.js injects --font-sans, so we fallback if needed, but we redefine it to include fallback */
   
   /* Serif for editorial headings, cinematic feel */
-  --font-serif: "Editorial Serif", "Playfair Display", Georgia, serif;
+  --font-serif-fallback: Georgia, serif;
   
   /* Monospace for technical/engineering data, labels, code */
-  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  --font-mono-fallback: Consolas, monospace;
 
   /* Typography Scale */
   --text-xs: 0.75rem;    /* 12px */
