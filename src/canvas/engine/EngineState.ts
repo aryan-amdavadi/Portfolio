@@ -23,6 +23,12 @@ export const EngineState = {
   fogDensity: 0.05,
   ambientIntensity: 0.5,
   
+  // Secondary Visual Systems
+  orbitalNodesOpacity: 0,
+  fragmentsOpacity: 0,
+  artifactsOpacity: 0,
+  activeArtifactIndex: -1, // -1: None, 0: SplitSphere, 1: Rapaport, 2: SecretSpeak, 3: Tabster, 4: PulseSync
+  
   // DOM state sync (optional)
   scrollProgress: 0,
 };

@@ -28,6 +28,10 @@ export const ScrollOrchestrator = () => {
     EngineState.sculptureRotX = 0;
     EngineState.cameraZ = 8;
     EngineState.fogDensity = 0.05;
+    EngineState.orbitalNodesOpacity = 0;
+    EngineState.fragmentsOpacity = 0;
+    EngineState.artifactsOpacity = 0;
+    EngineState.activeArtifactIndex = -1;
 
     // Create master ScrollTrigger timeline that controls the proxy EngineState object
     timelineRef.current = gsap.timeline({
@@ -41,12 +45,12 @@ export const ScrollOrchestrator = () => {
 
     const tl = timelineRef.current;
     
-    // We'll map the total scroll duration (e.g. 100%) across the sections
     // Section 1: Hero -> The Builder
     tl.to(EngineState, {
       sculptureX: -2,
       cameraZ: 10,
       sculptureRotY: Math.PI / 4,
+      orbitalNodesOpacity: 1,
       duration: 1,
       ease: "power1.inOut"
     }, 0)
@@ -56,6 +60,8 @@ export const ScrollOrchestrator = () => {
       sculptureRotX: Math.PI / 2,
       sculptureRotY: Math.PI,
       fogDensity: 0.1,
+      orbitalNodesOpacity: 0,
+      fragmentsOpacity: 1,
       duration: 1,
       ease: "power1.inOut"
     }, 1)
@@ -64,6 +70,8 @@ export const ScrollOrchestrator = () => {
     .to(EngineState, {
       sculptureX: 2,
       sculptureZ: -5,
+      fragmentsOpacity: 0,
+      orbitalNodesOpacity: 1,
       duration: 1,
       ease: "power2.inOut"
     }, 2)
@@ -73,6 +81,10 @@ export const ScrollOrchestrator = () => {
       sculptureX: 0,
       sculptureY: 2,
       cameraZ: 6,
+      orbitalNodesOpacity: 0,
+      artifactsOpacity: 1,
+      onStart: () => { EngineState.activeArtifactIndex = 0; },
+      onReverseComplete: () => { EngineState.activeArtifactIndex = -1; },
       duration: 1,
       ease: "power1.inOut"
     }, 3)
@@ -82,6 +94,9 @@ export const ScrollOrchestrator = () => {
       sculptureY: 0,
       sculptureZ: -15, // push way back
       fogDensity: 0.15,
+      artifactsOpacity: 0,
+      onStart: () => { EngineState.activeArtifactIndex = -1; },
+      onReverseComplete: () => { EngineState.activeArtifactIndex = 0; },
       duration: 1,
       ease: "power3.inOut"
     }, 4)
@@ -90,6 +105,7 @@ export const ScrollOrchestrator = () => {
     .to(EngineState, {
       sculptureZ: 0,
       sculptureRotY: Math.PI * 2,
+      orbitalNodesOpacity: 1,
       duration: 1,
       ease: "power1.inOut"
     }, 5)
@@ -98,6 +114,7 @@ export const ScrollOrchestrator = () => {
     .to(EngineState, {
       sculptureX: -3,
       cameraZ: 12,
+      orbitalNodesOpacity: 0,
       duration: 1,
       ease: "power2.inOut"
     }, 6)
@@ -106,6 +123,7 @@ export const ScrollOrchestrator = () => {
     .to(EngineState, {
       sculptureX: 3,
       sculptureRotX: 0,
+      fragmentsOpacity: 1,
       duration: 1,
       ease: "power1.inOut"
     }, 7)
@@ -115,6 +133,10 @@ export const ScrollOrchestrator = () => {
       sculptureX: 0,
       sculptureZ: -2,
       cameraZ: 8,
+      fragmentsOpacity: 0,
+      artifactsOpacity: 1,
+      onStart: () => { EngineState.activeArtifactIndex = 2; },
+      onReverseComplete: () => { EngineState.activeArtifactIndex = -1; },
       duration: 1,
       ease: "power2.inOut"
     }, 8)
@@ -123,6 +145,9 @@ export const ScrollOrchestrator = () => {
     .to(EngineState, {
       sculptureRotY: Math.PI * 4,
       fogDensity: 0.05, // return to baseline
+      artifactsOpacity: 0,
+      onStart: () => { EngineState.activeArtifactIndex = -1; },
+      onReverseComplete: () => { EngineState.activeArtifactIndex = 2; },
       duration: 1,
       ease: "power2.inOut"
     }, 9);

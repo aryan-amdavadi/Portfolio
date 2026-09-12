@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { PrimarySculpture } from '../scenes/PrimarySculpture';
+import { OrbitalNodes } from '../scenes/OrbitalNodes';
+import { FloatingFragments } from '../scenes/FloatingFragments';
+import { ProjectArtifacts } from '../scenes/ProjectArtifacts';
 import { EngineState } from './EngineState';
 
 /**
@@ -19,6 +22,9 @@ export class SceneDirector {
   private camera: THREE.PerspectiveCamera;
   
   private sculpture: PrimarySculpture;
+  private orbitalNodes: OrbitalNodes;
+  private floatingFragments: FloatingFragments;
+  private projectArtifacts: ProjectArtifacts;
   
   // Custom timer instead of deprecated THREE.Clock
   private startTime: number = 0;
@@ -31,9 +37,11 @@ export class SceneDirector {
   };
 
   private lerpedPointer = { x: 0, y: 0 };
+  private tier: number;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, tier: number = 3) {
     this.canvas = canvas;
+    this.tier = tier;
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -62,6 +70,15 @@ export class SceneDirector {
 
     this.sculpture = new PrimarySculpture();
     this.scene.add(this.sculpture.mesh);
+
+    this.orbitalNodes = new OrbitalNodes(this.tier);
+    this.scene.add(this.orbitalNodes.mesh);
+
+    this.floatingFragments = new FloatingFragments(this.tier);
+    this.scene.add(this.floatingFragments.mesh);
+
+    this.projectArtifacts = new ProjectArtifacts();
+    this.scene.add(this.projectArtifacts.group);
 
     window.addEventListener('resize', this.onResize);
     this.onResize();
@@ -114,6 +131,9 @@ export class SceneDirector {
 
     // Update scene objects
     this.sculpture.update(elapsedTime, this.lerpedPointer);
+    this.orbitalNodes.update(elapsedTime);
+    this.floatingFragments.update(elapsedTime);
+    this.projectArtifacts.update(elapsedTime);
 
     this.renderer.render(this.scene, this.camera);
 
@@ -124,6 +144,9 @@ export class SceneDirector {
     this.stop();
     window.removeEventListener('resize', this.onResize);
     this.sculpture.dispose();
+    this.orbitalNodes.dispose();
+    this.floatingFragments.dispose();
+    this.projectArtifacts.dispose();
     this.renderer.dispose();
   }
 }

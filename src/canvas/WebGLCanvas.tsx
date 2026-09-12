@@ -14,7 +14,7 @@ export default function WebGLCanvas() {
   useEffect(() => {
     if (tier === 0 || !canvasRef.current) return;
 
-    directorRef.current = new SceneDirector(canvasRef.current);
+    directorRef.current = new SceneDirector(canvasRef.current, tier);
     directorRef.current.start();
 
     const onPointerMove = (e: PointerEvent) => {
