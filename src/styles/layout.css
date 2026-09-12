@@ -1,30 +1,22 @@
-/* Layout, Grid, and Breakpoints */
+/* Layout, Surfaces, Borders, and Interactions */
 
 :root {
-  --container-max-width: 1440px;
+  --container-max-width: 1200px;
   --container-padding: clamp(1.5rem, 5vw, 4rem);
-  
-  /* Breakpoints as variables for JS synchronization if needed */
-  --bp-mobile: 480px;
-  --bp-tablet: 768px;
-  --bp-laptop: 1024px;
-  --bp-desktop: 1440px;
 }
 
-/* Container Utility */
+/* Container */
 .container {
   width: 100%;
   max-width: var(--container-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--container-padding);
-  padding-right: var(--container-padding);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
 }
 
 /* Grid System */
 .grid {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
   grid-template-columns: repeat(4, 1fr);
 }
 
@@ -40,15 +32,103 @@
   }
 }
 
-/* Core Subsystem Boundaries */
+/* --- SURFACE SYSTEM --- */
+.surface {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm); /* Minimal radius, avoiding excessive roundness */
+  padding: var(--space-6);
+  transition: border-color var(--duration-fast) var(--ease-out-expo),
+              background-color var(--duration-fast) var(--ease-out-expo);
+}
+
+.surface:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-surface-elevated);
+}
+
+/* --- DIVIDERS / BORDER SYSTEM --- */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin: var(--space-8) 0;
+}
+
+/* --- BUTTON SYSTEM --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border-radius: var(--radius-none); /* Sharp, technical feel */
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--text-primary);
+  color: var(--bg-base);
+  border: 1px solid var(--text-primary);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn-outline:hover {
+  border-color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .btn-outline:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* --- LINK SYSTEM --- */
+.link-technical {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 2px;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.link-technical:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-base);
+}
+
+/* --- FOCUS STATES (Accessibility) --- */
+*:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 4px;
+}
+
+/* Layers */
 .layer-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   z-index: var(--z-canvas);
-  pointer-events: none; /* Critical: 3D canvas does not block DOM interaction */
-  background-color: var(--bg-canvas);
+  pointer-events: none;
+  background-color: var(--bg-base);
 }
 
 .layer-ui {
@@ -59,7 +139,6 @@
   pointer-events: auto;
 }
 
-/* Screen Reader Only Utility for Accessibility */
 .sr-only {
   position: absolute;
   width: 1px;

@@ -1,29 +1,38 @@
-/* Typography Foundations */
+/* Typography Foundations: Visual Identity System */
 
 :root {
-  /* System default sans/serif as placeholders before custom fonts are loaded */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: "Editorial Serif", Georgia, "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-
-  /* Typographic Scale - fluid clamp() for responsiveness */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
+  /* Sans-serif for UI, navigation, business-minded clarity */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
-  --heading-1: clamp(3rem, 8vw, 6rem);
-  --heading-2: clamp(2rem, 5vw, 4rem);
+  /* Serif for editorial headings, cinematic feel */
+  --font-serif: "Editorial Serif", "Playfair Display", Georgia, serif;
+  
+  /* Monospace for technical/engineering data, labels, code */
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  /* Typography Scale */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  
+  /* Fluid Display Headings */
+  --heading-display: clamp(3rem, 10vw, 8rem);
+  --heading-1: clamp(2.5rem, 6vw, 4.5rem);
+  --heading-2: clamp(2rem, 4vw, 3.5rem);
   --heading-3: clamp(1.5rem, 3vw, 2.5rem);
   --heading-4: clamp(1.25rem, 2vw, 1.75rem);
   
   /* Line Heights */
-  --lh-tight: 1.1;
-  --lh-base: 1.5;
-  --lh-relaxed: 1.75;
+  --lh-none: 1;
+  --lh-tight: 1.15;
+  --lh-base: 1.6;
+  --lh-relaxed: 1.8;
   
-  /* Tracking */
+  /* Tracking (Letter Spacing) */
+  --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
   --tracking-normal: 0em;
   --tracking-wide: 0.05em;
@@ -35,38 +44,69 @@ body {
   font-size: var(--text-base);
   line-height: var(--lh-base);
   color: var(--text-primary);
-  background-color: var(--bg-primary);
+  background-color: var(--bg-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Base Heading Styles */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 400;
-  line-height: var(--lh-tight);
-  letter-spacing: var(--tracking-tight);
   margin: 0;
+  font-weight: 400;
+  color: var(--text-primary);
 }
 
-.heading-hero {
+/* Display / Cinematic Typography */
+.typography-display {
+  font-family: var(--font-serif);
+  font-size: var(--heading-display);
+  line-height: var(--lh-none);
+  letter-spacing: var(--tracking-tighter);
+}
+
+.typography-h1 {
   font-family: var(--font-serif);
   font-size: var(--heading-1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
-.heading-section {
+.typography-h2 {
+  font-family: var(--font-sans);
   font-size: var(--heading-2);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
 }
 
-.text-editorial {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
+.typography-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--heading-3);
+  line-height: var(--lh-tight);
+  font-weight: 500;
+}
+
+/* Body Typography */
+.typography-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--lh-base);
+  color: var(--text-secondary);
+}
+
+.typography-body-large {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
   line-height: var(--lh-relaxed);
+  color: var(--text-secondary);
 }
 
-.text-technical {
+/* Technical / Monospace Typography */
+.typography-technical {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  text-transform: uppercase;
+  line-height: var(--lh-base);
   letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
 }

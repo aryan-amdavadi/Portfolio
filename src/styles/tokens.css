@@ -1,58 +1,70 @@
-/* Design Tokens for Portfolio Foundation */
+/* Design Tokens: Visual Identity System */
 
 :root {
-  /* 
-   * PRIMARY 3D ENVIRONMENT - CINEMATIC DARK 
-   * As specified in docs/IMP.md 
-   */
-  --color-dark-100: #006466;
-  --color-dark-200: #065A60;
-  --color-dark-300: #0B525B;
-  --color-dark-400: #1B3A4B;
-  --color-dark-500: #212F45;
-  --color-dark-600: #272640;
-  --color-dark-700: #312244;
-  --color-dark-800: #3E1F47;
-  --color-dark-900: #4D194D;
-
-  /* 
-   * EDITORIAL LIGHT PALETTE
-   * Warm, editorial, premium
-   */
-  --color-light-100: #606C38;
-  --color-light-200: #283618;
-  --color-light-300: #FEFAE0;
-  --color-light-400: #DDA15E;
-  --color-light-500: #BC6C25;
-
-  /* Global Theme Defaults (Dark primary) */
-  --bg-primary: var(--color-dark-600);
-  --bg-secondary: var(--color-dark-700);
-  --bg-canvas: var(--color-dark-900);
+  /* DARK THEME (Default) */
+  --color-dark-bg-1: #212F45;
+  --color-dark-bg-2: #272640;
   
-  --text-primary: #FEFAE0;
-  --text-secondary: rgba(254, 250, 224, 0.7);
-  --text-muted: rgba(254, 250, 224, 0.4);
+  --color-dark-structural: #1B3A4B;
   
-  --accent-primary: var(--color-dark-100);
-  --accent-secondary: var(--color-dark-200);
+  --color-dark-teal-1: #006466;
+  --color-dark-teal-2: #065A60;
+  --color-dark-teal-3: #0B525B;
   
-  --border-subtle: rgba(254, 250, 224, 0.1);
-  --border-active: rgba(254, 250, 224, 0.3);
+  --color-dark-violet-1: #312244;
+  --color-dark-violet-2: #3E1F47;
+  --color-dark-violet-3: #4D194D;
 
-  /* Spacing */
+  /* LIGHT THEME */
+  --color-light-bg: #FEFAE0;
+  --color-light-primary: #283618;
+  --color-light-secondary: #606C38;
+  --color-light-accent: #DDA15E;
+  --color-light-highlight: #BC6C25;
+
+  /* --- SEMANTIC THEME VARIABLES (Dark Mode Default) --- */
+  --bg-base: var(--color-dark-bg-1);
+  --bg-surface: var(--color-dark-bg-2);
+  --bg-surface-elevated: var(--color-dark-structural);
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  
+  --accent-base: var(--color-dark-teal-1);
+  --accent-hover: var(--color-dark-teal-2);
+  
+  /* Atmospheric lighting meant for canvas/gradients */
+  --ambient-light-1: var(--color-dark-violet-1);
+  --ambient-light-2: var(--color-dark-violet-3);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-focus: var(--color-dark-teal-1);
+
+  /* Spacing Scale */
+  --space-px: 1px;
   --space-0: 0;
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 2rem;
-  --space-5: 4rem;
-  --space-6: 8rem;
-  --space-7: 16rem;
-  --space-8: 24rem;
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-24: 6rem;    /* 96px */
+  --space-32: 8rem;    /* 128px */
+  
+  /* Border Radius (Minimal/Restrained) */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
 
   /* Z-Index Strata */
-  --z-canvas: 0;
+  --z-canvas: -1;
   --z-base: 10;
   --z-overlay: 100;
   --z-nav: 200;
@@ -60,17 +72,22 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: var(--color-light-300);
-  --bg-secondary: #FFFFFF;
-  --bg-canvas: var(--color-light-300);
+  --bg-base: var(--color-light-bg);
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F8F5D7;
   
-  --text-primary: var(--color-dark-600);
-  --text-secondary: var(--color-dark-400);
-  --text-muted: var(--color-dark-300);
+  --text-primary: var(--color-light-primary);
+  --text-secondary: var(--color-light-secondary);
+  --text-muted: rgba(40, 54, 24, 0.5);
   
-  --accent-primary: var(--color-light-100);
-  --accent-secondary: var(--color-light-200);
+  --accent-base: var(--color-light-accent);
+  --accent-hover: var(--color-light-highlight);
   
-  --border-subtle: rgba(39, 38, 64, 0.1);
-  --border-active: rgba(39, 38, 64, 0.3);
+  /* Less atmospheric lighting needed in light mode, but mapped for consistency */
+  --ambient-light-1: #FEFAE0;
+  --ambient-light-2: #DDA15E;
+
+  --border-subtle: rgba(40, 54, 24, 0.1);
+  --border-strong: rgba(40, 54, 24, 0.3);
+  --border-focus: var(--color-light-highlight);
 }
