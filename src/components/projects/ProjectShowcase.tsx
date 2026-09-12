@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { EngineState } from '@/canvas/engine/EngineState';
 import { Button } from '../ui/Button';
@@ -59,9 +60,9 @@ export const ProjectShowcase: React.FC = () => {
 
             <div className="project-links">
               {project.caseStudyRoute && (
-                <a href={project.caseStudyRoute} {...exploreCursor}>
+                <Link href={project.caseStudyRoute} {...exploreCursor}>
                   <Button variant="primary">CASE STUDY</Button>
-                </a>
+                </Link>
               )}
               {project.liveUrl && (
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" {...externalCursor}>

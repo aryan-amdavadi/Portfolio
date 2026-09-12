@@ -8,6 +8,7 @@
 @import '../styles/components/navigation.css';
 @import '../styles/components/scroll.css';
 @import '../styles/components/projects.css';
+@import '../styles/components/case-study.css';
 
 /* CSS Reset */
 *, *::before, *::after {
