@@ -178,14 +178,51 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 8. ABOUT */}
+        {/* 8. ABOUT & CONTEXT */}
         <section id="about" className="scroll-section">
-          <div className="section-content align-right">
-            <span className="typography-technical text-muted">07 / ABOUT</span>
-            <h2 className="typography-h2 mt-4">My Journey</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              A brief history of my engineering path and where I am headed next.
-            </p>
+          <div className="section-content">
+            <span className="typography-technical text-muted">07 / PERSONAL CONTEXT</span>
+            <h2 className="typography-display mt-4">Profile</h2>
+            
+            <div className="about-grid">
+              {/* ABOUT */}
+              <div className="about-section-block">
+                <span className="about-label">ABOUT</span>
+                <p className="about-content">
+                  I am a <strong>Full-stack engineer moving toward AI engineering</strong>. My focus is on building performant, deterministic systems that solve actual problems rather than chasing trends.
+                </p>
+              </div>
+
+              {/* EDUCATION */}
+              <div className="about-section-block">
+                <span className="about-label">EDUCATION</span>
+                <div className="about-content">
+                  <p><strong>B.Tech Information Technology</strong></p>
+                  <p>Charusat University</p>
+                </div>
+              </div>
+
+              {/* INTERESTS */}
+              <div className="about-section-block">
+                <span className="about-label">INTERESTS</span>
+                <ul className="interests-list">
+                  <li className="interest-item">Technology</li>
+                  <li className="interest-item">Business</li>
+                  <li className="interest-item">Finance</li>
+                  <li className="interest-item">AI</li>
+                  <li className="interest-item">Product Development</li>
+                  <li className="interest-item">Problem Solving</li>
+                </ul>
+              </div>
+
+              {/* ACHIEVEMENTS */}
+              <div className="about-section-block">
+                <span className="about-label">ACHIEVEMENTS</span>
+                <div className="achievement-placeholder">
+                  <span>{"// Data pending population"}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

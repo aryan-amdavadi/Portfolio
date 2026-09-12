@@ -10,6 +10,7 @@
 @import '../styles/components/projects.css';
 @import '../styles/components/case-study.css';
 @import '../styles/components/toolset.css';
+@import '../styles/components/about.css';
 
 /* CSS Reset */
 *, *::before, *::after {

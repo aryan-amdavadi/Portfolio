@@ -1,0 +1,109 @@
+/* About & Personal Context Styles */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-24);
+  }
+}
+
+.about-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.about-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent-base);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--space-3);
+  display: block;
+}
+
+[data-theme="light"] .about-label {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.about-content {
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+}
+
+.about-content strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.interests-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.interest-item {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+[data-theme="light"] .interest-item {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.interest-item:hover {
+  border-color: var(--accent-base);
+  color: var(--accent-base);
+  transform: translateY(-2px);
+}
+
+.achievement-placeholder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.02) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+[data-theme="light"] .achievement-placeholder {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.02) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}
