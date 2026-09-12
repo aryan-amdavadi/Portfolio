@@ -1,0 +1,73 @@
+/* Layout, Grid, and Breakpoints */
+
+:root {
+  --container-max-width: 1440px;
+  --container-padding: clamp(1.5rem, 5vw, 4rem);
+  
+  /* Breakpoints as variables for JS synchronization if needed */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-laptop: 1024px;
+  --bp-desktop: 1440px;
+}
+
+/* Container Utility */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* Grid System */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* Core Subsystem Boundaries */
+.layer-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-canvas);
+  pointer-events: none; /* Critical: 3D canvas does not block DOM interaction */
+  background-color: var(--bg-canvas);
+}
+
+.layer-ui {
+  position: relative;
+  z-index: var(--z-base);
+  width: 100%;
+  min-height: 100vh;
+  pointer-events: auto;
+}
+
+/* Screen Reader Only Utility for Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

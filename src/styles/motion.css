@@ -1,0 +1,38 @@
+/* Motion Configuration and Accessibility */
+
+:root {
+  /* Durations */
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+  --duration-cinematic: 1200ms;
+
+  /* Easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-linear: linear;
+}
+
+/* Base interactive transitions */
+.transition-base {
+  transition-property: all;
+  transition-timing-function: var(--ease-out-expo);
+  transition-duration: var(--duration-base);
+}
+
+/* Accessibility: Reduced Motion Bypass */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .layer-canvas {
+    /* Optionally visually degrade or stop rendering entirely if necessary */
+    opacity: 0.5; 
+  }
+}

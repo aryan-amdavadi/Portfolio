@@ -1,0 +1,76 @@
+/* Design Tokens for Portfolio Foundation */
+
+:root {
+  /* 
+   * PRIMARY 3D ENVIRONMENT - CINEMATIC DARK 
+   * As specified in docs/IMP.md 
+   */
+  --color-dark-100: #006466;
+  --color-dark-200: #065A60;
+  --color-dark-300: #0B525B;
+  --color-dark-400: #1B3A4B;
+  --color-dark-500: #212F45;
+  --color-dark-600: #272640;
+  --color-dark-700: #312244;
+  --color-dark-800: #3E1F47;
+  --color-dark-900: #4D194D;
+
+  /* 
+   * EDITORIAL LIGHT PALETTE
+   * Warm, editorial, premium
+   */
+  --color-light-100: #606C38;
+  --color-light-200: #283618;
+  --color-light-300: #FEFAE0;
+  --color-light-400: #DDA15E;
+  --color-light-500: #BC6C25;
+
+  /* Global Theme Defaults (Dark primary) */
+  --bg-primary: var(--color-dark-600);
+  --bg-secondary: var(--color-dark-700);
+  --bg-canvas: var(--color-dark-900);
+  
+  --text-primary: #FEFAE0;
+  --text-secondary: rgba(254, 250, 224, 0.7);
+  --text-muted: rgba(254, 250, 224, 0.4);
+  
+  --accent-primary: var(--color-dark-100);
+  --accent-secondary: var(--color-dark-200);
+  
+  --border-subtle: rgba(254, 250, 224, 0.1);
+  --border-active: rgba(254, 250, 224, 0.3);
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 2rem;
+  --space-5: 4rem;
+  --space-6: 8rem;
+  --space-7: 16rem;
+  --space-8: 24rem;
+
+  /* Z-Index Strata */
+  --z-canvas: 0;
+  --z-base: 10;
+  --z-overlay: 100;
+  --z-nav: 200;
+  --z-cursor: 9999;
+}
+
+[data-theme="light"] {
+  --bg-primary: var(--color-light-300);
+  --bg-secondary: #FFFFFF;
+  --bg-canvas: var(--color-light-300);
+  
+  --text-primary: var(--color-dark-600);
+  --text-secondary: var(--color-dark-400);
+  --text-muted: var(--color-dark-300);
+  
+  --accent-primary: var(--color-light-100);
+  --accent-secondary: var(--color-light-200);
+  
+  --border-subtle: rgba(39, 38, 64, 0.1);
+  --border-active: rgba(39, 38, 64, 0.3);
+}
