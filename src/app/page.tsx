@@ -17,6 +17,13 @@ export default function Home() {
     <>
       <WebGLCanvas />
       
+      {/* Subtle quick nav for recruiters/returning visitors */}
+      <div className="quick-jump-nav" aria-hidden="true">
+        <a href="#work" {...linkCursor}>
+          ↓ Jump to Work
+        </a>
+      </div>
+      
       <main className="layer-ui">
         
         {/* 1. HERO */}
@@ -216,14 +223,6 @@ export default function Home() {
                   <li className="interest-item">Product Development</li>
                   <li className="interest-item">Problem Solving</li>
                 </ul>
-              </div>
-
-              {/* ACHIEVEMENTS */}
-              <div className="about-section-block">
-                <span className="about-label">ACHIEVEMENTS</span>
-                <div className="achievement-placeholder">
-                  <span>{"// Data pending population"}</span>
-                </div>
               </div>
             </div>
           </div>

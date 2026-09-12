@@ -44,8 +44,9 @@
 .nav-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(33, 47, 69, 0.9); /* Dark background with slight transparency to preserve environment */
-  backdrop-filter: blur(10px);
+  background-color: rgba(33, 47, 69, 0.85); /* Slightly more transparent to emphasize blur */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px); /* Safari support */
   z-index: calc(var(--z-nav) - 1);
   display: flex;
   flex-direction: column;

@@ -11,6 +11,8 @@ export const CustomCursor: React.FC = () => {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   
+  const [isPointerFine, setIsPointerFine] = React.useState(true);
+  
   // Physics state
   const mouse = useRef({ x: 0, y: 0 });
   const dotPos = useRef({ x: 0, y: 0 });
@@ -19,7 +21,11 @@ export const CustomCursor: React.FC = () => {
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouch) return;
+    if (isTouch) {
+      // eslint-disable-next-line
+      setIsPointerFine(false);
+      return;
+    }
 
     document.body.classList.add('has-custom-cursor');
     
@@ -66,6 +72,8 @@ export const CustomCursor: React.FC = () => {
   if (cursorState === 'project') text = 'VIEW';
   if (cursorState === 'explore') text = 'EXPLORE';
   if (cursorState === 'external') text = 'OPEN';
+
+  if (!isPointerFine) return null;
 
   return (
     <div className={`custom-cursor cursor-state-${cursorState}`} aria-hidden="true">

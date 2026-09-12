@@ -44,7 +44,7 @@ export const ScrollOrchestrator = () => {
           trigger: '#main-content',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1,
+          scrub: 0.5,
         }
       });
 
@@ -89,7 +89,7 @@ export const ScrollOrchestrator = () => {
           trigger: '#main-content',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1,
+          scrub: 0.5,
         }
       });
 
