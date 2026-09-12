@@ -22,7 +22,7 @@ export const ThemeToggle: React.FC = () => {
   };
 
   return (
-    <div style={{ position: 'fixed', top: 'var(--space-6)', right: 'var(--space-6)', zIndex: 'var(--z-nav)' }}>
+    <div>
       <Button variant="outline" onClick={toggleTheme}>
         {theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}
       </Button>

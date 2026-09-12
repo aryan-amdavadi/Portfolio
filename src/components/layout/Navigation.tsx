@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCursorHandlers } from '@/hooks/useCursorState';
+import { ThemeToggle } from './ThemeToggle';
 
 const MENU_ITEMS = [
   { num: '01', label: 'WORK' },
@@ -72,6 +73,10 @@ export const Navigation: React.FC = () => {
             </Link>
           ))}
         </nav>
+        
+        <div style={{ marginTop: 'auto', paddingTop: 'var(--space-8)' }}>
+          <ThemeToggle />
+        </div>
       </div>
     </>
   );
