@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCursorHandlers } from '@/hooks/useCursorState';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline';
@@ -13,8 +14,14 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const variantClass = variant === 'primary' ? 'btn-primary' : 'btn-outline';
   
+  const linkCursor = useCursorHandlers('link');
+  
   return (
-    <button className={`btn ${variantClass} ${className}`} {...props}>
+    <button 
+      className={`btn ${variantClass} ${className}`} 
+      {...linkCursor}
+      {...props}
+    >
       {children}
     </button>
   );

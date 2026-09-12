@@ -1,0 +1,100 @@
+/* Custom Cursor Styles */
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  mix-blend-mode: difference; /* Ensures visibility across light/dark backgrounds */
+  will-change: transform;
+}
+
+.cursor-dot {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background-color: white; /* Will invert due to mix-blend-mode */
+  border-radius: 50%;
+  transform-origin: center;
+  transition: transform 0.2s var(--ease-out-expo), opacity 0.2s var(--ease-out-expo);
+}
+
+.cursor-ring {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform-origin: center;
+  transition: all 0.3s var(--ease-out-expo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 1;
+}
+
+.cursor-ring-text {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* States */
+.cursor-state-link .cursor-ring {
+  transform: scale(1.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+.cursor-state-project .cursor-ring,
+.cursor-state-explore .cursor-ring,
+.cursor-state-external .cursor-ring {
+  transform: scale(2);
+  background-color: white;
+  border-color: white;
+  color: black;
+  mix-blend-mode: normal;
+}
+
+.cursor-state-project .cursor-dot,
+.cursor-state-explore .cursor-dot,
+.cursor-state-external .cursor-dot {
+  opacity: 0;
+}
+
+.cursor-state-project .cursor-ring-text,
+.cursor-state-explore .cursor-ring-text,
+.cursor-state-external .cursor-ring-text {
+  opacity: 1;
+}
+
+.cursor-state-disabled .cursor-ring {
+  opacity: 0.2;
+  border-style: dashed;
+}
+
+/* Hide native cursor for the entire document when custom cursor is active */
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* Disable on touch devices */
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+  body.has-custom-cursor,
+  body.has-custom-cursor * {
+    cursor: auto !important;
+  }
+}

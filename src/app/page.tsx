@@ -1,7 +1,12 @@
+'use client';
+
 import WebGLCanvas from '@/canvas/WebGLCanvas';
 import { Button } from '@/components/ui/Button';
+import { useCursorHandlers } from '@/hooks/useCursorState';
 
 export default function Home() {
+  const exploreCursor = useCursorHandlers('explore');
+  const externalCursor = useCursorHandlers('external');
   return (
     <>
       <WebGLCanvas />
@@ -69,7 +74,7 @@ export default function Home() {
           
           <div>
             <span className="typography-body" style={{ marginRight: 'var(--space-4)' }}>External reference:</span>
-            <a href="#" className="link-technical">VIEW GITHUB SOURCE</a>
+            <a href="#" className="link-technical" {...externalCursor}>VIEW GITHUB SOURCE</a>
           </div>
         </section>
 
@@ -87,7 +92,7 @@ export default function Home() {
               <p className="typography-body" style={{ marginBottom: 'var(--space-6)' }}>
                 A conceptual breakdown of the architecture, engineering challenges, and final execution.
               </p>
-              <a href="#" className="link-technical">EXPLORE SYSTEM</a>
+              <a href="#" className="link-technical" {...exploreCursor}>EXPLORE SYSTEM</a>
             </div>
 
             {/* Mock Surface Card 2 */}
@@ -97,7 +102,7 @@ export default function Home() {
               <p className="typography-body" style={{ marginBottom: 'var(--space-6)' }}>
                 High-performance real-time synchronization layer with zero-knowledge encryption guarantees.
               </p>
-              <a href="#" className="link-technical">EXPLORE SYSTEM</a>
+              <a href="#" className="link-technical" {...exploreCursor}>EXPLORE SYSTEM</a>
             </div>
           </div>
         </section>

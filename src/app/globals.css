@@ -3,6 +3,10 @@
 @import '../styles/layout.css';
 @import '../styles/motion.css';
 
+/* Component Styles */
+@import '../styles/components/cursor.css';
+@import '../styles/components/navigation.css';
+
 /* CSS Reset */
 *, *::before, *::after {
   box-sizing: border-box;
