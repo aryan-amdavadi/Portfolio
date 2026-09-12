@@ -11,6 +11,7 @@
 @import '../styles/components/case-study.css';
 @import '../styles/components/toolset.css';
 @import '../styles/components/about.css';
+@import '../styles/components/code.css';
 
 /* CSS Reset */
 *, *::before, *::after {

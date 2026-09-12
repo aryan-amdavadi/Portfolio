@@ -1,0 +1,109 @@
+/* Current Work & Code Styles */
+
+.current-work-path {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  padding-left: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+[data-theme="light"] .current-work-path {
+  border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.current-work-path span {
+  display: block;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.current-work-path span:last-child {
+  opacity: 1;
+  color: var(--accent-base);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.github-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  margin-top: var(--space-12);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .github-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.github-repo-card {
+  padding: var(--space-6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(33, 47, 69, 0.2);
+  border-radius: var(--radius-sm);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: none;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+[data-theme="light"] .github-repo-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.github-repo-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-base);
+  background: rgba(33, 47, 69, 0.6);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+[data-theme="light"] .github-repo-card:hover {
+  background: rgba(221, 161, 94, 0.05);
+}
+
+.github-repo-card h3 {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.github-repo-card p {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+.github-repo-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.github-repo-meta .lang-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-base);
+  margin-right: 6px;
+}

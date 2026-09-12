@@ -229,22 +229,68 @@ export default function Home() {
         {/* 9. CURRENTLY BUILDING */}
         <section id="currently-building" className="scroll-section">
           <div className="section-content align-left">
-            <span className="typography-technical text-muted">08 / CURRENTLY BUILDING</span>
-            <h2 className="typography-h2 mt-4">Active Pursuits</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              Focusing on AI integration and high-performance WebGL architectures.
+            <span className="typography-technical text-muted">08 / CURRENT WORK</span>
+            <h2 className="typography-display mt-4">Active Pursuits</h2>
+            
+            <div className="current-work-path">
+              <span>FULL-STACK ENGINEERING</span>
+              <span>→ AI ENGINEERING</span>
+              <span>→ PRODUCT BUILDING</span>
+            </div>
+            
+            <p className="typography-body mt-8 max-w-md">
+              I am actively expanding my engineering capabilities, focusing on the intersection of deterministic system architecture and generative models.
             </p>
           </div>
         </section>
 
         {/* 10. CODE */}
-        <section id="code" className="scroll-section">
+        <section id="code" className="scroll-section" style={{ minHeight: '120vh' }}>
           <div className="section-content align-center">
-            <span className="typography-technical text-muted">09 / CODE</span>
-            <h2 className="typography-h2 mt-4">Open Source</h2>
-            <p className="typography-body-large mt-6 max-w-md mx-auto">
-              Contributions and public repositories.
+            <span className="typography-technical text-muted">09 / THE CODE</span>
+            <h2 className="typography-display mt-4">Open Source</h2>
+            <p className="typography-body mt-6 max-w-md mx-auto">
+              Selected public repositories and experimental implementations demonstrating active engineering work.
             </p>
+
+            <div className="github-grid" style={{ textAlign: 'left' }}>
+              <a href="https://github.com/aryan-amdavadi/SplitSphere" target="_blank" rel="noopener noreferrer" className="github-repo-card" {...exploreCursor}>
+                <div>
+                  <h3>SplitSphere</h3>
+                  <p>A dynamic network application modeling complex financial relationships and transaction structures.</p>
+                </div>
+                <div className="github-repo-meta">
+                  <span><span className="lang-dot"></span>TypeScript</span>
+                  <span>System Architecture</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/aryan-amdavadi/Rapaport-Calculator" target="_blank" rel="noopener noreferrer" className="github-repo-card" {...exploreCursor}>
+                <div>
+                  <h3>Rapaport-Calculator</h3>
+                  <p>A structured pricing engine providing real-time data grid evaluations for crystalline assets.</p>
+                </div>
+                <div className="github-repo-meta">
+                  <span><span className="lang-dot" style={{ background: '#f1e05a' }}></span>JavaScript</span>
+                  <span>Data Grid</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/aryan-amdavadi/SecretSpeak" target="_blank" rel="noopener noreferrer" className="github-repo-card" {...exploreCursor}>
+                <div>
+                  <h3>SecretSpeak</h3>
+                  <p>A procedural language framework for obfuscated communication over WebSockets.</p>
+                </div>
+                <div className="github-repo-meta">
+                  <span><span className="lang-dot" style={{ background: '#3572A5' }}></span>Python</span>
+                  <span>Algorithms</span>
+                </div>
+              </a>
+
+              <a href="https://github.com/aryan-amdavadi" target="_blank" rel="noopener noreferrer" className="github-repo-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed' }} {...exploreCursor}>
+                <span className="typography-technical" style={{ color: 'var(--accent-base)' }}>EXPLORE THE CODE ↗</span>
+              </a>
+            </div>
           </div>
         </section>
 
