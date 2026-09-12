@@ -3,6 +3,7 @@
 import WebGLCanvas from '@/canvas/WebGLCanvas';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
+import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
 
 export default function Home() {
   const exploreCursor = useCursorHandlers('explore');
@@ -123,9 +124,8 @@ export default function Home() {
           <div className="section-content">
             <span className="typography-technical text-muted">04 / THE WORK</span>
             <h2 className="typography-display mt-4">Projects</h2>
-            <p className="typography-body mt-6">
-              (Case studies will be populated in Phase 6)
-            </p>
+            
+            <ProjectShowcase />
           </div>
         </section>
 

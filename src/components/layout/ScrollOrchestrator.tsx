@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -84,8 +84,6 @@ export const ScrollOrchestrator = () => {
       sculptureY: 2,
       cameraZ: 6,
       orbitalNodesOpacity: 0,
-      artifactsOpacity: 1,
-      onStart: () => { EngineState.activeArtifactIndex = 0; }, // set active, no reset needed
       duration: 1,
       ease: "power1.inOut"
     }, 3)
@@ -95,7 +93,6 @@ export const ScrollOrchestrator = () => {
       sculptureY: 0,
       sculptureZ: -15, // push way back
       fogDensity: 0.15,
-      artifactsOpacity: 0,
       // Removed instant -1 reset to fix popping
       duration: 1,
       ease: "power3.inOut"
@@ -134,8 +131,6 @@ export const ScrollOrchestrator = () => {
       sculptureZ: -2,
       cameraZ: 8,
       fragmentsOpacity: 0,
-      artifactsOpacity: 1,
-      onStart: () => { EngineState.activeArtifactIndex = 2; },
       duration: 1,
       ease: "power2.inOut"
     }, 8)
@@ -145,7 +140,6 @@ export const ScrollOrchestrator = () => {
       sculptureX: 0, // Return center
       sculptureRotY: Math.PI * 4,
       fogDensity: 0.05, 
-      artifactsOpacity: 0,
       duration: 1,
       ease: "power2.inOut"
     }, 9);
