@@ -43,6 +43,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { GhostFibersBackground } from '@/components/backgrounds/GhostFibersBackground';
+
 export default function RootLayout({
   children,
 }: {
@@ -51,6 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark" className={`${inter.variable} ${jetBrainsMono.variable} ${playfair.variable}`}>
       <body>
+        <GhostFibersBackground />
         <Shell>
           {children}
         </Shell>
