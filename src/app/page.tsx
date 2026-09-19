@@ -1,10 +1,13 @@
 'use client';
 
+import React, { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import gsap from 'gsap';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
 import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
+import { MaskedHeading } from '@/components/text/MaskedHeading';
 
 // Dynamically import heavy WebGL engine to avoid blocking initial render
 const WebGLCanvas = dynamic(() => import('@/canvas/WebGLCanvas'), { ssr: false });
@@ -12,6 +15,40 @@ const WebGLCanvas = dynamic(() => import('@/canvas/WebGLCanvas'), { ssr: false }
 export default function Home() {
   const exploreCursor = useCursorHandlers('explore');
   const linkCursor = useCursorHandlers('link');
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      // Start with elements invisible
+      gsap.set('.hero-fade-up', { y: 20, opacity: 0 });
+      gsap.set('.hero-cta', { y: 20, opacity: 0 });
+
+      // Animate after MaskedHeading reveals (it takes ~1.2s + 0.5s delay)
+      // The MaskedHeading itself is self-animating, so we just stagger the rest after it
+      gsap.to('.hero-fade-up', {
+        y: 0,
+        opacity: 1,
+        duration: 1.0,
+        stagger: 0.2,
+        ease: 'power3.out',
+        delay: 1.5
+      });
+
+      gsap.to('.hero-cta', {
+        y: 0,
+        opacity: 1,
+        duration: 1.0,
+        stagger: 0.1,
+        ease: 'power3.out',
+        delay: 2.0
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <>
@@ -27,28 +64,37 @@ export default function Home() {
       <main className="layer-ui">
         
         {/* 1. HERO */}
-        <section className="scroll-section hero-section">
+        <section className="scroll-section hero-section" ref={heroRef}>
           <div className="section-content">
             <div style={{ marginBottom: 'var(--space-8)' }}>
-              <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-4)' }}>
-                FULL-STACK ENGINEER <br />
-                AI ENGINEERING IN PROGRESS
-              </span>
+              <div className="hero-fade-up">
+                <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-2)' }}>
+                  ARYAN AMDAVADI
+                </span>
+                <span className="typography-technical text-muted" style={{ display: 'block', marginBottom: 'var(--space-4)' }}>
+                  FULL-STACK ENGINEER / AI ENGINEERING IN PROGRESS
+                </span>
+              </div>
               
-              <h1 className="typography-display" style={{ textTransform: 'uppercase' }}>
-                I Build Systems<br />
-                For Real-World<br />
-                Problems.
-              </h1>
+              <MaskedHeading 
+                lines={["I Build Systems", "For Real-World", "Problems."]} 
+                className="typography-display"
+                delay={0.5}
+                duration={1.2}
+              />
             </div>
 
             <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-              <a href="#work" {...exploreCursor}>
-                <Button variant="primary">EXPLORE WORK</Button>
-              </a>
-              <a href="#connect" {...linkCursor}>
-                <Button variant="outline">LET&apos;S BUILD</Button>
-              </a>
+              <div className="hero-cta">
+                <a href="#work" {...exploreCursor}>
+                  <Button variant="primary">EXPLORE WORK</Button>
+                </a>
+              </div>
+              <div className="hero-cta">
+                <a href="#connect" {...linkCursor}>
+                  <Button variant="outline">LET&apos;S BUILD</Button>
+                </a>
+              </div>
             </div>
           </div>
         </section>
