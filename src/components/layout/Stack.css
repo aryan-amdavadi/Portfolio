@@ -1,0 +1,141 @@
+.system-artifacts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: var(--space-24);
+  margin-bottom: var(--space-24);
+  gap: var(--space-12);
+}
+
+.system-artifacts-header {
+  text-align: center;
+  max-width: 600px;
+}
+
+.system-artifacts-stack {
+  position: relative;
+  width: 320px;
+  height: 420px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .system-artifacts-stack {
+    width: 400px;
+    height: 520px;
+  }
+}
+
+.stack-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+}
+
+.card-rotate {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.card-rotate:active {
+  cursor: grabbing;
+}
+
+.card-rotate-disabled {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.card {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .card {
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.stack-artifact-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.stack-artifact-img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.stack-artifact-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(12, 17, 26, 0.9) 0%, rgba(12, 17, 26, 0.2) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--space-8);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.card-rotate:hover .stack-artifact-overlay {
+  opacity: 1;
+}
+
+[data-theme="light"] .stack-artifact-overlay {
+  background: linear-gradient(to top, rgba(254, 250, 224, 0.95) 0%, rgba(254, 250, 224, 0.4) 60%, transparent 100%);
+}
+
+.stack-artifact-title {
+  font-family: var(--font-serif);
+  font-size: var(--heading-4);
+  margin: 0 0 var(--space-1) 0;
+  color: var(--text-primary);
+  transform: translateY(10px);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.stack-artifact-role {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent-base);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-4);
+  transform: translateY(10px);
+  transition: transform 0.4s var(--ease-out-expo) 0.05s;
+}
+
+.stack-artifact-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  transform: translateY(10px);
+  transition: transform 0.4s var(--ease-out-expo) 0.1s;
+}
+
+.card-rotate:hover .stack-artifact-title,
+.card-rotate:hover .stack-artifact-role,
+.card-rotate:hover .stack-artifact-tech {
+  transform: translateY(0);
+}

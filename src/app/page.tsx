@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
+import { SystemArtifactsStack } from '@/components/layout/SystemArtifactsStack';
 import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
 import { MaskedHeading } from '@/components/text/MaskedHeading';
 import { ThinkingProcess } from '@/components/layout/ThinkingProcess';
@@ -179,6 +180,7 @@ export default function Home() {
             <h2 className="typography-display mt-4">Projects</h2>
             
             <ProjectShowcase />
+            <SystemArtifactsStack />
           </div>
         </section>
 

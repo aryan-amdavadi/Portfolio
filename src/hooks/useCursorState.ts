@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export type CursorState = 'default' | 'link' | 'project' | 'explore' | 'external' | 'disabled';
+export type CursorState = 'default' | 'link' | 'project' | 'explore' | 'external' | 'disabled' | 'inspect' | 'view' | 'open';
 
 let currentState: CursorState = 'default';
 const listeners = new Set<(state: CursorState) => void>();
