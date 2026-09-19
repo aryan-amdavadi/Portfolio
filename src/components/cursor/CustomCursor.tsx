@@ -425,7 +425,8 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
     parallaxOn,
     cursorColor,
     cursorColorOnTarget,
-    prefersReducedMotion
+    prefersReducedMotion,
+    isMounted
   ]);
 
   useEffect(() => {
