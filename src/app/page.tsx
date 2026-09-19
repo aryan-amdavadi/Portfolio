@@ -54,12 +54,7 @@ export default function Home() {
     <>
       <WebGLCanvas />
       
-      {/* Subtle quick nav for recruiters/returning visitors */}
-      <div className="quick-jump-nav" aria-hidden="true">
-        <a href="#work" {...linkCursor}>
-          ↓ Jump to Work
-        </a>
-      </div>
+      
       
       <main className="layer-ui">
         
