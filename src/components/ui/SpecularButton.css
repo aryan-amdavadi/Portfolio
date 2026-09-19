@@ -1,0 +1,112 @@
+.specular-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--bg-layer-2, #111);
+  color: var(--text-primary, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full, 9999px);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+              box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1),
+              background 0.3s ease;
+  outline: none;
+  text-decoration: none;
+}
+
+[data-theme='light'] .specular-button {
+  background: var(--bg-layer-1, #fff);
+  color: var(--text-primary, #111);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.specular-button:hover,
+.specular-button:focus-visible {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='light'] .specular-button:hover,
+[data-theme='light'] .specular-button:focus-visible {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.specular-button:active {
+  transform: scale(0.96);
+}
+
+.specular-button:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg-default, #000), 0 0 0 4px var(--text-primary, #fff);
+}
+
+/* The Specular Light Layer */
+.specular-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 80px at var(--x, 50%) var(--y, 50%),
+    rgba(255, 255, 255, 0.15),
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+[data-theme='light'] .specular-button::before {
+  background: radial-gradient(
+    circle 80px at var(--x, 50%) var(--y, 50%),
+    rgba(0, 0, 0, 0.08),
+    transparent 100%
+  );
+}
+
+.specular-button:hover::before {
+  opacity: 1;
+}
+
+/* Content needs to stay above the light */
+.specular-button-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: inherit;
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  .specular-button {
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .specular-button:active {
+    transform: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme='light'] .specular-button:active {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Disable the dynamic light tracking, just use a static highlight */
+  .specular-button::before {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 100%
+    );
+  }
+}

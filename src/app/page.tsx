@@ -10,6 +10,7 @@ import { SystemArtifactsStack } from '@/components/layout/SystemArtifactsStack';
 import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
 import { MaskedHeading } from '@/components/text/MaskedHeading';
 import { ThinkingProcess } from '@/components/layout/ThinkingProcess';
+import { SpecularButton } from '@/components/ui/SpecularButton';
 
 // Dynamically import heavy WebGL engine to avoid blocking initial render
 const WebGLCanvas = dynamic(() => import('@/canvas/WebGLCanvas'), { ssr: false });
@@ -325,11 +326,9 @@ export default function Home() {
             </h2>
             
             <div className="mt-16" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-8)' }}>
-              <a href="mailto:contact@example.com" {...exploreCursor}>
-                <Button variant="primary" style={{ padding: 'var(--space-4) var(--space-12)', fontSize: 'var(--text-lg)' }}>
-                  START A CONVERSATION
-                </Button>
-              </a>
+              <SpecularButton href="mailto:aryan.amdavadi@gmail.com" style={{ padding: 'var(--space-4) var(--space-12)', fontSize: 'var(--text-lg)' }}>
+                LET&apos;S BUILD
+              </SpecularButton>
               
               <div style={{ display: 'flex', gap: 'var(--space-8)', marginTop: 'var(--space-4)' }}>
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
