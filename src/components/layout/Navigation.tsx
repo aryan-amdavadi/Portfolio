@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ThemeToggle } from './ThemeToggle';
+import { FlowingMenu } from './FlowingMenu';
 
 const MENU_ITEMS = [
-  { num: '01', label: 'WORK' },
-  { num: '02', label: 'THINKING' },
-  { num: '03', label: 'SYSTEM' },
-  { num: '04', label: 'ABOUT' },
-  { num: '05', label: 'CONNECT' },
+  { link: '#work', text: 'WORK', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop' },
+  { link: '#thinking', text: 'THINKING', image: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2564&auto=format&fit=crop' },
+  { link: '#about', text: 'ABOUT', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop' },
+  { link: '#code', text: 'CODE', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2564&auto=format&fit=crop' },
+  { link: '#contact', text: 'CONTACT', image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2564&auto=format&fit=crop' },
 ];
 
 export const Navigation: React.FC = () => {
@@ -61,22 +62,25 @@ export const Navigation: React.FC = () => {
         className="nav-overlay" 
         data-state={isOpen ? 'open' : 'closed'}
         aria-hidden={!isOpen}
+        style={{ 
+          pointerEvents: isOpen ? 'auto' : 'none', 
+          opacity: isOpen ? 1 : 0, 
+          transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)', 
+          position: 'fixed', 
+          inset: 0, 
+          zIndex: 90, 
+          backgroundColor: 'var(--bg-base)'
+        }}
       >
-        <nav className="nav-menu" aria-label="Main Navigation">
-          {MENU_ITEMS.map((item) => (
-            <Link 
-              key={item.num}
-              href={`#${item.label.toLowerCase()}`}
-              className="nav-item"
-              onClick={() => setIsOpen(false)}
-              tabIndex={isOpen ? 0 : -1}
-              {...linkCursor}
-            >
-              <span className="nav-number">{item.num}</span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
+        <FlowingMenu 
+          items={MENU_ITEMS} 
+          onItemClick={() => setIsOpen(false)}
+          isOpen={isOpen}
+          bgColor="transparent"
+          textColor="#ffffff"
+          marqueeBgColor="var(--accent-primary)"
+          marqueeTextColor="#000000"
+        />
       </div>
     </>
   );
