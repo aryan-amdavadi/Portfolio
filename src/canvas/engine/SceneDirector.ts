@@ -3,6 +3,7 @@ import { PrimarySculpture } from '../scenes/PrimarySculpture';
 import { OrbitalNodes } from '../scenes/OrbitalNodes';
 import { FloatingFragments } from '../scenes/FloatingFragments';
 import { ProjectArtifacts } from '../scenes/ProjectArtifacts';
+import { AntigravityField } from '../scenes/AntigravityField';
 import { EngineState } from './EngineState';
 
 /**
@@ -25,6 +26,7 @@ export class SceneDirector {
   private orbitalNodes: OrbitalNodes;
   private floatingFragments: FloatingFragments;
   private projectArtifacts: ProjectArtifacts;
+  private antigravityField: AntigravityField;
   
   // Custom timer instead of deprecated THREE.Clock
   private startTime: number = 0;
@@ -84,6 +86,11 @@ export class SceneDirector {
 
     this.projectArtifacts = new ProjectArtifacts();
     this.scene.add(this.projectArtifacts.group);
+
+    // Initialize Antigravity Field with reduced count on lower tiers
+    const particleCount = this.tier >= 3 ? 300 : (this.tier === 2 ? 150 : 50);
+    this.antigravityField = new AntigravityField({ count: particleCount });
+    this.scene.add(this.antigravityField.group);
 
     window.addEventListener('resize', this.onResize);
     document.addEventListener('visibilitychange', this.onVisibilityChange);
@@ -175,6 +182,7 @@ export class SceneDirector {
     this.orbitalNodes.update(elapsedTime);
     this.floatingFragments.update(elapsedTime);
     this.projectArtifacts.update(elapsedTime);
+    this.antigravityField.update(elapsedTime, this.lerpedPointer, this.state.isReducedMotion);
 
     this.renderer.render(this.scene, this.camera);
 
@@ -189,6 +197,7 @@ export class SceneDirector {
     this.orbitalNodes.dispose();
     this.floatingFragments.dispose();
     this.projectArtifacts.dispose();
+    this.antigravityField.dispose();
     this.renderer.dispose();
   }
 }
