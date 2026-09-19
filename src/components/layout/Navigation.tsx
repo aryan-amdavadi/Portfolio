@@ -77,9 +77,9 @@ export const Navigation: React.FC = () => {
           onItemClick={() => setIsOpen(false)}
           isOpen={isOpen}
           bgColor="transparent"
-          textColor="#ffffff"
-          marqueeBgColor="var(--accent-primary)"
-          marqueeTextColor="#000000"
+          textColor="var(--text-primary)"
+          marqueeBgColor="var(--text-primary)"
+          marqueeTextColor="var(--bg-base)"
         />
       </div>
     </>

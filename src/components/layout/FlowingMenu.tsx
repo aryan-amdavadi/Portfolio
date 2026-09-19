@@ -180,10 +180,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
         onMouseLeave={handleMouseLeave}
         onClick={onItemClick}
         style={{ color: textColor }}
-        data-cursor="open"
         tabIndex={isOpen ? 0 : -1}
       >
-        {text}
+        <span data-cursor="open" style={{ display: 'inline-block' }}>{text}</span>
       </Link>
       <div className="marquee" ref={marqueeRef} style={{ backgroundColor: marqueeBgColor }}>
         <div className="marquee__inner-wrap">

@@ -73,6 +73,7 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line
     setIsMounted(true);
   }, []);
 
