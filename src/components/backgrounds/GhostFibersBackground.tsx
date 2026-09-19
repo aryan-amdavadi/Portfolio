@@ -6,14 +6,14 @@ const GhostFibers = dynamic(() => import('./GhostFibers'), { ssr: false });
 
 export const GhostFibersBackground = () => {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: -10, pointerEvents: 'none', opacity: 0.15 }}>
+    <div style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', zIndex: -10, pointerEvents: 'none' }}>
       <GhostFibers 
-        speed={0.1}
-        lineColor="#3437A0"
-        glowColor="#140E35"
+        speed={0.2}
+        lineColor="#A8B1FF"
+        glowColor="#3437A0"
         layers={3}
-        brightness={1.5}
-        vignette={1.0}
+        brightness={2.0}
+        vignette={0.8}
         lineSharpness={12}
         grain={0.02}
       />

@@ -77,7 +77,7 @@ export class AntigravityField {
       
       const x = (Math.random() - 0.5) * width;
       const y = (Math.random() - 0.5) * height;
-      const z = (Math.random() - 0.5) * 20;
+      const z = -5 - Math.random() * 20; // Keep particles between -5 and -25 to ensure they are visible in front of camera
 
       const randomRadiusOffset = (Math.random() - 0.5) * 2;
 
@@ -94,9 +94,9 @@ export class AntigravityField {
       });
     }
 
-    // Use a small smooth sphere for premium technical feel instead of capsule
-    const geometry = new THREE.SphereGeometry(0.05, 16, 16); 
-    const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.6 });
+    // Use a larger sphere for clear visibility
+    const geometry = new THREE.SphereGeometry(0.2, 16, 16); 
+    const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85 });
     
     this.mesh = new THREE.InstancedMesh(geometry, material, count);
     this.group.add(this.mesh);

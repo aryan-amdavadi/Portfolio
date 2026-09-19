@@ -53,6 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark" className={`${inter.variable} ${jetBrainsMono.variable} ${playfair.variable}`}>
       <body>
+        <div style={{ position: 'fixed', inset: 0, zIndex: -20, backgroundColor: 'var(--bg-base)' }} />
         <GhostFibersBackground />
         <Shell>
           {children}
