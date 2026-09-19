@@ -445,7 +445,7 @@ const DepthCarousel = ({
             aria-hidden={active !== i}
             onClick={() => onCardClick(i)}
           >
-            <Image className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} fill style={{ objectFit: 'cover' }} />
+            <Image className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} fill sizes="(max-width: 768px) 100vw, 400px" style={{ objectFit: 'cover' }} />
             <span
               className="depth-carousel__tint"
               ref={el => {

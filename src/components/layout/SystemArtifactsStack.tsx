@@ -21,6 +21,7 @@ export const SystemArtifactsStack = () => {
           src={`/images/projects/${project.id.toLowerCase()}.jpg`}
           alt={`${project.title} conceptual artifact`}
           fill
+          sizes="(max-width: 768px) 100vw, 400px"
           style={{ objectFit: 'cover' }}
           className="stack-artifact-img"
         />
