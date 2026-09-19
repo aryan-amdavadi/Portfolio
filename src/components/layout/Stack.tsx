@@ -94,7 +94,7 @@ export default function Stack({
     return cards.map((content, index) => ({ 
       id: index + 1, 
       content,
-      randomRotate: randomRotation ? Math.random() * 10 - 5 : 0
+      randomRotate: 0 // deterministic for SSR hydration
     }));
   });
 
