@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { InteractiveDiagram } from '@/components/projects/InteractiveDiagram';
+import { ScrollReveal } from '@/components/text/ScrollReveal';
 
 export async function generateStaticParams() {
   return projects.map((p) => ({
@@ -36,25 +37,39 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
 
       {/* 01 — THE PROBLEM */}
       <section className="cs-section">
-        <span className="cs-label">01 — THE PROBLEM</span>
-        <p className="cs-content">{caseStudy.section01_problem}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          01 — THE PROBLEM
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section01_problem}
+        </ScrollReveal>
       </section>
 
       {/* 02 — THE QUESTION */}
       <section className="cs-section">
-        <span className="cs-label">02 — THE QUESTION</span>
-        <p className="cs-content">{caseStudy.section02_question}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          02 — THE QUESTION
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section02_question}
+        </ScrollReveal>
       </section>
 
-      {/* 03 — THE IDEA */}
+      {/* 03 — THE SYSTEM */}
       <section className="cs-section">
-        <span className="cs-label">03 — THE IDEA</span>
-        <p className="cs-content">{caseStudy.section03_idea}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          03 — THE SYSTEM
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section03_idea}
+        </ScrollReveal>
       </section>
 
       {/* 04 — THE ARCHITECTURE */}
       <section className="cs-section">
-        <span className="cs-label">04 — THE ARCHITECTURE</span>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          04 — THE ARCHITECTURE
+        </ScrollReveal>
         <InteractiveDiagram 
           nodes={caseStudy.section04_architecture.nodes} 
           edges={caseStudy.section04_architecture.edges} 
@@ -63,26 +78,40 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
 
       {/* 05 — THE ENGINEERING CHALLENGE */}
       <section className="cs-section">
-        <span className="cs-label">05 — THE ENGINEERING CHALLENGE</span>
-        <p className="cs-content">{caseStudy.section05_challenge}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          05 — THE ENGINEERING CHALLENGE
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section05_challenge}
+        </ScrollReveal>
       </section>
 
       {/* 06 — THE SOLUTION */}
       <section className="cs-section">
-        <span className="cs-label">06 — THE SOLUTION</span>
-        <p className="cs-content">{caseStudy.section06_solution}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          06 — THE SOLUTION
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section06_solution}
+        </ScrollReveal>
       </section>
 
       {/* 07 — THE RESULT */}
       <section className="cs-section">
-        <span className="cs-label">07 — THE RESULT</span>
-        <p className="cs-content">{caseStudy.section07_result}</p>
+        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+          07 — THE RESULT
+        </ScrollReveal>
+        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
+          {caseStudy.section07_result}
+        </ScrollReveal>
       </section>
 
       {/* 08 & 09 — LIVE SYSTEM & SOURCE */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)' }} className="cs-section">
         <section>
-          <span className="cs-label">08 — LIVE SYSTEM</span>
+          <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+            08 — LIVE SYSTEM
+          </ScrollReveal>
           <p className="cs-content">
             {project.liveUrl && project.liveUrl !== '#' ? (
               <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)' }}>
@@ -95,7 +124,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         </section>
 
         <section>
-          <span className="cs-label">09 — SOURCE</span>
+          <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
+            09 — SOURCE
+          </ScrollReveal>
           <p className="cs-content">
             {project.githubUrl && project.githubUrl !== '#' ? (
               <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)' }}>
