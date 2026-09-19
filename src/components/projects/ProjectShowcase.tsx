@@ -15,24 +15,13 @@ export const ProjectShowcase: React.FC = () => {
     // Artifacts removed as requested by user
   };
 
-  const handleMouseLeave = () => {
-    // Artifacts removed as requested by user
-  };
-
   return (
-    <div className="project-showcase" onMouseLeave={handleMouseLeave}>
+    <div className="project-showcase">
       {projects.map((project) => (
         <div 
           key={project.id} 
           className="project-card"
-          onMouseEnter={() => {
-            handleMouseEnter();
-            exploreCursor.onMouseEnter();
-          }}
-          onMouseLeave={() => {
-            // showcase wrapper already handles mouseleave, but we can call cursor cleanup
-            exploreCursor.onMouseLeave();
-          }}
+          data-cursor="explore"
         >
           <div className="project-meta">
             <h3 className="project-title">{project.title}</h3>

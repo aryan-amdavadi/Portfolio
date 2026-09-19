@@ -29,13 +29,12 @@ export const InteractiveToolset: React.FC = () => {
                 <button
                   key={tech}
                   className={`tech-tag-btn ${isActive ? 'active' : ''} ${activeTech && !isActive ? 'dimmed' : ''}`}
+                  data-cursor="explore"
                   onMouseEnter={() => {
                     setActiveTech(tech);
-                    exploreCursor.onMouseEnter();
                   }}
                   onMouseLeave={() => {
                     setActiveTech(null);
-                    exploreCursor.onMouseLeave();
                   }}
                 >
                   {tech}

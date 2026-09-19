@@ -65,11 +65,11 @@ export const InteractiveDiagram: React.FC<InteractiveDiagramProps> = ({ nodes, e
               key={node.id}
               className={`diagram-node ${isDimmed ? 'dimmed' : ''} ${isActive ? 'active' : ''}`}
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              data-cursor="explore"
               onMouseEnter={() => {
                 setActiveNode(node.id);
-                exploreCursor.onMouseEnter();
               }}
-              onMouseLeave={() => exploreCursor.onMouseLeave()}
+              onMouseLeave={() => setActiveNode(null)}
             >
               {node.label}
             </div>

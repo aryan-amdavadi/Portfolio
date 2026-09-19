@@ -29,7 +29,6 @@ export function useCursorState() {
 
 export function useCursorHandlers(state: CursorState = 'link') {
   return {
-    onMouseEnter: () => cursorManager.setState(state),
-    onMouseLeave: () => cursorManager.setState('default'),
+    'data-cursor': state
   };
 }
