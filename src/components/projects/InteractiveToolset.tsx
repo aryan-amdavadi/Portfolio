@@ -2,11 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import { projects } from '@/data/projects';
-import { useCursorHandlers } from '@/hooks/useCursorState';
 
 export const InteractiveToolset: React.FC = () => {
   const [activeTech, setActiveTech] = useState<string | null>(null);
-  const exploreCursor = useCursorHandlers('explore');
 
   // Extract all unique technologies from projects
   const allTechnologies = useMemo(() => {

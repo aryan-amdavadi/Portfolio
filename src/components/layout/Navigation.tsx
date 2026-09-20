@@ -16,7 +16,6 @@ const MENU_ITEMS = [
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const linkCursor = useCursorHandlers('link');
   
   // Close menu on escape key
   useEffect(() => {

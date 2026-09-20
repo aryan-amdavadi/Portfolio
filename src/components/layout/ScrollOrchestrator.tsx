@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -51,28 +51,28 @@ export const ScrollOrchestrator = () => {
       const tl = timelineRef.current;
       
       tl.to(EngineState, {
-        sculptureX: -6, cameraZ: 10, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureX: -6, cameraZ: 10, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 0)
       .to(EngineState, {
-        sculptureX: -8, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power1.inOut"
+        sculptureX: -8, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power2.inOut"
       }, 1)
       .to(EngineState, {
         sculptureX: 4, sculptureZ: -5, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 2)
       .to(EngineState, {
-        sculptureX: 6, sculptureY: 2, cameraZ: 6, orbitalNodesOpacity: 0, duration: 1, ease: "power1.inOut"
+        sculptureX: 6, sculptureY: 2, cameraZ: 6, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
       }, 3)
       .to(EngineState, {
-        sculptureY: 0, sculptureZ: -15, fogDensity: 0.15, duration: 1, ease: "power3.inOut"
+        sculptureY: 0, sculptureZ: -15, fogDensity: 0.15, duration: 1, ease: "power2.inOut"
       }, 4)
       .to(EngineState, {
-        sculptureZ: 0, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureZ: 0, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 5)
       .to(EngineState, {
         sculptureX: -6, cameraZ: 12, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
       }, 6)
       .to(EngineState, {
-        sculptureX: 4, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureX: 4, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 7)
       .to(EngineState, {
         sculptureX: 6, sculptureZ: -2, cameraZ: 8, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"
@@ -96,28 +96,28 @@ export const ScrollOrchestrator = () => {
       const tl = timelineRef.current;
       
       tl.to(EngineState, {
-        sculptureX: -2, cameraZ: 14, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureX: -2, cameraZ: 14, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 0)
       .to(EngineState, {
-        sculptureX: -2, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power1.inOut"
+        sculptureX: -2, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power2.inOut"
       }, 1)
       .to(EngineState, {
         sculptureX: 2, sculptureZ: -8, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 2)
       .to(EngineState, {
-        sculptureX: 2, sculptureY: 2, cameraZ: 10, orbitalNodesOpacity: 0, duration: 1, ease: "power1.inOut"
+        sculptureX: 2, sculptureY: 2, cameraZ: 10, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
       }, 3)
       .to(EngineState, {
-        sculptureY: 0, sculptureZ: -20, fogDensity: 0.15, duration: 1, ease: "power3.inOut"
+        sculptureY: 0, sculptureZ: -20, fogDensity: 0.15, duration: 1, ease: "power2.inOut"
       }, 4)
       .to(EngineState, {
-        sculptureZ: -4, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureZ: -4, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 5)
       .to(EngineState, {
         sculptureX: -2, cameraZ: 16, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
       }, 6)
       .to(EngineState, {
-        sculptureX: 2, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power1.inOut"
+        sculptureX: 2, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power2.inOut"
       }, 7)
       .to(EngineState, {
         sculptureX: 2, sculptureZ: -5, cameraZ: 12, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"

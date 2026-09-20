@@ -207,9 +207,21 @@ export default function Home() {
         <section id="work" className="scroll-section projects-section">
           <div className="section-content">
             <span className="typography-technical text-muted">04 / THE WORK</span>
-            <h2 className="typography-display mt-4">Projects</h2>
+            <h2 className="typography-display mt-4">Project Exploration</h2>
             
             <ProjectShowcase />
+          </div>
+        </section>
+
+        {/* 5.5 SYSTEM ARTIFACTS */}
+        <section id="artifacts" className="scroll-section">
+          <div className="section-content align-right">
+            <span className="typography-technical text-muted">04.5 / SYSTEM ARTIFACTS</span>
+            <h2 className="typography-display mt-4">Architectural Inspection</h2>
+            <p className="typography-body-large mt-6 max-w-md" style={{ marginLeft: 'auto', marginBottom: 'var(--space-12)' }}>
+              Abstract visual representations of the underlying systems powering each project. Select a card to inspect its composition.
+            </p>
+            
             <SystemArtifactsStack />
           </div>
         </section>

@@ -115,6 +115,8 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
       document.body.style.cursor = 'none';
     }
 
+    const strengthObj = activeStrengthRef.current;
+    
     const cursor = cursorRef.current;
     cornersRef.current = cursor.querySelectorAll<HTMLDivElement>('.target-cursor-corner');
 
@@ -412,7 +414,7 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
       isActiveRef.current = false;
       targetCornerPositionsRef.current = null;
       activeTarget = null;
-      activeStrengthRef.current.current = 0;
+      strengthObj.current = 0;
     };
   }, [
     targetSelector,

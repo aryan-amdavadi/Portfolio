@@ -44,7 +44,7 @@ export const ThinkingProcess: React.FC = () => {
     const items = containerRef.current.querySelectorAll('.thinking-step');
 
     const ctx = gsap.context(() => {
-      items.forEach((item, i) => {
+      items.forEach((item) => {
         gsap.fromTo(
           item,
           { opacity: 0, y: 50 },

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { DiagramNode, DiagramEdge } from '@/data/projects';
-import { useCursorHandlers } from '@/hooks/useCursorState';
 
 interface InteractiveDiagramProps {
   nodes: DiagramNode[];
@@ -11,7 +10,6 @@ interface InteractiveDiagramProps {
 
 export const InteractiveDiagram: React.FC<InteractiveDiagramProps> = ({ nodes, edges }) => {
   const [activeNode, setActiveNode] = useState<string | null>(null);
-  const exploreCursor = useCursorHandlers('explore');
 
   // Find edges related to the active node
   const activeEdges = edges.filter(
