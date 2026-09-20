@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { SceneDirector } from './engine/SceneDirector';
 import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { experienceStore } from '@/store/ExperienceStore';
 
 export default function WebGLCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -12,10 +13,19 @@ export default function WebGLCanvas() {
   const isReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (tier === 0 || !canvasRef.current) return;
+    if (tier === 0) {
+      // If Tier 0, WebGL is skipped. Mark as ready immediately so loading screen progresses.
+      experienceStore.setWebglReady();
+      return;
+    }
+    
+    if (!canvasRef.current) return;
 
     directorRef.current = new SceneDirector(canvasRef.current, tier);
     directorRef.current.start();
+    
+    // Mark WebGL as initialized in the global experience store
+    experienceStore.setWebglReady();
 
     const onPointerMove = (e: PointerEvent) => {
       const x = (e.clientX / window.innerWidth) * 2 - 1;

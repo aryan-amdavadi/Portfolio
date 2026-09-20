@@ -1,0 +1,123 @@
+.experience-bootstrap {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--bg-base, #05060a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary, #ffffff);
+  font-family: var(--font-mono, monospace);
+  pointer-events: all;
+}
+
+.experience-bootstrap--fading {
+  pointer-events: none;
+}
+
+.experience-bootstrap-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  opacity: 1;
+}
+
+.experience-bootstrap__header {
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted, #888);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.experience-bootstrap__divider {
+  width: 40px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 1rem auto;
+}
+
+.experience-bootstrap__indicator {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.experience-bootstrap__indicator::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--text-primary, #ffffff);
+  transition: transform 0.5s ease-out;
+  transform: scale(0.5);
+  opacity: 0.5;
+}
+
+.experience-bootstrap[data-phase="ENVIRONMENT"] .experience-bootstrap__indicator::after {
+  transform: scale(1);
+  opacity: 0.7;
+}
+
+.experience-bootstrap[data-phase="INTERACTION"] .experience-bootstrap__indicator::after {
+  transform: scale(1.5);
+  opacity: 0.85;
+}
+
+.experience-bootstrap[data-phase="IDENTITY"] .experience-bootstrap__indicator::after {
+  transform: scale(2);
+  opacity: 1;
+}
+
+.experience-bootstrap[data-phase="READY"] .experience-bootstrap__indicator::after {
+  transform: scale(3);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1), opacity 0.6s ease;
+}
+
+.experience-bootstrap__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+
+.experience-step {
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.4s ease, opacity 0.4s ease;
+  opacity: 0.5;
+}
+
+.experience-step.is-active {
+  color: var(--text-primary, #ffffff);
+  opacity: 1;
+}
+
+.experience-step.is-complete {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 0.8;
+}
+
+.experience-step--ready {
+  margin-top: 1.5rem;
+  font-weight: bold;
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  .experience-bootstrap__indicator::after {
+    transition: none !important;
+  }
+}

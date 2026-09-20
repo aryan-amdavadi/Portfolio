@@ -44,6 +44,7 @@ export const metadata: Metadata = {
 };
 
 import { GhostFibersBackground } from '@/components/backgrounds/GhostFibersBackground';
+import { ExperienceBootstrap } from '@/components/layout/ExperienceBootstrap';
 
 export default function RootLayout({
   children,
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body>
         <div style={{ position: 'fixed', inset: 0, zIndex: -20, backgroundColor: 'var(--bg-base)' }} />
         <GhostFibersBackground />
+        <ExperienceBootstrap />
         <Shell>
           {children}
         </Shell>

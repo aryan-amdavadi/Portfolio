@@ -11,6 +11,7 @@ import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
 import { MaskedHeading } from '@/components/text/MaskedHeading';
 import { ThinkingProcess } from '@/components/layout/ThinkingProcess';
 import { SpecularButton } from '@/components/ui/SpecularButton';
+import { experienceStore } from '@/store/ExperienceStore';
 
 // Dynamically import heavy WebGL engine to avoid blocking initial render
 const WebGLCanvas = dynamic(() => import('@/canvas/WebGLCanvas'), { ssr: false });
@@ -21,36 +22,64 @@ export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    // Report hero layout is mounted and ready for display
+    experienceStore.setHeroReady();
 
-    const ctx = gsap.context(() => {
-      // Start with elements invisible
-      gsap.set('.hero-fade-up', { y: 20, opacity: 0 });
-      gsap.set('.hero-cta', { y: 20, opacity: 0 });
+    let ctx: gsap.Context;
+    let didStart = false;
 
-      // Animate after MaskedHeading reveals (it takes ~1.2s + 0.5s delay)
-      // The MaskedHeading itself is self-animating, so we just stagger the rest after it
-      gsap.to('.hero-fade-up', {
-        y: 0,
-        opacity: 1,
-        duration: 1.0,
-        stagger: 0.2,
-        ease: 'power3.out',
-        delay: 1.5
+    const startAnimations = () => {
+      if (didStart) return;
+      didStart = true;
+      
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      ctx = gsap.context(() => {
+        // Start with elements invisible
+        gsap.set('.hero-fade-up', { y: 20, opacity: 0 });
+        gsap.set('.hero-cta', { y: 20, opacity: 0 });
+
+        // Animate after MaskedHeading reveals
+        gsap.to('.hero-fade-up', {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          stagger: 0.2,
+          ease: 'power3.out',
+          delay: 0.8
+        });
+
+        gsap.to('.hero-cta', {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          stagger: 0.1,
+          ease: 'power3.out',
+          delay: 1.3
+        });
+      }, heroRef);
+    };
+
+    const currentState = experienceStore.getState();
+    let unsubscribe: (() => void) | null = null;
+
+    if (currentState.hasInitialized || currentState.phase === 'READY') {
+      startAnimations();
+    } else {
+      unsubscribe = experienceStore.subscribe(() => {
+        const nextState = experienceStore.getState();
+        if (nextState.phase === 'READY' || nextState.hasInitialized) {
+          startAnimations();
+          if (unsubscribe) unsubscribe();
+        }
       });
+    }
 
-      gsap.to('.hero-cta', {
-        y: 0,
-        opacity: 1,
-        duration: 1.0,
-        stagger: 0.1,
-        ease: 'power3.out',
-        delay: 2.0
-      });
-    }, heroRef);
-
-    return () => ctx.revert();
+    return () => {
+      if (unsubscribe) unsubscribe();
+      if (ctx) ctx.revert();
+    };
   }, []);
 
   return (
