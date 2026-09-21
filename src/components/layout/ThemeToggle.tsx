@@ -24,6 +24,7 @@ export const ThemeToggle: React.FC = () => {
     setTheme(initialTheme);
     document.documentElement.setAttribute('data-theme', initialTheme);
     EngineState.theme = initialTheme;
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: initialTheme } }));
   }, []);
 
   const toggleTheme = () => {
@@ -32,6 +33,7 @@ export const ThemeToggle: React.FC = () => {
     localStorage.setItem('theme-preference', nextTheme);
     EngineState.theme = nextTheme;
     setTheme(nextTheme);
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: nextTheme } }));
   };
 
   return (

@@ -69,10 +69,12 @@ export class SceneDirector {
 
     const directionalLight = new THREE.DirectionalLight(0x006466, 2);
     directionalLight.position.set(5, 5, 5);
+    directionalLight.name = 'dirLight';
     this.scene.add(directionalLight);
     
     const fillLight = new THREE.DirectionalLight(0x4D194D, 3);
     fillLight.position.set(-5, 0, -5);
+    fillLight.name = 'fillLight';
     this.scene.add(fillLight);
 
     this.sculpture = new PrimarySculpture();
@@ -146,32 +148,36 @@ export class SceneDirector {
 
     // Theme colors
     const darkFogColor = new THREE.Color(0x312244);
-    const lightFogColor = new THREE.Color(0xFEFAE0);
+    const lightFogColor = new THREE.Color(0xFEFAE0); // Warm off-white
     
-    const darkDirColor = new THREE.Color(0x006466);
-    const lightDirColor = new THREE.Color(0x283618);
+    const darkDirColor = new THREE.Color(0x006466); // Cool teal
+    const lightDirColor = new THREE.Color(0x606C38); // Olive
     
-    const darkFillColor = new THREE.Color(0x4D194D);
-    const lightFillColor = new THREE.Color(0xDDA15E);
+    const darkFillColor = new THREE.Color(0x4D194D); // Violet
+    const lightFillColor = new THREE.Color(0xDDA15E); // Copper
     
     const isLight = EngineState.theme === 'light';
     const targetFog = isLight ? lightFogColor : darkFogColor;
+    const targetFogDensity = isLight ? EngineState.fogDensity * 0.5 : EngineState.fogDensity; // Lower fog density in light mode
     const targetDir = isLight ? lightDirColor : darkDirColor;
     const targetFill = isLight ? lightFillColor : darkFillColor;
+    const targetAmbient = isLight ? EngineState.ambientIntensity * 1.5 : EngineState.ambientIntensity; // Brighter ambient
 
     // Sync camera and environment from GSAP controlled EngineState
     this.camera.position.z = EngineState.cameraZ;
     if (this.scene.fog instanceof THREE.FogExp2) {
-      this.scene.fog.density = EngineState.fogDensity;
+      this.scene.fog.density += (targetFogDensity - this.scene.fog.density) * 0.05;
       this.scene.fog.color.lerp(targetFog, 0.05);
     }
     
     // Update lighting
     this.scene.children.forEach(child => {
-      if (child instanceof THREE.DirectionalLight) {
-        if (child.intensity === 2) { // main dir light
+      if (child instanceof THREE.AmbientLight) {
+        child.intensity += (targetAmbient - child.intensity) * 0.05;
+      } else if (child instanceof THREE.DirectionalLight) {
+        if (child.name === 'dirLight') {
           child.color.lerp(targetDir, 0.05);
-        } else if (child.intensity === 3) { // fill light
+        } else if (child.name === 'fillLight') {
           child.color.lerp(targetFill, 0.05);
         }
       }

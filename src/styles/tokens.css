@@ -4,13 +4,13 @@
   /* DARK THEME (Default) */
   --color-dark-bg-1: #212F45;
   --color-dark-bg-2: #272640;
-  
+
   --color-dark-structural: #1B3A4B;
-  
+
   --color-dark-teal-1: #006466;
   --color-dark-teal-2: #065A60;
   --color-dark-teal-3: #0B525B;
-  
+
   --color-dark-violet-1: #312244;
   --color-dark-violet-2: #3E1F47;
   --color-dark-violet-3: #4D194D;
@@ -19,21 +19,22 @@
   --color-light-bg: #FEFAE0;
   --color-light-primary: #283618;
   --color-light-secondary: #606C38;
-  --color-light-accent: #DDA15E;
-  --color-light-highlight: #BC6C25;
+  --color-light-accent: #606C38; /* olive */
+  --color-light-highlight: #BC6C25; /* copper/clay */
+  --color-light-ambient: #DDA15E;
 
   /* --- SEMANTIC THEME VARIABLES (Dark Mode Default) --- */
   --bg-base: var(--color-dark-bg-1);
   --bg-surface: var(--color-dark-bg-2);
   --bg-surface-elevated: var(--color-dark-structural);
-  
+
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-muted: rgba(255, 255, 255, 0.4);
-  
+
   --accent-base: var(--color-dark-teal-1);
   --accent-hover: var(--color-dark-teal-2);
-  
+
   /* Atmospheric lighting meant for canvas/gradients */
   --ambient-light-1: var(--color-dark-violet-1);
   --ambient-light-2: var(--color-dark-violet-3);
@@ -45,17 +46,17 @@
   /* Spacing Scale */
   --space-px: 1px;
   --space-0: 0;
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.5rem;   /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-6: 1.5rem;   /* 24px */
-  --space-8: 2rem;     /* 32px */
-  --space-12: 3rem;    /* 48px */
-  --space-16: 4rem;    /* 64px */
-  --space-24: 6rem;    /* 96px */
-  --space-32: 8rem;    /* 128px */
-  
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
   /* Border Radius (Minimal/Restrained) */
   --radius-none: 0px;
   --radius-sm: 2px;
@@ -73,21 +74,25 @@
 
 [data-theme="light"] {
   --bg-base: var(--color-light-bg);
-  --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F8F5D7;
-  
+  --bg-surface: #F8F5D7;
+  --bg-surface-elevated: #EFE7BC;
+
   --text-primary: var(--color-light-primary);
   --text-secondary: var(--color-light-secondary);
   --text-muted: rgba(40, 54, 24, 0.5);
-  
+
   --accent-base: var(--color-light-accent);
   --accent-hover: var(--color-light-highlight);
-  
-  /* Less atmospheric lighting needed in light mode, but mapped for consistency */
-  --ambient-light-1: #FEFAE0;
-  --ambient-light-2: #DDA15E;
+
+  --ambient-light-1: var(--color-light-ambient);
+  --ambient-light-2: var(--color-light-highlight);
 
   --border-subtle: rgba(40, 54, 24, 0.1);
   --border-strong: rgba(40, 54, 24, 0.3);
   --border-focus: var(--color-light-highlight);
+}
+/* Theme Transition class added to body when theme switches */
+body.theme-transitioning,
+body.theme-transitioning * {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease !important;
 }
