@@ -187,10 +187,34 @@ export default function Home() {
 
 
 
-        {/* 5. ABOUT & CONTEXT */}
+        {/* 5. THINKING (PROCESS) */}
+        <section id="thinking" className="scroll-section" style={{ minHeight: '60vh' }}>
+          <div className="section-content">
+            <span className="typography-technical text-muted">04 / THE PROCESS</span>
+            <h2 className="typography-display mt-4">Engineering Methodology</h2>
+            
+            <div className="mt-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-8)' }}>
+              {[
+                { step: '01', title: 'UNDERSTAND' },
+                { step: '02', title: 'DECOMPOSE' },
+                { step: '03', title: 'DESIGN' },
+                { step: '04', title: 'ENGINEER' },
+                { step: '05', title: 'TEST' },
+                { step: '06', title: 'ITERATE' }
+              ].map(item => (
+                <div key={item.step} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                  <span className="typography-technical text-muted">{item.step}</span>
+                  <span className="typography-technical" style={{ color: 'var(--text-primary)' }}>{item.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. ABOUT & CONTEXT */}
         <section id="about" className="scroll-section">
           <div className="section-content">
-            <span className="typography-technical text-muted">04 / PERSONAL CONTEXT</span>
+            <span className="typography-technical text-muted">05 / PERSONAL CONTEXT</span>
             <h2 className="typography-display mt-4">Profile & Trajectory</h2>
             
             <div className="about-grid mt-12">
@@ -220,7 +244,7 @@ export default function Home() {
                   <p><strong>B.Tech Information Technology</strong></p>
                   <p className="text-muted">Charusat University</p>
                   <div className="mt-4" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-                    {['Product', 'Business', 'Architecture', 'AI'].map(i => (
+                    {['AI', 'Technology', 'Business', 'Finance', 'Product Development', 'System Design'].map(i => (
                       <span key={i} className="tech-tag" style={{ margin: 0 }}>{i}</span>
                     ))}
                   </div>
@@ -230,10 +254,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. CODE */}
+        {/* 7. CODE */}
         <section id="code" className="scroll-section" style={{ minHeight: '100vh' }}>
           <div className="section-content align-center">
-            <span className="typography-technical text-muted">05 / THE CODE</span>
+            <span className="typography-technical text-muted">06 / THE CODE</span>
             <h2 className="typography-display mt-4">Open Source</h2>
             <p className="typography-body mt-6 max-w-md mx-auto">
               Selected public repositories and experimental implementations demonstrating active engineering work.
@@ -280,10 +304,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 7. CONNECT */}
+        {/* 8. CONNECT */}
         <section id="connect" className="scroll-section connect-section" style={{ minHeight: '100vh' }}>
           <div className="section-content align-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            <span className="typography-technical text-muted">06 / CONCLUSION</span>
+            <span className="typography-technical text-muted">07 / CONCLUSION</span>
             <h2 className="typography-display mt-8" style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', lineHeight: 0.9 }}>
               HAVE A PROBLEM?<br />
               <span style={{ color: 'var(--accent-base)' }}>LET&apos;S BUILD IT.</span>
