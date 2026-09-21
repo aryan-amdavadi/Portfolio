@@ -1,25 +1,23 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects } from '@/data/projects';
 import { Button } from '../ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
-import DepthCarousel, { DepthCarouselItem } from '../layout/DepthCarousel';
+import './ProjectShowcase.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const ProjectShowcase: React.FC = () => {
   const exploreCursor = useCursorHandlers('explore');
   const externalCursor = useCursorHandlers('external');
-  const [isMobile, setIsMobile] = React.useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const carouselItems = useMemo(() => {
+  const displayProjects = useMemo(() => {
     return projects.map((project) => ({
       ...project,
       image: `/images/projects/${project.id.toLowerCase()}.jpg`,
@@ -27,71 +25,102 @@ export const ProjectShowcase: React.FC = () => {
     }));
   }, []);
 
-  type ProjectCarouselItem = DepthCarouselItem & {
-    title: string;
-    role: string;
-    problem: string;
-    technology: string[];
-    caseStudyRoute?: string;
-    liveUrl?: string;
-    githubUrl?: string;
-  };
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
-  const renderOverlay = (item: DepthCarouselItem, isActive: boolean) => {
-    const proj = item as ProjectCarouselItem;
-    // Only render full interactive content if active, otherwise maybe just title or nothing.
-    // The depth carousel will automatically handle opacity of non-active items, but we want 
-    // pointer-events to be handled as well.
-    return (
-      <div className={`project-card ${isActive ? 'is-active' : ''}`} style={{ width: '100%', height: '100%', pointerEvents: isActive ? 'auto' : 'none' }}>
-        <div className="project-meta">
-          <h3 className="project-title">{proj.title}</h3>
-          <span className="project-role">{proj.role}</span>
-          <div className="project-tech">
-            {proj.technology?.map((tech: string) => (
-              <span key={tech} className="tech-tag">{tech}</span>
-            ))}
-          </div>
-        </div>
+    const ctx = gsap.context(() => {
+      const stages = gsap.utils.toArray('.project-stage') as HTMLElement[];
+      
+      stages.forEach((stage: HTMLElement) => {
+        const visual = stage.querySelector('.project-visual img');
         
-        <div className="project-details" style={{ opacity: isActive ? 1 : 0, transition: 'opacity 0.4s ease' }}>
-          <p className="project-desc">
-            <strong>System:</strong> {proj.problem}
-          </p>
+        // Main stage transformation
+        gsap.to(stage, {
+          scale: 1,
+          opacity: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: stage,
+            start: 'top 75%',
+            end: 'top 25%',
+            scrub: 1,
+          }
+        });
 
-          <div className="project-links mt-4">
-            {proj.caseStudyRoute && (
-              <Link href={proj.caseStudyRoute} {...exploreCursor} tabIndex={isActive ? 0 : -1}>
-                <Button variant="primary">EXPLORE SYSTEM</Button>
-              </Link>
-            )}
-            {proj.liveUrl && (
-              <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Live demo for ${proj.title}`} {...externalCursor} tabIndex={isActive ? 0 : -1}>
-                <Button variant="outline">LIVE</Button>
-              </a>
-            )}
-            {proj.githubUrl && (
-              <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`GitHub repository for ${proj.title}`} {...externalCursor} tabIndex={isActive ? 0 : -1}>
-                <Button variant="outline">SOURCE</Button>
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
+        // Subtitle visual parallax/rotation
+        if (visual) {
+          gsap.fromTo(visual, 
+            { scale: 1.05, rotation: -2 },
+            { 
+              scale: 1,
+              rotation: 2,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: stage,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+              }
+            }
+          );
+        }
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div className="project-showcase" style={{ width: '100%', height: '600px', position: 'relative' }}>
-      <DepthCarousel 
-        items={carouselItems} 
-        renderOverlay={renderOverlay} 
-        cardWidth={isMobile ? 280 : 350} 
-        cardHeight={isMobile ? 380 : 450} 
-        depth={isMobile ? 180 : 250}
-        tilt={15}
-        showIndicators={false}
-      />
+    <div className="project-showcase" ref={containerRef}>
+      {displayProjects.map((proj) => (
+        <div key={proj.id} className="project-stage">
+          <div className="project-stage-content">
+            <div className="project-info">
+              <span className="project-role">{proj.role}</span>
+              <h3 className="project-title">{proj.title}</h3>
+              
+              <div className="project-tech">
+                {proj.technology?.map((tech: string) => (
+                  <span key={tech} className="tech-tag">{tech}</span>
+                ))}
+              </div>
+              
+              <p className="project-desc mt-4">
+                <strong>System:</strong> {proj.problem}
+              </p>
+
+              <div className="project-links mt-6">
+                {proj.caseStudyRoute && (
+                  <Link href={proj.caseStudyRoute} {...exploreCursor}>
+                    <Button variant="primary">EXPLORE SYSTEM</Button>
+                  </Link>
+                )}
+                {proj.liveUrl && proj.liveUrl !== '#' && (
+                  <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Live demo for ${proj.title}`} {...externalCursor}>
+                    <Button variant="outline">LIVE</Button>
+                  </a>
+                )}
+                {proj.githubUrl && proj.githubUrl !== '#' && (
+                  <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`GitHub repository for ${proj.title}`} {...externalCursor}>
+                    <Button variant="outline">SOURCE</Button>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="project-visual">
+              <Image 
+                src={proj.image} 
+                alt={proj.alt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 500px"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
