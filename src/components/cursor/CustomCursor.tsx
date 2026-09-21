@@ -96,15 +96,14 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
     []
   );
 
+  const xToRef = useRef<gsap.QuickToFunc | null>(null);
+  const yToRef = useRef<gsap.QuickToFunc | null>(null);
+
   const moveCursor = useCallback((x: number, y: number) => {
-    if (!cursorRef.current) return;
+    if (!cursorRef.current || !xToRef.current || !yToRef.current) return;
     const { x: offsetX, y: offsetY } = getContainingBlockOffset(containingBlockRef.current);
-    gsap.to(cursorRef.current, {
-      x: x - offsetX,
-      y: y - offsetY,
-      duration: 0.1,
-      ease: 'power3.out'
-    });
+    xToRef.current(x - offsetX);
+    yToRef.current(y - offsetY);
   }, []);
 
   useEffect(() => {
@@ -141,6 +140,9 @@ export const CustomCursor: React.FC<TargetCursorProps> = ({
       x: window.innerWidth / 2 - initialOffset.x,
       y: window.innerHeight / 2 - initialOffset.y
     });
+
+    xToRef.current = gsap.quickTo(cursor, "x", { duration: 0.1, ease: "power3.out" });
+    yToRef.current = gsap.quickTo(cursor, "y", { duration: 0.1, ease: "power3.out" });
 
     const createSpinTimeline = () => {
       if (spinTl.current) {

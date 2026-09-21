@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface MaskedHeadingProps {
   lines: string[];
@@ -33,7 +36,11 @@ export const MaskedHeading: React.FC<MaskedHeadingProps> = ({
         duration: duration, 
         ease: 'power4.out',
         stagger: 0.15,
-        delay: delay
+        delay: delay,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 90%', // Triggers when the top of the element hits 90% down the viewport
+        }
       });
     }, containerRef);
 
