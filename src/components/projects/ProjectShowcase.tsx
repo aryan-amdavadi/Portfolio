@@ -10,6 +10,14 @@ import DepthCarousel, { DepthCarouselItem } from '../layout/DepthCarousel';
 export const ProjectShowcase: React.FC = () => {
   const exploreCursor = useCursorHandlers('explore');
   const externalCursor = useCursorHandlers('external');
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const carouselItems = useMemo(() => {
     return projects.map((project) => ({
@@ -78,9 +86,9 @@ export const ProjectShowcase: React.FC = () => {
       <DepthCarousel 
         items={carouselItems} 
         renderOverlay={renderOverlay} 
-        cardWidth={350} 
-        cardHeight={450} 
-        depth={250}
+        cardWidth={isMobile ? 280 : 350} 
+        cardHeight={isMobile ? 380 : 450} 
+        depth={isMobile ? 180 : 250}
         tilt={15}
         showIndicators={false}
       />
