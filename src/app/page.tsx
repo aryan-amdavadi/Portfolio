@@ -6,10 +6,7 @@ import gsap from 'gsap';
 import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
-import { SystemArtifactsStack } from '@/components/layout/SystemArtifactsStack';
-import { InteractiveToolset } from '@/components/projects/InteractiveToolset';
 import { MaskedHeading } from '@/components/text/MaskedHeading';
-import { ThinkingProcess } from '@/components/layout/ThinkingProcess';
 import { SpecularButton } from '@/components/ui/SpecularButton';
 import { experienceStore } from '@/store/ExperienceStore';
 
@@ -149,36 +146,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. THE PROBLEMS */}
-        <section id="problems" className="scroll-section">
-          <div className="section-content align-left">
-            <span className="typography-technical text-muted">02 / THE PROBLEMS</span>
+        {/* 3. PROBLEM -> SYSTEM */}
+        <section id="problem-system" className="scroll-section" style={{ minHeight: '80vh' }}>
+          <div className="section-content">
+            <span className="typography-technical text-muted">02 / PROBLEM & SYSTEM</span>
             <h2 className="typography-display mt-4">
-              Problems I&apos;ve<br />Chosen To Solve
+              Complex Problems Require<br />Intentional Systems.
             </h2>
             
-            <ul className="typography-body-large mt-8" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                <span className="typography-technical text-muted">01</span>
-                Expense complexity
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                <span className="typography-technical text-muted">02</span>
-                Pricing & data complexity
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                <span className="typography-technical text-muted">03</span>
-                Commerce systems
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                <span className="typography-technical text-muted">04</span>
-                Procedural language
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-                <span className="typography-technical text-muted">05</span>
-                Health monitoring
-              </li>
-            </ul>
+            <p className="typography-body-large mt-8 max-w-xl">
+              I decompose real-world constraints—expense routing, pricing grids, structural data—and architect robust, deterministic systems to solve them. 
+              From high-throughput backends to fluid user interfaces, every component must serve the system&apos;s overarching purpose.
+            </p>
 
             <div className="mt-16" style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', opacity: 0.6 }}>
               <span className="typography-technical">PROBLEM</span>
@@ -192,71 +171,29 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. THE SYSTEMS */}
-        <section id="systems" className="scroll-section">
-          <div className="section-content align-right">
-            <span className="typography-technical text-muted">03 / THE SYSTEMS</span>
-            <h2 className="typography-h2 mt-4">Architecting Solutions</h2>
-            <p className="typography-body-large mt-6 max-w-md">
-              From high-throughput backends to fluid user interfaces, every component must serve the system&apos;s overarching purpose.
-            </p>
-          </div>
-        </section>
-
-        {/* 5. PROJECTS */}
+        {/* 4. PROJECTS */}
         <section id="work" className="scroll-section projects-section">
           <div className="section-content">
-            <span className="typography-technical text-muted">04 / THE WORK</span>
+            <span className="typography-technical text-muted">03 / THE WORK</span>
             <h2 className="typography-display mt-4">Project Exploration</h2>
             
             <ProjectShowcase />
           </div>
         </section>
 
-        {/* 5.5 SYSTEM ARTIFACTS */}
-        <section id="artifacts" className="scroll-section">
-          <div className="section-content align-right">
-            <span className="typography-technical text-muted">04.5 / SYSTEM ARTIFACTS</span>
-            <h2 className="typography-display mt-4">Architectural Inspection</h2>
-            <p className="typography-body-large mt-6 max-w-md" style={{ marginLeft: 'auto', marginBottom: 'var(--space-12)' }}>
-              Abstract visual representations of the underlying systems powering each project. Select a card to inspect its composition.
-            </p>
-            
-            <SystemArtifactsStack />
-          </div>
-        </section>
 
-        {/* 6. THINKING / THE METHOD */}
-        <section id="thinking" className="scroll-section">
-          <div className="section-content align-left">
-            <span className="typography-technical text-muted">05 / THE METHOD</span>
-            <h2 className="typography-display mt-4">Engineering Process</h2>
-            
-            <ThinkingProcess />
-          </div>
-        </section>
 
-        {/* 7. TOOLSET */}
-        <section id="toolset" className="scroll-section" style={{ minHeight: '150vh' }}>
-          <div className="section-content align-right">
-            <span className="typography-technical text-muted">06 / THE TOOLSET</span>
-            <h2 className="typography-display mt-4">Proven Technologies</h2>
-            <p className="typography-body mt-6 max-w-md" style={{ marginLeft: 'auto' }}>
-              I have used these technologies to build production systems. Hover over a technology to see its application.
-            </p>
-            
-            <InteractiveToolset />
-          </div>
-        </section>
 
-        {/* 8. ABOUT & CONTEXT */}
+
+
+
+        {/* 5. ABOUT & CONTEXT */}
         <section id="about" className="scroll-section">
           <div className="section-content">
-            <span className="typography-technical text-muted">07 / PERSONAL CONTEXT</span>
-            <h2 className="typography-display mt-4">Profile</h2>
+            <span className="typography-technical text-muted">04 / PERSONAL CONTEXT</span>
+            <h2 className="typography-display mt-4">Profile & Trajectory</h2>
             
-            <div className="about-grid">
-              {/* ABOUT */}
+            <div className="about-grid mt-12">
               <div className="about-section-block">
                 <span className="about-label">ABOUT</span>
                 <p className="about-content">
@@ -264,53 +201,39 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* EDUCATION */}
               <div className="about-section-block">
-                <span className="about-label">EDUCATION</span>
+                <span className="about-label">CURRENT PURSUIT</span>
                 <div className="about-content">
-                  <p><strong>B.Tech Information Technology</strong></p>
-                  <p>Charusat University</p>
+                  <div className="current-work-path" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                    <span>FULL-STACK ENGINEERING</span>
+                    <span style={{ color: 'var(--accent-base)' }}>→ AI ENGINEERING</span>
+                  </div>
+                  <p className="mt-4">
+                    Actively expanding my capabilities at the intersection of robust system architecture and generative models.
+                  </p>
                 </div>
               </div>
 
-              {/* INTERESTS */}
               <div className="about-section-block">
-                <span className="about-label">INTERESTS</span>
-                <ul className="interests-list">
-                  <li className="interest-item">Technology</li>
-                  <li className="interest-item">Business</li>
-                  <li className="interest-item">Finance</li>
-                  <li className="interest-item">AI</li>
-                  <li className="interest-item">Product Development</li>
-                  <li className="interest-item">Problem Solving</li>
-                </ul>
+                <span className="about-label">EDUCATION & INTERESTS</span>
+                <div className="about-content">
+                  <p><strong>B.Tech Information Technology</strong></p>
+                  <p className="text-muted">Charusat University</p>
+                  <div className="mt-4" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+                    {['Product', 'Business', 'Architecture', 'AI'].map(i => (
+                      <span key={i} className="tech-tag" style={{ margin: 0 }}>{i}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 9. CURRENTLY BUILDING */}
-        <section id="currently-building" className="scroll-section">
-          <div className="section-content align-left">
-            <span className="typography-technical text-muted">08 / CURRENT WORK</span>
-            <h2 className="typography-display mt-4">Active Pursuits</h2>
-            
-            <div className="current-work-path">
-              <span>FULL-STACK ENGINEERING</span>
-              <span>→ AI ENGINEERING</span>
-              <span>→ PRODUCT BUILDING</span>
-            </div>
-            
-            <p className="typography-body mt-8 max-w-md">
-              I am actively expanding my engineering capabilities, focusing on the intersection of deterministic system architecture and generative models.
-            </p>
-          </div>
-        </section>
-
-        {/* 10. CODE */}
-        <section id="code" className="scroll-section" style={{ minHeight: '120vh' }}>
+        {/* 6. CODE */}
+        <section id="code" className="scroll-section" style={{ minHeight: '100vh' }}>
           <div className="section-content align-center">
-            <span className="typography-technical text-muted">09 / THE CODE</span>
+            <span className="typography-technical text-muted">05 / THE CODE</span>
             <h2 className="typography-display mt-4">Open Source</h2>
             <p className="typography-body mt-6 max-w-md mx-auto">
               Selected public repositories and experimental implementations demonstrating active engineering work.
@@ -357,10 +280,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 11. CONNECT */}
-        <section id="connect" className="scroll-section connect-section" style={{ minHeight: '120vh' }}>
+        {/* 7. CONNECT */}
+        <section id="connect" className="scroll-section connect-section" style={{ minHeight: '100vh' }}>
           <div className="section-content align-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            <span className="typography-technical text-muted">10 / CONCLUSION</span>
+            <span className="typography-technical text-muted">06 / CONCLUSION</span>
             <h2 className="typography-display mt-8" style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', lineHeight: 0.9 }}>
               HAVE A PROBLEM?<br />
               <span style={{ color: 'var(--accent-base)' }}>LET&apos;S BUILD IT.</span>
