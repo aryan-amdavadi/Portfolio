@@ -38,97 +38,55 @@ export const ScrollOrchestrator = () => {
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 769px)", () => {
-      // DESKTOP TIMELINE
+      // DESKTOP TIMELINE: Subtle, continuous spatial response
       timelineRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: '#main-content',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.5,
+          scrub: 1, // Smooth native feel
+          onUpdate: (self) => {
+            EngineState.scrollProgress = self.progress;
+          }
         }
       });
 
       const tl = timelineRef.current;
       
       tl.to(EngineState, {
-        sculptureX: -6, cameraZ: 10, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 0)
-      .to(EngineState, {
-        sculptureX: -8, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power2.inOut"
-      }, 1)
-      .to(EngineState, {
-        sculptureX: 4, sculptureZ: -5, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 2)
-      .to(EngineState, {
-        sculptureX: 6, sculptureY: 2, cameraZ: 6, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 3)
-      .to(EngineState, {
-        sculptureY: 0, sculptureZ: -15, fogDensity: 0.15, duration: 1, ease: "power2.inOut"
-      }, 4)
-      .to(EngineState, {
-        sculptureZ: 0, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 5)
-      .to(EngineState, {
-        sculptureX: -6, cameraZ: 12, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 6)
-      .to(EngineState, {
-        sculptureX: 4, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 7)
-      .to(EngineState, {
-        sculptureX: 6, sculptureZ: -2, cameraZ: 8, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 8)
-      .to(EngineState, {
-        sculptureX: 0, sculptureZ: 0, sculptureRotY: Math.PI * 4, fogDensity: 0.05, fragmentsOpacity: 0, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 9);
+        sculptureRotY: Math.PI * 2, // One full slow rotation over the entire page
+        sculptureZ: -2,             // Slight push back to give content room
+        cameraZ: 7,                 // Subtle zoom in
+        ease: "none"
+      });
     });
 
     mm.add("(max-width: 768px)", () => {
-      // MOBILE TIMELINE (Reduced lateral translation, deeper Z-axis)
+      // MOBILE TIMELINE: Subtle, continuous spatial response, scaled for mobile
       timelineRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: '#main-content',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.5,
+          scrub: 1,
+          onUpdate: (self) => {
+            EngineState.scrollProgress = self.progress;
+          }
         }
       });
 
       const tl = timelineRef.current;
       
       tl.to(EngineState, {
-        sculptureX: -2, cameraZ: 14, sculptureRotY: Math.PI / 4, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 0)
-      .to(EngineState, {
-        sculptureX: -2, sculptureRotX: Math.PI / 2, sculptureRotY: Math.PI, fogDensity: 0.1, orbitalNodesOpacity: 0, fragmentsOpacity: 1, fragmentsScale: 1.5, duration: 1, ease: "power2.inOut"
-      }, 1)
-      .to(EngineState, {
-        sculptureX: 2, sculptureZ: -8, fragmentsScale: 0.1, fragmentsOpacity: 0, orbitalNodesScale: 1, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 2)
-      .to(EngineState, {
-        sculptureX: 2, sculptureY: 2, cameraZ: 10, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 3)
-      .to(EngineState, {
-        sculptureY: 0, sculptureZ: -20, fogDensity: 0.15, duration: 1, ease: "power2.inOut"
-      }, 4)
-      .to(EngineState, {
-        sculptureZ: -4, sculptureRotY: Math.PI * 2, orbitalNodesOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 5)
-      .to(EngineState, {
-        sculptureX: -2, cameraZ: 16, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 6)
-      .to(EngineState, {
-        sculptureX: 2, sculptureRotX: 0, fragmentsOpacity: 1, duration: 1, ease: "power2.inOut"
-      }, 7)
-      .to(EngineState, {
-        sculptureX: 2, sculptureZ: -5, cameraZ: 12, fragmentsOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 8)
-      .to(EngineState, {
-        sculptureX: 0, sculptureZ: 0, sculptureRotY: Math.PI * 4, fogDensity: 0.05, fragmentsOpacity: 0, orbitalNodesOpacity: 0, duration: 1, ease: "power2.inOut"
-      }, 9);
+        sculptureRotY: Math.PI * 2,
+        sculptureZ: -4, 
+        cameraZ: 12, // Needs more distance on mobile
+        ease: "none"
+      });
     });
 
     return () => {
-      mm.revert(); // Revert all matchMedia setups
+      mm.revert(); 
     };
   }, [isReducedMotion]);
 
