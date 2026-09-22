@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { EngineState } from '@/canvas/engine/EngineState';
+import { EngineState, SpatialLanes } from '@/canvas/engine/EngineState';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,14 +14,13 @@ export const ScrollOrchestrator = () => {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useGSAP(() => {
-    // If reduced motion is preferred, we don't orchestrate complex timeline shifts 
-    // to avoid nausea, but we still allow minimal position updates or just keep it static.
     if (isReducedMotion) {
+      EngineState.sculptureX = SpatialLanes.CENTER;
       return;
     }
 
-    // Reset Engine State before creating timeline
-    EngineState.sculptureX = 0;
+    // Initial State Reset
+    EngineState.sculptureX = SpatialLanes.CENTER; // Start center before matchMedia overrides it
     EngineState.sculptureY = 0;
     EngineState.sculptureZ = 0;
     EngineState.sculptureRotY = 0;
@@ -29,22 +28,25 @@ export const ScrollOrchestrator = () => {
     EngineState.cameraZ = 8;
     EngineState.fogDensity = 0.05;
     EngineState.orbitalNodesOpacity = 0;
-    EngineState.orbitalNodesScale = 0; // Starts collapsed
+    EngineState.orbitalNodesScale = 0;
     EngineState.fragmentsOpacity = 0;
-    EngineState.fragmentsScale = 0; // Starts collapsed
+    EngineState.fragmentsScale = 0;
     EngineState.artifactsOpacity = 0;
     EngineState.activeArtifactIndex = -1;
 
     const mm = gsap.matchMedia();
 
+    // Desktop
     mm.add("(min-width: 769px)", () => {
-      // DESKTOP TIMELINE: Subtle, continuous spatial response
+      // Set initial position for desktop
+      EngineState.sculptureX = SpatialLanes.DESKTOP_RIGHT; // Hero text is left
+
       timelineRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: '#main-content',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1, // Smooth native feel
+          scrub: 1, // Smooth interpolation natively provided by GSAP scrub
           onUpdate: (self) => {
             EngineState.scrollProgress = self.progress;
           }
@@ -52,17 +54,35 @@ export const ScrollOrchestrator = () => {
       });
 
       const tl = timelineRef.current;
-      
-      tl.to(EngineState, {
-        sculptureRotY: Math.PI * 2, // One full slow rotation over the entire page
-        sculptureZ: -2,             // Slight push back to give content room
-        cameraZ: 7,                 // Subtle zoom in
-        ease: "none"
-      });
+      const totalRot = Math.PI * 2;
+
+      // Map global scroll to spatial keyframes using labels and relative positions
+      // We assume roughly equal height sections for simplicity in the global timeline, 
+      // or we can just sequence them based on percentages.
+
+      tl.to(EngineState, { sculptureRotY: totalRot, ease: 'none' }, 0); // Constant rotation
+
+      // 1. Hero -> Builder (Text Right, Object Left)
+      tl.to(EngineState, { sculptureX: SpatialLanes.DESKTOP_LEFT, sculptureZ: -2, cameraZ: 7, ease: 'power1.inOut' }, 0.1);
+
+      // 2. Builder -> Problem/System (Text Left, Object Right)
+      tl.to(EngineState, { sculptureX: SpatialLanes.DESKTOP_RIGHT, ease: 'power1.inOut' }, 0.3);
+
+      // 3. Problem/System -> Projects (Text Left/Center, Object Right pushed back)
+      tl.to(EngineState, { sculptureX: SpatialLanes.DESKTOP_RIGHT, sculptureZ: -4, ease: 'power1.inOut' }, 0.5);
+
+      // 4. Projects -> Thinking (Text Left, Object Right brought forward)
+      tl.to(EngineState, { sculptureX: SpatialLanes.DESKTOP_RIGHT, sculptureZ: -2, ease: 'power1.inOut' }, 0.7);
+
+      // 5. Thinking -> Connect (Text Center, Object Left)
+      tl.to(EngineState, { sculptureX: SpatialLanes.DESKTOP_LEFT, ease: 'power1.inOut' }, 0.9);
     });
 
+    // Mobile
     mm.add("(max-width: 768px)", () => {
-      // MOBILE TIMELINE: Subtle, continuous spatial response, scaled for mobile
+      // Set initial position for mobile
+      EngineState.sculptureX = SpatialLanes.MOBILE_RIGHT;
+
       timelineRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: '#main-content',
@@ -77,12 +97,14 @@ export const ScrollOrchestrator = () => {
 
       const tl = timelineRef.current;
       
-      tl.to(EngineState, {
-        sculptureRotY: Math.PI * 2,
-        sculptureZ: -4, 
-        cameraZ: 12, // Needs more distance on mobile
-        ease: "none"
-      });
+      tl.to(EngineState, { sculptureRotY: Math.PI * 2, ease: 'none' }, 0);
+
+      // Reduced movement for mobile, push z back more to ensure it fits
+      tl.to(EngineState, { sculptureX: SpatialLanes.MOBILE_LEFT, sculptureZ: -4, cameraZ: 12, ease: 'power1.inOut' }, 0.1);
+      tl.to(EngineState, { sculptureX: SpatialLanes.MOBILE_RIGHT, ease: 'power1.inOut' }, 0.3);
+      tl.to(EngineState, { sculptureX: SpatialLanes.MOBILE_RIGHT, sculptureZ: -6, ease: 'power1.inOut' }, 0.5);
+      tl.to(EngineState, { sculptureX: SpatialLanes.MOBILE_RIGHT, sculptureZ: -4, ease: 'power1.inOut' }, 0.7);
+      tl.to(EngineState, { sculptureX: SpatialLanes.MOBILE_LEFT, ease: 'power1.inOut' }, 0.9);
     });
 
     return () => {
@@ -90,5 +112,5 @@ export const ScrollOrchestrator = () => {
     };
   }, [isReducedMotion]);
 
-  return null; // Logic only component
+  return null;
 };

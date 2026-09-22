@@ -7,6 +7,14 @@
  * This completely decouples Scroll/Animation logic from React component re-renders.
  */
 
+export const SpatialLanes = {
+  DESKTOP_LEFT: -3.5,
+  DESKTOP_RIGHT: 3.5,
+  MOBILE_LEFT: -1.5,
+  MOBILE_RIGHT: 1.5,
+  CENTER: 0
+};
+
 export const EngineState = {
   // Theme State
   theme: 'dark' as 'dark' | 'light',

@@ -50,10 +50,11 @@ export class PrimarySculpture {
     this.mesh.rotation.y = (time * 0.1) + (pointer.x * 0.1) + EngineState.sculptureRotY;
     this.mesh.rotation.x = (Math.sin(time * 0.2) * 0.1) + (pointer.y * 0.1) + EngineState.sculptureRotX;
     
-    // Apply interpolated positions from GSAP
-    this.mesh.position.x = EngineState.sculptureX;
-    this.mesh.position.y = EngineState.sculptureY;
-    this.mesh.position.z = EngineState.sculptureZ;
+    // Apply interpolated positions from GSAP with a weighty lerp
+    const lerpFactor = 0.05;
+    this.mesh.position.x += (EngineState.sculptureX - this.mesh.position.x) * lerpFactor;
+    this.mesh.position.y += (EngineState.sculptureY - this.mesh.position.y) * lerpFactor;
+    this.mesh.position.z += (EngineState.sculptureZ - this.mesh.position.z) * lerpFactor;
     
     this.mesh.scale.setScalar(EngineState.sculptureScale);
   }
