@@ -1,9 +1,13 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { Metadata } from 'next';
 import { projects } from '@/data/projects';
 import { InteractiveDiagram } from '@/components/projects/InteractiveDiagram';
-import { ScrollReveal } from '@/components/text/ScrollReveal';
-import { Metadata } from 'next';
+import { CaseStudyHero } from '@/components/projects/CaseStudyHero';
+import { CaseStudySection } from '@/components/projects/CaseStudySection';
+import { TechnologyEvidence } from '@/components/projects/TechnologyEvidence';
+import { ProjectLinks } from '@/components/projects/ProjectLinks';
+import { CaseStudyNavigation } from '@/components/projects/CaseStudyNavigation';
+import { AlgorithmVisualizer } from '@/components/projects/AlgorithmVisualizer';
 
 export async function generateStaticParams() {
   return projects.map((p) => ({
@@ -35,174 +39,66 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
   }
 
   const { caseStudy } = project;
-  
   const prevProject = projectIndex > 0 ? projects[projectIndex - 1] : null;
   const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
 
   return (
-    <main className="case-study-container">
-      <header className="case-study-header">
-        <Link href="/#work" className="back-link">
-          ← BACK TO PROJECTS
-        </Link>
-        <h1 className="case-study-title">{project.title}</h1>
-        <div className="case-study-meta">
-          <span>ROLE: {project.role}</span>
-          <span>
-            TECH: {project.technology.join(' / ')}
-          </span>
-        </div>
-      </header>
+    <main className="case-study-container" style={{ padding: 'var(--space-8) 0', maxWidth: '800px', margin: '0 auto' }}>
+      <CaseStudyHero project={project} />
 
-      {/* 01 — OVERVIEW */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          01 — OVERVIEW
-        </ScrollReveal>
-        <div className="cs-content" style={{ marginTop: 'var(--space-4)' }}>
-          <p style={{ marginBottom: 'var(--space-2)' }}><strong>Project:</strong> {project.title}</p>
-          <p style={{ marginBottom: 'var(--space-2)' }}><strong>Description:</strong> {project.problem}</p>
-          <p style={{ marginBottom: 'var(--space-2)' }}><strong>Role:</strong> {project.role}</p>
-          <p style={{ marginBottom: 'var(--space-2)' }}><strong>Stack:</strong> {project.technology.join(' / ')}</p>
-          <p style={{ marginBottom: 'var(--space-2)' }}><strong>Status:</strong> {project.liveUrl && project.liveUrl !== '#' ? 'Production' : 'Completed / Prototype'}</p>
-          {project.liveUrl && project.liveUrl !== '#' && (
-            <p style={{ marginBottom: 'var(--space-2)' }}><strong>Live:</strong> <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)' }}>View Production ↗</a></p>
-          )}
-          {project.githubUrl && project.githubUrl !== '#' && (
-            <p style={{ marginBottom: 'var(--space-2)' }}><strong>Source:</strong> <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)' }}>View Repo ↗</a></p>
-          )}
-        </div>
-      </section>
+      <CaseStudySection number="01" title="THE PROBLEM">
+        <p>{caseStudy.problem}</p>
+      </CaseStudySection>
 
-      {/* 02 — THE PROBLEM */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          02 — THE PROBLEM
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.problem}
-        </ScrollReveal>
-      </section>
+      <CaseStudySection number="02" title="THE IDEA">
+        <p>{caseStudy.idea}</p>
+      </CaseStudySection>
 
-      {/* 03 — THE QUESTION */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          03 — THE QUESTION
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.question}
-        </ScrollReveal>
-      </section>
-
-      {/* 04 — THE SYSTEM */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          04 — THE SYSTEM
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.system}
-        </ScrollReveal>
+      <CaseStudySection number="03" title="THE SYSTEM">
+        <p style={{ marginBottom: 'var(--space-6)' }}>{caseStudy.system}</p>
         {caseStudy.architecture && (
-          <InteractiveDiagram 
-            nodes={caseStudy.architecture.nodes} 
-            edges={caseStudy.architecture.edges} 
-          />
+          <div style={{ marginTop: 'var(--space-6)' }}>
+            <InteractiveDiagram 
+              nodes={caseStudy.architecture.nodes} 
+              edges={caseStudy.architecture.edges} 
+            />
+          </div>
         )}
-      </section>
+      </CaseStudySection>
 
-      {/* 05 — ENGINEERING CHALLENGE */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          05 — ENGINEERING CHALLENGE
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.challenge}
-        </ScrollReveal>
-      </section>
+      <CaseStudySection number="04" title="ENGINEERING CHALLENGE">
+        <p>{caseStudy.challenge}</p>
+      </CaseStudySection>
 
-      {/* 06 — THE SOLUTION */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          06 — THE SOLUTION
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.solution}
-        </ScrollReveal>
-      </section>
+      <CaseStudySection number="05" title="THE SOLUTION">
+        <p>{caseStudy.solution}</p>
+        {project.id === 'splitsphere' && <AlgorithmVisualizer />}
+      </CaseStudySection>
 
-      {/* 07 — ENGINEERING DECISIONS */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          07 — ENGINEERING DECISIONS
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.decisions}
-        </ScrollReveal>
-      </section>
-
-      {/* 08 — RESULT */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          08 — RESULT
-        </ScrollReveal>
-        <ScrollReveal baseRotation={2} blurStrength={2} baseOpacity={0.5} textClassName="cs-content" containerClassName="cs-content-reveal">
-          {caseStudy.result}
-        </ScrollReveal>
-      </section>
-
-      {/* 09 — LIVE / SOURCE */}
-      <section className="cs-section">
-        <ScrollReveal baseRotation={5} blurStrength={8} baseOpacity={0} textClassName="cs-label" containerClassName="cs-label-reveal">
-          09 — LIVE / SOURCE
-        </ScrollReveal>
-        <div className="cs-content">
-          {project.liveUrl && project.liveUrl !== '#' && (
-            <p style={{ marginBottom: 'var(--space-2)' }}>
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                View Live System ↗
-              </a>
-            </p>
-          )}
-          {project.githubUrl && project.githubUrl !== '#' && (
-            <p>
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-base)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                View Source Code ↗
-              </a>
-            </p>
-          )}
-          {(!project.liveUrl || project.liveUrl === '#') && (!project.githubUrl || project.githubUrl === '#') && (
-            <p>Source code and live system are proprietary or currently offline.</p>
-          )}
+      <CaseStudySection number="06" title="ENGINEERING DETAILS">
+        <div style={{ display: 'grid', gap: 'var(--space-6)' }}>
+          {caseStudy.details.map((detail, index) => (
+            <div key={index} style={{ borderLeft: '2px solid var(--border)', paddingLeft: 'var(--space-4)' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 500, marginBottom: 'var(--space-2)' }}>{detail.title}</h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>{detail.content}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </CaseStudySection>
 
-      {/* NAVIGATION */}
-      <nav className="case-study-nav" style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginTop: '10vh', 
-        paddingTop: 'var(--space-6)', 
-        borderTop: '1px solid var(--border)',
-        flexWrap: 'wrap',
-        gap: 'var(--space-4)'
-      }}>
-        {prevProject ? (
-          <Link href={prevProject.caseStudyRoute || `/projects/${prevProject.id}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', letterSpacing: '0.05em' }}>
-            ← PREVIOUS: {prevProject.title.toUpperCase()}
-          </Link>
-        ) : <div style={{ width: '150px' }} />}
+      <CaseStudySection number="07" title="RESULT">
+        <p>{caseStudy.result}</p>
+      </CaseStudySection>
 
-        <Link href="/#work" style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500, fontSize: '0.9rem', letterSpacing: '0.1em' }}>
-          BACK TO WORK
-        </Link>
+      <CaseStudySection number="08" title="TECHNOLOGY">
+        <TechnologyEvidence technologies={project.technology} />
+      </CaseStudySection>
 
-        {nextProject ? (
-          <Link href={nextProject.caseStudyRoute || `/projects/${nextProject.id}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', letterSpacing: '0.05em' }}>
-            NEXT: {nextProject.title.toUpperCase()} →
-          </Link>
-        ) : <div style={{ width: '150px' }} />}
-      </nav>
+      <CaseStudySection number="09" title="SOURCE / LIVE">
+        <ProjectLinks githubUrl={project.githubUrl} liveUrl={project.liveUrl} />
+      </CaseStudySection>
+
+      <CaseStudyNavigation prevProject={prevProject} nextProject={nextProject} />
     </main>
   );
 }
