@@ -57,59 +57,40 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { transformOrigin: '0% 50%', rotate: baseRotation },
-        {
-          ease: 'none',
-          rotate: 0,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top bottom',
-            end: rotationEnd,
-            scrub: true
-          }
-        }
-      );
-
       const wordElements = el.querySelectorAll<HTMLElement>('.scroll-reveal-word');
 
-      gsap.fromTo(
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          scroller,
+          start: 'top bottom',
+          end: wordAnimationEnd,
+          scrub: true
+        }
+      });
+
+      tl.fromTo(
+        el,
+        { transformOrigin: '0% 50%', rotate: baseRotation },
+        { ease: 'none', rotate: 0 },
+        0
+      );
+
+      tl.fromTo(
         wordElements,
-        { opacity: baseOpacity, willChange: 'opacity' },
+        { 
+          opacity: baseOpacity, 
+          willChange: 'opacity, filter',
+          filter: enableBlur ? `blur(${blurStrength}px)` : 'none'
+        },
         {
           ease: 'none',
           opacity: 1,
-          stagger: 0.05,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top bottom-=20%',
-            end: wordAnimationEnd,
-            scrub: true
-          }
-        }
+          filter: enableBlur ? 'blur(0px)' : 'none',
+          stagger: 0.05
+        },
+        0
       );
-
-      if (enableBlur) {
-        gsap.fromTo(
-          wordElements,
-          { filter: `blur(${blurStrength}px)` },
-          {
-            ease: 'none',
-            filter: 'blur(0px)',
-            stagger: 0.05,
-            scrollTrigger: {
-              trigger: el,
-              scroller,
-              start: 'top bottom-=20%',
-              end: wordAnimationEnd,
-              scrub: true
-            }
-          }
-        );
-      }
     }, el);
 
     return () => ctx.revert();
