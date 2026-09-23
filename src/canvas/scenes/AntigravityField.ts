@@ -3,208 +3,186 @@ import { EngineState } from '../engine/EngineState';
 
 export interface AntigravityFieldOptions {
   count?: number;
-  magnetRadius?: number;
-  ringRadius?: number;
-  waveSpeed?: number;
-  waveAmplitude?: number;
-  particleSize?: number;
-  lerpSpeed?: number;
   color?: number | string;
-  particleVariance?: number;
-  rotationSpeed?: number;
-  depthFactor?: number;
-  pulseSpeed?: number;
-  fieldStrength?: number;
 }
 
-export interface AntigravityParticle {
-  t: number;
-  speed: number;
-  mx: number;
-  my: number;
-  mz: number;
-  cx: number;
-  cy: number;
-  cz: number;
-  randomRadiusOffset: number;
+const vertexShader = `
+uniform float uTime;
+uniform vec2 uPointer;
+uniform float uState;
+uniform float uReducedMotion;
+
+attribute vec3 aBasePosition;
+attribute vec3 aParams; // x: speed, y: randomRadiusOffset, z: randomSeed
+
+varying float vScale;
+
+void main() {
+    float speed = aParams.x;
+    float randomRadiusOffset = aParams.y;
+    float rSeed = aParams.z;
+    
+    // Determine simulated time, freeze if reduced motion
+    float t = uReducedMotion > 0.5 ? 0.0 : (uTime * speed * 50.0 + rSeed * 100.0);
+    
+    vec3 basePos = aBasePosition;
+    
+    float magnetRadius = 10.0 * (1.0 + uState * 0.5);
+    float ringRadius = 10.0;
+    float waveSpeed = 0.4;
+    float waveAmplitude = 1.0;
+    float fieldStrength = 10.0;
+    
+    // Virtual width/height ~ 100
+    vec2 projectedTarget = uPointer * 50.0; 
+    
+    // Depth projection factor
+    float projectionFactor = 1.0 - (basePos.z / 50.0);
+    projectedTarget *= projectionFactor;
+    
+    vec2 d = basePos.xy - projectedTarget;
+    float dist = length(d);
+    
+    vec3 targetPos = basePos;
+    float scaleFactor = 0.0;
+    
+    if (uReducedMotion < 0.5) {
+        if (dist < magnetRadius) {
+            float angle = atan(d.y, d.x);
+            float wave = sin(t * waveSpeed + angle) * (0.5 * waveAmplitude);
+            float deviation = randomRadiusOffset * (5.0 / (fieldStrength + 0.1));
+            
+            float currentRingRadius = ringRadius + wave + deviation;
+            
+            targetPos.x = projectedTarget.x + currentRingRadius * cos(angle);
+            targetPos.y = projectedTarget.y + currentRingRadius * sin(angle);
+            targetPos.z = basePos.z + sin(t) * waveAmplitude;
+            
+            float currentDistToMouse = length(targetPos.xy - projectedTarget);
+            float distFromRing = abs(currentDistToMouse - ringRadius);
+            scaleFactor = 1.0 - (distFromRing / 10.0);
+        } else {
+            if (uState > 1.5) {
+                targetPos.x = basePos.x * 0.5 + sin(t + rSeed) * 5.0;
+                targetPos.y = basePos.y * 0.5 + cos(t - rSeed) * 5.0;
+            }
+        }
+    }
+    
+    scaleFactor = clamp(scaleFactor, 0.0, 1.0);
+    float finalScale = scaleFactor * (0.8 + sin(t * 3.0) * 0.2) * 2.0;
+    finalScale = max(0.2, finalScale);
+    
+    vScale = finalScale;
+    
+    vec3 transformed = position * finalScale + targetPos;
+    
+    // Three.js InstancedMesh uses instanceMatrix
+    vec4 mvPosition = modelViewMatrix * instanceMatrix * vec4(transformed, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
 }
+`;
+
+const fragmentShader = `
+uniform vec3 uColor;
+varying float vScale;
+
+void main() {
+    float alpha = 0.6 + (vScale * 0.1);
+    gl_FragColor = vec4(uColor, alpha);
+}
+`;
 
 export class AntigravityField {
   public group: THREE.Group;
   private mesh!: THREE.InstancedMesh;
-  private dummy: THREE.Object3D;
-  private particles: AntigravityParticle[] = [];
-  private virtualMouse: THREE.Vector2;
-  private lastMousePos: THREE.Vector2;
-  
+  private material!: THREE.ShaderMaterial;
   private options: Required<AntigravityFieldOptions>;
+  private targetColor: THREE.Color;
 
   constructor(options: AntigravityFieldOptions = {}) {
     this.options = {
       count: 300,
-      magnetRadius: 10,
-      ringRadius: 10,
-      waveSpeed: 0.4,
-      waveAmplitude: 1,
-      particleSize: 2,
-      lerpSpeed: 0.1,
       color: 0xFF9FFC,
-      particleVariance: 1,
-      rotationSpeed: 0,
-      depthFactor: 1,
-      pulseSpeed: 3,
-      fieldStrength: 10,
       ...options
     };
 
     this.group = new THREE.Group();
-    this.dummy = new THREE.Object3D();
-    this.virtualMouse = new THREE.Vector2(0, 0);
-    this.lastMousePos = new THREE.Vector2(0, 0);
-
+    this.targetColor = new THREE.Color(this.options.color);
     this.initParticles();
   }
 
   private initParticles() {
-    const { count, color } = this.options;
-    // We don't have access to viewport width/height directly in init, we'll assume a bounding box
+    const { count } = this.options;
     const width = 100;
     const height = 100;
 
+    const basePositions = new Float32Array(count * 3);
+    const params = new Float32Array(count * 3); // x: speed, y: randomRadiusOffset, z: randomSeed
+
     for (let i = 0; i < count; i++) {
-      const t = Math.random() * 100;
-      const speed = 0.01 + Math.random() / 200;
+      const i3 = i * 3;
       
-      const x = (Math.random() - 0.5) * width;
-      const y = (Math.random() - 0.5) * height;
-      const z = -5 - Math.random() * 20; // Keep particles between -5 and -25 to ensure they are visible in front of camera
+      basePositions[i3 + 0] = (Math.random() - 0.5) * width;
+      basePositions[i3 + 1] = (Math.random() - 0.5) * height;
+      basePositions[i3 + 2] = -5 - Math.random() * 20;
 
-      const randomRadiusOffset = (Math.random() - 0.5) * 2;
-
-      this.particles.push({
-        t,
-        speed,
-        mx: x,
-        my: y,
-        mz: z,
-        cx: x,
-        cy: y,
-        cz: z,
-        randomRadiusOffset
-      });
+      params[i3 + 0] = 0.01 + Math.random() / 200; // speed
+      params[i3 + 1] = (Math.random() - 0.5) * 2; // randomRadiusOffset
+      params[i3 + 2] = Math.random() * 100; // randomSeed
     }
 
-    // Use a larger sphere for clear visibility
-    const geometry = new THREE.SphereGeometry(0.2, 16, 16); 
-    const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85 });
+    const geometry = new THREE.SphereGeometry(0.2, 16, 16);
+    geometry.setAttribute('aBasePosition', new THREE.InstancedBufferAttribute(basePositions, 3));
+    geometry.setAttribute('aParams', new THREE.InstancedBufferAttribute(params, 3));
+
+    this.material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uPointer: { value: new THREE.Vector2(0, 0) },
+        uState: { value: 0 },
+        uReducedMotion: { value: 0 },
+        uColor: { value: this.targetColor }
+      },
+      transparent: true,
+      blending: THREE.NormalBlending,
+      depthWrite: false
+    });
+
+    this.mesh = new THREE.InstancedMesh(geometry, this.material, count);
     
-    this.mesh = new THREE.InstancedMesh(geometry, material, count);
+    // Initialize instance matrices to identity so the shader math isn't multiplied by 0
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < count; i++) {
+      this.mesh.setMatrixAt(i, dummy.matrix);
+    }
+    this.mesh.instanceMatrix.needsUpdate = true;
+    
     this.group.add(this.mesh);
   }
 
   public update(time: number, pointer: { x: number, y: number }, isReducedMotion: boolean = false) {
-    if (isReducedMotion) {
-      // In reduced motion, just keep them static and don't react to pointer
-      return;
-    }
-
-    // Convert normalized pointer (-1 to 1) to world coordinates approximate to our z=0 plane
-    // Assume camera is at z=50, fov=35. We'll map pointer to our virtual bounding box
-    const vWidth = 100;
-    const vHeight = 100;
-    
-    const m = { x: pointer.x, y: pointer.y };
-    const destX = (m.x * vWidth) / 2;
-    const destY = (m.y * vHeight) / 2;
-
-    const smoothFactor = 0.05;
-    this.virtualMouse.x += (destX - this.virtualMouse.x) * smoothFactor;
-    this.virtualMouse.y += (destY - this.virtualMouse.y) * smoothFactor;
-
-    const targetX = this.virtualMouse.x;
-    const targetY = this.virtualMouse.y;
-
-    const globalRotation = time * this.options.rotationSpeed;
-
-    // React to system state from EngineState.
-    // Map scroll progress (0-1) to state (0-2)
-    const state = EngineState.scrollProgress * 2; 
-
-    const dynamicMagnetRadius = this.options.magnetRadius * (1 + state * 0.5);
-    const dynamicLerpSpeed = this.options.lerpSpeed * (1 + state);
-    
-    // Theme colors
+    // 1. Determine theme target color
     const isLight = EngineState.theme === 'light';
-    const targetColor = isLight ? new THREE.Color(0x606C38) : new THREE.Color(0xFF9FFC);
-    (this.mesh.material as THREE.MeshBasicMaterial).color.lerp(targetColor, 0.05);
+    const desiredColorHex = isLight ? 0x606C38 : 0xFF9FFC;
+    
+    // Smoothly lerp color (CPU side, only done once per frame for the uniform)
+    this.targetColor.lerp(new THREE.Color(desiredColorHex), 0.05);
 
-    this.particles.forEach((particle, i) => {
-      const { speed, mx, my, mz, cz, randomRadiusOffset } = particle;
-
-      particle.t += speed / 2;
-      const t = particle.t;
-
-      const projectionFactor = 1 - cz / 50;
-      const projectedTargetX = targetX * projectionFactor;
-      const projectedTargetY = targetY * projectionFactor;
-
-      const dx = mx - projectedTargetX;
-      const dy = my - projectedTargetY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      const targetPos = { x: mx, y: my, z: mz * this.options.depthFactor };
-
-      if (dist < dynamicMagnetRadius) {
-        const angle = Math.atan2(dy, dx) + globalRotation;
-
-        const wave = Math.sin(t * this.options.waveSpeed + angle) * (0.5 * this.options.waveAmplitude);
-        const deviation = randomRadiusOffset * (5 / (this.options.fieldStrength + 0.1));
-
-        const currentRingRadius = this.options.ringRadius + wave + deviation;
-
-        targetPos.x = projectedTargetX + currentRingRadius * Math.cos(angle);
-        targetPos.y = projectedTargetY + currentRingRadius * Math.sin(angle);
-        targetPos.z = mz * this.options.depthFactor + Math.sin(t) * (1 * this.options.waveAmplitude * this.options.depthFactor);
-      } else {
-        // System structure pull if state is high
-        if (state > 1.5) {
-            targetPos.x = mx * 0.5 + Math.sin(t + i) * 5;
-            targetPos.y = my * 0.5 + Math.cos(t - i) * 5;
-        }
-      }
-
-      particle.cx += (targetPos.x - particle.cx) * dynamicLerpSpeed;
-      particle.cy += (targetPos.y - particle.cy) * dynamicLerpSpeed;
-      particle.cz += (targetPos.z - particle.cz) * dynamicLerpSpeed;
-
-      this.dummy.position.set(particle.cx, particle.cy, particle.cz);
-      this.dummy.lookAt(projectedTargetX, projectedTargetY, particle.cz);
-      this.dummy.rotateX(Math.PI / 2);
-
-      const currentDistToMouse = Math.sqrt(
-        Math.pow(particle.cx - projectedTargetX, 2) + Math.pow(particle.cy - projectedTargetY, 2)
-      );
-
-      const distFromRing = Math.abs(currentDistToMouse - this.options.ringRadius);
-      let scaleFactor = 1 - distFromRing / 10;
-      scaleFactor = Math.max(0, Math.min(1, scaleFactor));
-
-      const finalScale = scaleFactor * (0.8 + Math.sin(t * this.options.pulseSpeed) * 0.2 * this.options.particleVariance) * this.options.particleSize;
-      
-      // Make non-ring particles slightly visible too
-      const baseScale = Math.max(0.2, finalScale);
-      
-      this.dummy.scale.set(baseScale, baseScale, baseScale);
-      this.dummy.updateMatrix();
-
-      this.mesh.setMatrixAt(i, this.dummy.matrix);
-    });
-
-    this.mesh.instanceMatrix.needsUpdate = true;
+    // 2. Pass lightweight uniforms to GPU
+    this.material.uniforms.uTime.value = time;
+    this.material.uniforms.uPointer.value.set(pointer.x, pointer.y);
+    this.material.uniforms.uState.value = EngineState.scrollProgress * 2;
+    this.material.uniforms.uReducedMotion.value = isReducedMotion ? 1 : 0;
+    this.material.uniforms.uColor.value.copy(this.targetColor);
+    
+    // Absolutely NO per-particle CPU math! The GPU Vertex Shader handles everything.
   }
 
   public dispose() {
     this.mesh.geometry.dispose();
-    (this.mesh.material as THREE.Material).dispose();
+    this.material.dispose();
   }
 }
