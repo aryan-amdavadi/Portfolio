@@ -232,7 +232,7 @@ export default function Home() {
                 <a href="https://github.com/aryan-amdavadi" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
                   GITHUB
                 </a>
-                <a href="mailto:contact@example.com" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...exploreCursor}>
+                <a href="mailto:aryan.amdavadi@gmail.com" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...exploreCursor}>
                   EMAIL
                 </a>
               </div>
