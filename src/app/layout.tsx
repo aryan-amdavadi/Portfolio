@@ -1,11 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { Shell } from '@/components/layout/Shell';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-serif' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aryanamdavadi.com'),
@@ -52,7 +47,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="dark" className={`${inter.variable} ${jetBrainsMono.variable} ${playfair.variable}`}>
+    <html lang="en" data-theme="dark">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" />
+      </head>
       <body>
         <div style={{ position: 'fixed', inset: 0, zIndex: -20, backgroundColor: 'var(--bg-base)' }} />
         <GhostFibersBackground />
