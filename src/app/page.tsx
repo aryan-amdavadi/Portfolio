@@ -28,7 +28,7 @@ export default function Home() {
     const startAnimations = () => {
       if (didStart) return;
       didStart = true;
-      
+
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
@@ -82,11 +82,11 @@ export default function Home() {
   return (
     <>
       <WebGLCanvas />
-      
-      
-      
+
+
+
       <main className="layer-ui">
-        
+
         {/* 1. HERO */}
         <section className="scroll-section hero-section" ref={heroRef}>
           <div className="section-content">
@@ -99,9 +99,9 @@ export default function Home() {
                   FULL-STACK ENGINEER / AI ENGINEERING IN PROGRESS
                 </span>
               </div>
-              
-              <MaskedHeading 
-                lines={["I Build Systems", "For Real-World", "Problems."]} 
+
+              <MaskedHeading
+                lines={["I Build Systems", "For Real-World", "Problems."]}
                 className="typography-display"
                 delay={0.5}
                 duration={1.2}
@@ -127,7 +127,7 @@ export default function Home() {
         <section id="builder" className="scroll-section">
           <div className="section-content align-right">
             <span className="typography-technical text-muted">01 / THE BUILDER</span>
-            
+
             <div className="mt-8">
               <span className="typography-technical" style={{ display: 'block', marginBottom: 'var(--space-2)' }}>
                 FULL-STACK ENGINEERING
@@ -153,9 +153,9 @@ export default function Home() {
             <h2 className="typography-display mt-4">
               Complex Problems Require<br />Intentional Systems.
             </h2>
-            
+
             <p className="typography-body-large mt-8 max-w-xl">
-              I decompose real-world constraints—expense routing, pricing grids, structural data—and architect robust, deterministic systems to solve them. 
+              I decompose real-world constraints—expense routing, pricing grids, structural data—and architect robust, deterministic systems to solve them.
               From high-throughput backends to fluid user interfaces, every component must serve the system&apos;s overarching purpose.
             </p>
 
@@ -176,7 +176,7 @@ export default function Home() {
           <div className="section-content">
             <span className="typography-technical text-muted">03 / THE WORK</span>
             <h2 className="typography-display mt-4">Project Exploration</h2>
-            
+
             <ProjectShowcase />
           </div>
         </section>
@@ -192,7 +192,7 @@ export default function Home() {
           <div className="section-content">
             <span className="typography-technical text-muted">04 / THE PROCESS</span>
             <h2 className="typography-display mt-4">Engineering Methodology</h2>
-            
+
             <div className="mt-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-8)' }}>
               {[
                 { step: '01', title: 'UNDERSTAND' },
@@ -219,12 +219,12 @@ export default function Home() {
               HAVE A PROBLEM?<br />
               <span style={{ color: 'var(--accent-base)' }}>LET&apos;S BUILD IT.</span>
             </h2>
-            
+
             <div className="mt-16" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-8)' }}>
               <SpecularButton href="mailto:aryan.amdavadi@gmail.com" style={{ padding: 'var(--space-4) var(--space-12)', fontSize: 'var(--text-lg)' }}>
                 LET&apos;S BUILD
               </SpecularButton>
-              
+
               <div style={{ display: 'flex', gap: 'var(--space-8)', marginTop: 'var(--space-4)' }}>
                 <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
                   LINKEDIN
@@ -232,7 +232,7 @@ export default function Home() {
                 <a href="https://github.com/aryan-amdavadi" target="_blank" rel="noopener noreferrer" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...useCursorHandlers('external')}>
                   GITHUB
                 </a>
-                <a href="mailto:aryan.amdavadi@gmail.com" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...exploreCursor}>
+                <a href="mailto:aryanb4256@gmail.com" className="typography-technical text-muted hover:text-white" style={{ transition: 'color 0.3s ease' }} {...exploreCursor}>
                   EMAIL
                 </a>
               </div>
