@@ -49,19 +49,18 @@ export const projects: Project[] = [
     title: 'SplitSphere',
     category: 'Full-Stack Application',
     problem: 'Managing shared expenses across connected groups creates cyclic debt patterns that are computationally expensive to resolve.',
-    solution: 'A directed graph reduction algorithm modeling and settling complex financial relationships.',
+    solution: 'Built an AI-first collaborative expense splitting and financial coordination platform to calculate optimal settlements.',
     technology: ['Node.js', 'Express', 'TypeScript', 'Prisma', 'PostgreSQL', 'Better Auth', 'Swagger'],
     role: 'Full-Stack Engineer',
     githubUrl: 'https://github.com/aryan-amdavadi/SplitSphere',
-    liveUrl: '#',
     caseStudyRoute: '/projects/splitsphere',
     artifactIndex: 0,
     image: '/images/projects/splitsphere.jpg',
     alt: 'SplitSphere application architecture',
     caseStudy: {
       problem: 'When individuals share expenses in highly connected groups, the resulting debt graph contains complex cycles. Resolving these using naive approaches results in N^2 transactions, degrading both UX and backend performance.',
-      idea: 'A centralized system to manage group expenses that automatically calculates the minimum cash flow required to settle all debts.',
-      system: 'The system uses a graph-based representation where users are nodes and debts are directed edges. It includes session-based authentication via Better Auth (HTTP-only cookies), PostgreSQL for state, and a Node.js/Express API layer that ingests structured split data.',
+      idea: 'An AI-first collaborative expense splitting and financial coordination platform to manage groups and automatically calculate minimum cash flow settlements.',
+      system: 'The system uses a graph-based representation where users are nodes and debts are directed edges. It includes session-based authentication via Better Auth (HTTP-only cookies), PostgreSQL for persistent sessions, and a Node.js/Express API layer that ingests structured expense data.',
       architecture: {
         nodes: [
           { id: 'auth', label: 'Auth Layer (Better Auth)', x: 10, y: 50, description: 'Handles session/cookies.' },
@@ -76,34 +75,33 @@ export const projects: Project[] = [
           { source: 'engine', target: 'db', animated: false }
         ]
       },
-      challenge: 'The hardest engineering challenge is calculating the net balances and applying a minimum cash flow algorithm to a complex graph of debts, eliminating cyclic debt without dropping any financial obligations.',
-      solution: 'We implemented a max-flow min-cut inspired graph reduction algorithm on the backend that recalculates the optimal settlement path anytime a group expense is added or modified. The engine traverses multiple users, maps individual obligations, reduces debts, and yields an optimized settlement graph.',
+      challenge: 'Calculating net balances and applying a minimum cash flow settlement across a complex graph of debts, eliminating cyclic debt without dropping any financial obligations.',
+      solution: 'Built a minimum cash-flow settlement algorithm on the backend that recalculates the optimal settlement path anytime a group expense is added or modified. The engine traverses multiple users, maps individual obligations, reduces debts, and yields an optimized settlement graph.',
       details: [
-        { title: 'Authentication', content: 'Session authentication implemented via Better Auth, utilizing HTTP-only cookies and persistent, PostgreSQL-backed sessions to secure protected user routes.' },
-        { title: 'Algorithms', content: 'Minimum cash flow algorithm built for optimal settlement, executing efficiently over the structured expense split graph.' },
-        { title: 'State Management', content: 'Group memberships and running expense balances are strictly managed in relational PostgreSQL tables via Prisma ORM.' }
+        { title: 'Authentication', content: 'Implemented secure session authentication using Better Auth with HTTP-only cookies and persistent PostgreSQL-backed sessions.' },
+        { title: 'Balance Calculation', content: 'Developed a minimum cash flow algorithm to resolve cyclic debts and calculate the fewest required transactions to settle all group balances.' },
+        { title: 'State Management', content: 'Managed users, groups, memberships, expenses, and splits in relational PostgreSQL tables via Prisma ORM.' }
       ],
-      result: 'The system accurately computes optimal settlement paths for any number of users and expenses, significantly reducing the total number of transactions required to settle balances within a group.'
+      result: 'The system accurately computes optimal settlement paths for any number of users and expenses, successfully reducing the total number of transactions required to settle balances within a group.'
     }
   },
   {
     id: 'rapaport',
     title: 'Rapaport Calculator',
     category: 'Data Pricing Engine',
-    problem: 'Pricing models for crystalline assets require complex matrix evaluations against volatile real-time data.',
-    solution: 'A high-performance calculation flow utilizing structured pricing data ingestion.',
+    problem: 'Pricing models for crystalline assets require complex matrix evaluations against structured data.',
+    solution: 'Built a pricing-data and calculation system for diamond-market workflows to ingest and query large matrices.',
     technology: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'ShadCN', 'Zod', 'TanStack Table', 'Node.js', 'PostgreSQL'],
     role: 'Lead Developer',
     githubUrl: 'https://github.com/aryan-amdavadi/Rapaport-Calculator',
-    liveUrl: '#',
     caseStudyRoute: '/projects/rapaport',
     artifactIndex: 1,
     image: '/images/projects/rapaport.jpg',
     alt: 'Rapaport Calculator interface',
     caseStudy: {
-      problem: 'The diamond and gemstone industry relies on the Rapaport pricing matrix. Transforming this vast, structured pricing data via Excel ingestion into a usable, searchable database calculation workflow is typically a brittle, error-prone process.',
-      idea: 'A reliable pipeline that ingests complex Excel pricing matrices and exposes them for lightning-fast historical and recent calculations.',
-      system: 'The architecture features a Next.js frontend with TanStack Table for data presentation and React Hook Form / Zod for strict input validation. The backend utilizes Node.js and Express to parse Excel files, transforming the data into a normalized PostgreSQL schema via Prisma.',
+      problem: 'The diamond and gemstone industry relies on the Rapaport pricing matrix. Transforming this vast, structured pricing data via Excel ingestion into a usable, searchable database calculation workflow is typically a brittle process.',
+      idea: 'A pricing-data and calculation system for diamond-market workflows that ingests Excel pricing matrices and exposes them for fast historical and recent calculations.',
+      system: 'The architecture features a Next.js frontend with TanStack Table for data presentation and Zod for strict input validation. The backend utilizes Node.js and Express to parse Excel files, transforming the data into a normalized PostgreSQL schema via Prisma.',
       architecture: {
         nodes: [
           { id: 'excel', label: 'Excel Ingestion', x: 10, y: 50, description: 'Parses Rapaport files.' },
@@ -117,12 +115,12 @@ export const projects: Project[] = [
           { source: 'db', target: 'ui', animated: true }
         ]
       },
-      challenge: 'The most difficult engineering hurdle was accurately transforming the denormalized, two-dimensional Excel grid data into a queryable relational database format without losing the implicit pricing rules governed by stone shape, clarity, and color combinations.',
-      solution: 'We built a custom parser in Node.js that maps the matrix coordinates to specific database columns, utilizing Prisma transactions to ensure that if any part of the pricing update fails, the entire ingestion rolls back to preserve historical accuracy.',
+      challenge: 'Accurately transforming denormalized, two-dimensional Excel grid data into a queryable relational database format without losing the implicit pricing rules governed by stone shape, clarity, and color combinations.',
+      solution: 'Built a custom parser in Node.js that maps the matrix coordinates to specific database columns. Utilized Prisma transactions to ensure that if any part of the pricing update fails, the entire ingestion rolls back to preserve data integrity.',
       details: [
-        { title: 'Data Ingestion', content: 'Robust Excel file parsing and data transformation pipeline.' },
-        { title: 'Database Representation', content: 'Normalized PostgreSQL schema ensuring referential integrity of volatile pricing vectors.' },
-        { title: 'Search & Calculation', content: 'High-performance React implementation using TanStack Table to handle large datasets without UI lag, including recent calculations tracking.' }
+        { title: 'Data Ingestion', content: 'Built a robust Excel file parsing and data transformation pipeline for structured pricing data.' },
+        { title: 'Database Representation', content: 'Designed a normalized PostgreSQL schema to ensure referential integrity of pricing vectors.' },
+        { title: 'Search & Calculation', content: 'Implemented a high-performance React table using TanStack Table to handle large datasets, calculation workflows, and track recent calculations.' }
       ],
       result: 'The application successfully ingests complex pricing matrices and provides instant, accurate calculations for users, maintaining a robust history of recent calculations.'
     }
@@ -131,20 +129,19 @@ export const projects: Project[] = [
     id: 'secretspeak',
     title: 'SecretSpeak',
     category: 'Procedural Language Studio',
-    problem: 'Standard cryptographic protocols in secure messaging are easily identifiable by deep packet inspection.',
-    solution: 'A deterministic procedural language-generation studio.',
+    problem: 'Standard protocols often possess identifiable metadata that makes them vulnerable to structural analysis.',
+    solution: 'Built a deterministic procedural language-generation studio to translate standard inputs into symbolic representations.',
     technology: ['Next.js', 'Prisma', 'PostgreSQL'],
     role: 'Backend Architect',
     githubUrl: 'https://github.com/aryan-amdavadi/SecretSpeak',
-    liveUrl: '#',
     caseStudyRoute: '/projects/secretspeak',
     artifactIndex: 2,
     image: '/images/projects/secretspeak.jpg',
     alt: 'SecretSpeak procedural language generation',
     caseStudy: {
-      problem: 'In highly restricted network environments, simply encrypting data is insufficient. Deep Packet Inspection (DPI) can identify standard cryptographic handshakes or structured metadata and block the traffic entirely.',
-      idea: 'Disguise encoded communication streams to look like innocuous, procedurally generated human-readable text.',
-      system: 'The system uses a Next.js framework backed by PostgreSQL (Prisma) to store deterministic translation dictionaries. A core engine maps standard inputs to a symbolic procedural representation that is structurally valid but meaningless to external observers.',
+      problem: 'Data transformed through standard encoding schemes often retains identifiable metadata structures. Converting input into truly innocuous, readable text requires complex, repeatable procedural generation.',
+      idea: 'A deterministic procedural language-generation studio that transforms structured inputs into symbolic, procedurally generated human-readable text.',
+      system: 'The system uses a Next.js framework backed by PostgreSQL (Prisma) to store deterministic translation dictionaries. A core engine maps standard inputs to a symbolic procedural representation based on these persisted dictionaries.',
       architecture: {
         nodes: [
           { id: 'input', label: 'Input Text', x: 10, y: 50, description: 'Raw user message.' },
@@ -158,13 +155,14 @@ export const projects: Project[] = [
           { source: 'engine', target: 'output', animated: true }
         ]
       },
-      challenge: 'Ensuring that the procedural generation is perfectly deterministic. If the same input does not yield the exact same procedural structure—or if the inverse operation fails to decode it—the communication is destroyed.',
-      solution: 'We engineered a strict symbolic representation engine where every token in the source message is mapped to a specific sequence of procedurally generated grammar blocks based on a seeded dictionary.',
+      challenge: 'Ensuring that the procedural generation is perfectly deterministic. If the same input does not yield the exact same procedural structure—or if the inverse operation fails to decode it—the symbolic representation breaks.',
+      solution: 'Engineered a strict symbolic representation engine where every token in the source message is mapped to a specific sequence of procedurally generated grammar blocks based on a seeded dictionary.',
       details: [
-        { title: 'Procedural Generation', content: 'Algorithm deterministically converts inputs into readable, obfuscated grammar trees.' },
-        { title: 'Symbolic Representation', content: 'Mappings are firmly stored and retrieved from PostgreSQL without relying on unpredictable AI models.' }
+        { title: 'Procedural Generation', content: 'Algorithm deterministically converts inputs into repeatable, structurally valid grammar trees.' },
+        { title: 'Symbolic Representation', content: 'Mappings are firmly stored and retrieved from PostgreSQL to ensure identical output for specific inputs.' },
+        { title: 'Data Persistence', content: 'Designed robust database tables to persist the translation dictionaries necessary for the procedural generation.' }
       ],
-      result: 'The system reliably transforms messages into procedural structures and back, providing a functional obfuscation layer that operates entirely predictably.'
+      result: 'The system reliably transforms messages into procedural structures and back, providing a functional symbolic representation layer that operates predictably.'
     }
   },
   {
@@ -172,18 +170,16 @@ export const projects: Project[] = [
     title: 'Tabster',
     category: 'Commerce Platform',
     problem: 'Commerce tracking systems often lack the flexibility to handle modular, multi-party transactions effectively.',
-    solution: 'A full-stack commerce platform with robust payment and administrative workflows.',
+    solution: 'Built a full-stack commerce platform to orchestrate complex transactional workflows.',
     technology: ['React', 'Node.js', 'Express', 'MySQL', 'Stripe'],
     role: 'Software Engineer',
-    githubUrl: '#',
-    liveUrl: '#',
     caseStudyRoute: '/projects/tabster',
     artifactIndex: 3,
     image: '/images/projects/tabster.jpg',
     alt: 'Tabster commerce platform',
     caseStudy: {
-      problem: 'Building a full-stack commerce platform requires a rigid transactional backbone. Managing product search, order lifecycles, coupons, gift cards, and refunds across separate backend APIs often leads to fragmented state and desynced data.',
-      idea: 'A payment orchestration layer that handles complex transactional states while maintaining strict ACID compliance.',
+      problem: 'Building a full-stack commerce platform requires a rigid transactional backbone. Managing product search, order lifecycles, coupons, gift cards, and credits across separate backend APIs often leads to fragmented state and desynced data.',
+      idea: 'A full-stack commerce platform that handles complex transactional workflows and integrates with Stripe.',
       system: 'A React frontend communicates with a Node.js/Express backend API. Product and transactional state is stored in MySQL. The system integrates tightly with Stripe for payment processing, mapping Stripe webhooks to internal order states.',
       architecture: {
         nodes: [
@@ -199,34 +195,32 @@ export const projects: Project[] = [
           { source: 'stripe', target: 'api', animated: true }
         ]
       },
-      challenge: 'The primary challenge is managing the commerce transaction flow, specifically ensuring that internal order states (credits, gift cards, coupons) remain perfectly synchronized with Stripe\'s external payment intents and webhooks.',
-      solution: 'We implemented a webhook-driven state machine. When an order is placed, it is stored in a pending state in MySQL. The backend relies on Stripe webhooks (e.g., payment_intent.succeeded) to execute the final transactional commits, fulfilling the order and debiting gift cards.',
+      challenge: 'Managing the commerce transaction flow, specifically ensuring that internal order states (credits, gift cards, coupons) remain perfectly synchronized with Stripe\'s external payment intents and webhooks.',
+      solution: 'Implemented a webhook-driven state machine. When an order is placed, it is stored in a pending state in MySQL. The backend relies on Stripe webhooks (e.g., payment_intent.succeeded) to execute the final transactional commits and fulfill the order.',
       details: [
-        { title: 'Commerce Transaction Architecture', content: 'Complete order lifecycle handling from intent creation to final fulfillment using a webhook-driven state machine.' },
-        { title: 'Product Workflows', content: 'Comprehensive features including product search, coupon validation, cards, gift cards, and credits.' },
-        { title: 'Administrative Functionality', content: 'Secure endpoints for processing refunds and managing product inventory.' }
+        { title: 'Commerce Transaction Architecture', content: 'Built complete order lifecycle handling from intent creation to final fulfillment using a webhook-driven state machine.' },
+        { title: 'Product Workflows', content: 'Implemented comprehensive features including products, orders, coupons, cards, gift cards, and credits.' },
+        { title: 'Administrative Functionality', content: 'Developed secure endpoints for managing product inventory and monitoring transactional workflows.' }
       ],
-      result: 'The platform provides a reliable, end-to-end commerce flow, successfully processing simulated transactions, managing administrative workflows, and handling refunds without state corruption.'
+      result: 'The platform provides a reliable, end-to-end commerce flow, successfully processing transactions and managing administrative workflows.'
     }
   },
   {
     id: 'pulsesync',
     title: 'PulseSync',
     category: 'Hardware Prototype',
-    problem: 'Health monitoring signals generate massive amounts of noisy data that is difficult to capture and represent efficiently.',
-    solution: 'An IoT healthcare monitoring prototype for real-time sensor acquisition.',
+    problem: 'Health monitoring signals generate noisy data that is difficult to capture and represent efficiently.',
+    solution: 'Built an embedded/IoT physiological-signal monitoring prototype for real-time sensor acquisition.',
     technology: ['ESP32', 'MAX30102', 'AD8232', 'C++'],
     role: 'Hardware/Software Engineer',
-    githubUrl: '#',
-    liveUrl: '#',
     caseStudyRoute: '/projects/pulsesync',
     artifactIndex: 4,
     image: '/images/projects/pulsesync.jpg',
     alt: 'PulseSync hardware prototype',
     caseStudy: {
-      problem: 'Acquiring continuous biological telemetry (like pulse and ECG) requires precise timing. If the embedded system blocks or lags, the resulting signal representation is distorted, making real-time monitoring impossible.',
-      idea: 'Acquire, process, and transmit high-frequency sensor data from an embedded device to an application layer without losing signal fidelity.',
-      system: 'The hardware prototype uses an ESP32 microcontroller connected to a MAX30102 pulse oximeter and an AD8232 ECG sensor. It acquires analog signals, applies basic digital filtering, and displays the data locally on an OLED display while transmitting over serial/WiFi.',
+      problem: 'Acquiring continuous physiological telemetry (like pulse and ECG) requires precise timing. If the embedded system blocks or lags, the resulting signal representation is distorted.',
+      idea: 'An embedded/IoT physiological-signal monitoring prototype to acquire, process, and transmit high-frequency sensor data from an embedded device to an application layer.',
+      system: 'The hardware prototype uses an ESP32 microcontroller connected to a MAX30102 pulse oximeter and an AD8232 ECG sensor. It acquires analog signals, applies digital processing, displays data locally on an OLED, and transmits it via device-to-application communication.',
       architecture: {
         nodes: [
           { id: 'sensors', label: 'Biometric Sensors', x: 10, y: 50, description: 'MAX30102 / AD8232' },
@@ -240,13 +234,14 @@ export const projects: Project[] = [
           { source: 'esp32', target: 'app', animated: true }
         ]
       },
-      challenge: 'The main engineering challenge was managing the ESP32\'s interrupt routines and ADC (Analog-to-Digital Converter) polling to sample the AD8232 ECG sensor at a consistent, high frequency without overwhelming the main loop.',
-      solution: 'We utilized FreeRTOS on the ESP32 to pin the sensor acquisition task to a dedicated core. This ensured that the tight timing requirements for signal sampling were met, while the other core handled the OLED display and network transmission.',
+      challenge: 'Managing the ESP32\'s interrupt routines and ADC polling to sample the AD8232 ECG sensor at a consistent, high frequency without overwhelming the main loop.',
+      solution: 'Utilized FreeRTOS on the ESP32 to pin the sensor acquisition task to a dedicated core. This ensured that the tight timing requirements for signal sampling were met, while the other core handled the OLED display and network transmission.',
       details: [
-        { title: 'Embedded System', content: 'Dual-core task pinning using FreeRTOS for uninterrupted sensor polling.' },
-        { title: 'Signal Flow & Sensor Acquisition', content: 'Raw analog data acquisition converted and filtered before display and transmission.' }
+        { title: 'Embedded Processing', content: 'Utilized dual-core task pinning using FreeRTOS for uninterrupted sensor polling.' },
+        { title: 'Sensor Acquisition', content: 'Acquired raw analog data from MAX30102 and AD8232 sensors, converting and filtering it before transmission.' },
+        { title: 'Signal Visualization', content: 'Displayed physiological signals in real-time on a connected OLED display and built device-to-application communication for remote monitoring.' }
       ],
-      result: 'The prototype successfully acquires and visualizes real-time pulse and ECG signals on the OLED display and transmits a stable data pipeline to the application layer. (Note: This is a prototype and makes no medical diagnostic claims.)'
+      result: 'The prototype successfully acquires and visualizes pulse and ECG signals on the OLED display and transmits a stable data pipeline to the application layer. (Note: This is a prototype and makes no medical diagnostic claims.)'
     }
   },
   {
@@ -254,19 +249,17 @@ export const projects: Project[] = [
     title: 'EngiNexus',
     category: 'Analytics Dashboard',
     problem: 'University data systems are fragmented, making it difficult to construct a unified view of resources and talent.',
-    solution: 'A university intelligence and analytics platform prototype created for SIH.',
+    solution: 'Built a university intelligence and analytics prototype to facilitate cross-domain discovery and data visualization.',
     technology: ['React', 'Node.js', 'PostgreSQL', 'Data Visualization'],
     role: 'Full-Stack Engineer',
-    githubUrl: '#',
-    liveUrl: '#',
     caseStudyRoute: '/projects/enginexus',
     artifactIndex: 5,
     image: '/images/projects/enginexus.jpg',
     alt: 'EngiNexus university analytics dashboard',
     caseStudy: {
       problem: 'University resources—students, projects, faculty, labs, and talent—are typically siloed. Finding cross-disciplinary connections or analyzing aggregate project intelligence across departments is a manual, inefficient process.',
-      idea: 'Unify fragmented academic and project data to enable data-driven navigation and resource intelligence.',
-      system: 'Built as a hackathon prototype for SIH, the platform ingests university data sets into a relational database and exposes it through a dashboard. It maps relationships between users, projects, and lab resources.',
+      idea: 'A university intelligence and analytics prototype developed for SIH to map student, faculty, and resource relationships.',
+      system: 'Built as a hackathon prototype, the platform ingests university data sets into a relational database and exposes it through a data visualization dashboard. It maps relationships between users, projects, and lab resources.',
       architecture: {
         nodes: [
           { id: 'data', label: 'University Data', x: 10, y: 50, description: 'Siloed datasets.' },
@@ -280,11 +273,12 @@ export const projects: Project[] = [
           { source: 'db', target: 'dashboard', animated: true }
         ]
       },
-      challenge: 'Designing a schema that was flexible enough to handle highly variable project and talent data while remaining performant enough to serve aggregate university analytics in a dashboard.',
-      solution: 'We engineered a highly normalized relational schema that separates core entities (Users, Labs, Projects) while using extensive junction tables to map the many-to-many relationships, facilitating complex SQL joins for the analytics views.',
+      challenge: 'Designing a schema flexible enough to handle variable project and talent data while remaining performant enough to serve aggregate university analytics.',
+      solution: 'Engineered a normalized relational schema that separates core entities (Users, Labs, Projects) while using extensive junction tables to map the many-to-many relationships, facilitating complex SQL joins for the analytics views.',
       details: [
-        { title: 'Project & Resource Intelligence', content: 'Cross-disciplinary analysis of students, projects, and lab resources.' },
-        { title: 'Database Design', content: 'Highly normalized relational schema optimized for aggregate analytics and complex joins.' }
+        { title: 'Project Intelligence', content: 'Built systems for cross-domain discovery and analysis of students, projects, and lab resources.' },
+        { title: 'Database Functionality', content: 'Designed a normalized relational schema in PostgreSQL optimized for aggregate analytics and complex joins.' },
+        { title: 'Data Visualization', content: 'Implemented interactive frontend components to visualize student/faculty/resource relationships.' }
       ],
       result: 'The prototype successfully demonstrates how disparate university data can be aggregated to provide actionable intelligence on lab utilization and student project alignment.'
     }
