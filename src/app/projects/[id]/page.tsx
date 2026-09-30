@@ -43,21 +43,27 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
   const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
 
   return (
-    <main className="case-study-container" style={{ padding: 'var(--space-8) 0', maxWidth: '800px', margin: '0 auto' }}>
+    <main className="w-full min-h-screen pt-32 pb-16 px-6 max-w-4xl mx-auto flex flex-col gap-24">
       <CaseStudyHero project={project} />
 
       <CaseStudySection number="01" title="THE PROBLEM">
-        <p>{caseStudy.problem}</p>
+        <p className="text-xl md:text-2xl text-foreground font-body leading-relaxed max-w-3xl">
+          {caseStudy.problem}
+        </p>
       </CaseStudySection>
 
       <CaseStudySection number="02" title="THE IDEA">
-        <p>{caseStudy.idea}</p>
+        <p className="text-xl md:text-2xl text-secondary-foreground font-body leading-relaxed max-w-3xl">
+          {caseStudy.idea}
+        </p>
       </CaseStudySection>
 
       <CaseStudySection number="03" title="THE SYSTEM">
-        <p style={{ marginBottom: 'var(--space-6)' }}>{caseStudy.system}</p>
+        <p className="text-lg md:text-xl text-secondary-foreground font-body leading-relaxed max-w-3xl mb-12">
+          {caseStudy.system}
+        </p>
         {caseStudy.architecture && (
-          <div style={{ marginTop: 'var(--space-6)' }}>
+          <div className="w-full">
             <InteractiveDiagram 
               nodes={caseStudy.architecture.nodes} 
               edges={caseStudy.architecture.edges} 
@@ -67,27 +73,44 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       </CaseStudySection>
 
       <CaseStudySection number="04" title="ENGINEERING CHALLENGE">
-        <p>{caseStudy.challenge}</p>
+        <div className="p-8 md:p-12 border border-border bg-card rounded-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+          <p className="text-lg md:text-xl text-card-foreground font-body leading-relaxed">
+            {caseStudy.challenge}
+          </p>
+        </div>
       </CaseStudySection>
 
       <CaseStudySection number="05" title="THE SOLUTION">
-        <p>{caseStudy.solution}</p>
-        {project.id === 'splitsphere' && <AlgorithmVisualizer />}
+        <p className="text-lg md:text-xl text-secondary-foreground font-body leading-relaxed max-w-3xl mb-12">
+          {caseStudy.solution}
+        </p>
+        {project.id === 'splitsphere' && (
+          <div className="w-full border border-border rounded-2xl overflow-hidden">
+            <AlgorithmVisualizer />
+          </div>
+        )}
       </CaseStudySection>
 
       <CaseStudySection number="06" title="ENGINEERING DETAILS">
-        <div style={{ display: 'grid', gap: 'var(--space-6)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
           {caseStudy.details.map((detail, index) => (
-            <div key={index} style={{ borderLeft: '2px solid var(--border)', paddingLeft: 'var(--space-4)' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 500, marginBottom: 'var(--space-2)' }}>{detail.title}</h3>
-              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>{detail.content}</p>
+            <div key={index} className="flex flex-col gap-3">
+              <h3 className="font-technical text-sm tracking-widest text-primary uppercase">
+                {detail.title}
+              </h3>
+              <p className="text-secondary-foreground font-body leading-relaxed">
+                {detail.content}
+              </p>
             </div>
           ))}
         </div>
       </CaseStudySection>
 
       <CaseStudySection number="07" title="RESULT">
-        <p>{caseStudy.result}</p>
+        <p className="text-xl md:text-2xl text-foreground font-body leading-relaxed max-w-3xl">
+          {caseStudy.result}
+        </p>
       </CaseStudySection>
 
       <CaseStudySection number="08" title="TECHNOLOGY">
@@ -98,7 +121,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         <ProjectLinks githubUrl={project.githubUrl} liveUrl={project.liveUrl} />
       </CaseStudySection>
 
-      <CaseStudyNavigation prevProject={prevProject} nextProject={nextProject} />
+      <div className="mt-12 pt-12 border-t border-border">
+        <CaseStudyNavigation prevProject={prevProject} nextProject={nextProject} />
+      </div>
     </main>
   );
 }

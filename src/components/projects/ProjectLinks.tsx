@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@/components/ui/Button';
 
 interface ProjectLinksProps {
   githubUrl?: string;
@@ -11,32 +12,24 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ githubUrl, liveUrl }
 
   if (!hasLive && !hasGithub) {
     return (
-      <p style={{ color: 'var(--text-tertiary)', fontStyle: 'italic', fontSize: '0.9rem' }}>
+      <p className="font-body italic text-sm text-muted-foreground">
         Source code and live system are proprietary or currently offline.
       </p>
     );
   }
 
   return (
-    <div className="cs-links" style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+    <div className="flex flex-wrap gap-4 px-4">
       {hasLive && (
         <a 
           href={liveUrl} 
           target="_blank" 
           rel="noopener noreferrer" 
-          style={{ 
-            padding: '12px 24px', 
-            backgroundColor: 'var(--text)', 
-            color: 'var(--bg)', 
-            textDecoration: 'none', 
-            fontWeight: 500,
-            borderRadius: '4px',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
+          aria-label="View Live System"
         >
-          View Live System ↗
+          <Button variant="primary" className="gap-2">
+            View Live System ↗
+          </Button>
         </a>
       )}
       {hasGithub && (
@@ -44,20 +37,11 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ githubUrl, liveUrl }
           href={githubUrl} 
           target="_blank" 
           rel="noopener noreferrer" 
-          style={{ 
-            padding: '12px 24px', 
-            backgroundColor: 'transparent', 
-            border: '1px solid var(--border)',
-            color: 'var(--text)', 
-            textDecoration: 'none', 
-            fontWeight: 500,
-            borderRadius: '4px',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
+          aria-label="View Source Code"
         >
-          View Source Code ↗
+          <Button variant="outline" className="gap-2">
+            View Source Code ↗
+          </Button>
         </a>
       )}
     </div>

@@ -45,7 +45,7 @@ export const AlgorithmVisualizer: React.FC = () => {
       ]
     },
     {
-      title: "4. Max-Flow Min-Cut Reduction",
+      title: "4. Minimum Cash Flow Reduction",
       desc: "Graph algorithms find the shortest path to zero.",
       graph: "ALGORITHM_PROCESSING"
     },
@@ -62,50 +62,31 @@ export const AlgorithmVisualizer: React.FC = () => {
   const current = steps[step];
 
   return (
-    <div className="algorithm-visualizer" style={{ 
-      marginTop: 'var(--space-6)', 
-      padding: 'var(--space-6)', 
-      backgroundColor: 'var(--bg-secondary)', 
-      borderRadius: '8px',
-      border: '1px solid var(--border)' 
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
-        <h3 style={{ fontSize: '1.2rem', margin: 0 }}>{current.title}</h3>
-        <div style={{ display: 'flex', gap: '4px' }}>
+    <div className="w-full bg-muted/30 p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="font-technical text-lg tracking-wide uppercase text-foreground">{current.title}</h3>
+        <div className="flex gap-2">
           {[0, 1, 2, 3, 4].map(i => (
             <div 
               key={i} 
-              style={{
-                width: '8px', 
-                height: '8px', 
-                borderRadius: '50%',
-                backgroundColor: step === i ? 'var(--accent-base)' : 'var(--border)',
-                transition: 'background-color 0.3s'
-              }} 
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${step === i ? 'bg-primary' : 'bg-border'}`}
             />
           ))}
         </div>
       </div>
       
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-8)' }}>{current.desc}</p>
+      <p className="font-body text-secondary-foreground mb-8">{current.desc}</p>
       
-      <div className="algo-graph-container" style={{ 
-        minHeight: '200px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        fontFamily: 'monospace',
-        fontSize: '1.1rem'
-      }}>
+      <div className="min-h-[200px] flex items-center justify-center font-technical text-sm md:text-base tracking-widest uppercase">
         <ScrollReveal baseOpacity={0} blurStrength={0} baseRotation={0} key={step}>
           {Array.isArray(current.graph) ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="flex flex-col gap-3">
               {current.graph.map((item: { from?: string; to?: string; amount?: number; type?: string; node?: string; balance?: number }, i) => (
-                <div key={i} style={{ padding: '8px 16px', border: '1px solid var(--border)', borderRadius: '4px', backgroundColor: 'var(--bg)' }}>
+                <div key={i} className="px-6 py-3 border border-border rounded-lg bg-card text-card-foreground">
                   {item.from ? (
                     <span>User {item.from} → User {item.to} : ${item.amount}</span>
                   ) : item.type ? (
-                    <span style={{ color: item.type === 'Debtor' ? 'var(--error, #e57373)' : 'var(--success, #81c784)' }}>
+                    <span className={item.type === 'Debtor' ? 'text-destructive' : 'text-primary'}>
                       User {item.node} : {item.type} (${item.amount})
                     </span>
                   ) : (
@@ -115,19 +96,12 @@ export const AlgorithmVisualizer: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="processing-animation" style={{ color: 'var(--accent-base)', animation: 'pulse 1s infinite alternate' }}>
+            <div className="text-primary animate-pulse">
               {'[ RECALCULATING DIRECTED ACYCLIC GRAPH... ]'}
             </div>
           )}
         </ScrollReveal>
       </div>
-      
-      <style>{`
-        @keyframes pulse {
-          0% { opacity: 0.5; }
-          100% { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 };
