@@ -23,57 +23,65 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
   useEffect(() => {
     if (!containerRef.current) return;
     
-    const isMobile = window.innerWidth < 768;
-    const baseRotationGap = isMobile ? 8 : 12;
-    const hoverSpread = isHovered && !isReducedMotion ? (isMobile ? 12 : 18) : baseRotationGap;
-    
-    projects.forEach((_, i) => {
-      const card = cardsRef.current[i];
-      if (!card) return;
-
-      let diff = i - activeIndex;
-      const half = Math.floor(projects.length / 2);
+    const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
+      const baseRotationGap = isMobile ? 8 : 12;
+      const hoverSpread = isHovered && !isReducedMotion ? (isMobile ? 12 : 18) : baseRotationGap;
       
-      if (diff > half) diff -= projects.length;
-      if (diff < -half) diff += projects.length;
+      projects.forEach((_, i) => {
+        const card = cardsRef.current[i];
+        if (!card) return;
 
-      const isActive = diff === 0;
-      
-      const targetRotation = diff * hoverSpread;
-      const targetY = Math.abs(diff) * (isMobile ? 10 : 20);
-      const targetX = diff * (isMobile ? 20 : 40);
-      const targetScale = isActive ? 1 : 1 - (Math.abs(diff) * 0.05);
-      const targetZIndex = 50 - Math.abs(diff);
-      const targetOpacity = Math.abs(diff) > 2 ? 0 : 1;
+        let diff = i - activeIndex;
+        const half = Math.floor(projects.length / 2);
+        
+        if (diff > half) diff -= projects.length;
+        if (diff < -half) diff += projects.length;
 
-      gsap.to(card, {
-        rotation: targetRotation,
-        y: targetY,
-        x: targetX,
-        scale: targetScale,
-        opacity: targetOpacity,
-        zIndex: targetZIndex,
-        duration: isReducedMotion ? 0 : 0.6,
-        ease: 'power3.out',
-        transformOrigin: '50% 150%',
+        const isActive = diff === 0;
+        
+        const targetRotation = diff * hoverSpread;
+        const targetY = Math.abs(diff) * (isMobile ? 10 : 20);
+        const targetX = diff * (isMobile ? 20 : 40);
+        const targetScale = isActive ? 1 : 1 - (Math.abs(diff) * 0.05);
+        const targetZIndex = 50 - Math.abs(diff);
+        const targetOpacity = Math.abs(diff) > 2 ? 0 : 1;
+
+        gsap.to(card, {
+          rotation: targetRotation,
+          y: targetY,
+          x: targetX,
+          scale: targetScale,
+          opacity: targetOpacity,
+          zIndex: targetZIndex,
+          duration: isReducedMotion ? 0 : 0.6,
+          ease: 'power3.out',
+          transformOrigin: '50% 150%',
+        });
       });
-    });
+    }, containerRef);
+    
+    return () => ctx.revert();
   }, [activeIndex, isHovered, projects, isReducedMotion]);
 
   useEffect(() => {
     if (isReducedMotion || !containerRef.current) return;
     
-    gsap.fromTo(cardsRef.current, 
-      { y: 300, opacity: 0, rotation: (i) => (i - activeIndex) * 30 },
-      { 
-        y: 0, 
-        opacity: 1, 
-        duration: 1.2, 
-        stagger: 0.1, 
-        ease: 'elastic.out(1, 0.5)',
-        clearProps: 'y'
-      }
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo(cardsRef.current, 
+        { y: 300, opacity: 0, rotation: (i) => (i - activeIndex) * 30 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1.2, 
+          stagger: 0.1, 
+          ease: 'elastic.out(1, 0.5)',
+          clearProps: 'y'
+        }
+      );
+    }, containerRef);
+    
+    return () => ctx.revert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
