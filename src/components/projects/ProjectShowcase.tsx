@@ -1,21 +1,16 @@
 'use client';
 
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects } from '@/data/projects';
 import { Button } from '../ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
-import './ProjectShowcase.css';
-
-gsap.registerPlugin(ScrollTrigger);
+import { CardFanCarousel } from './CardFanCarousel';
 
 export const ProjectShowcase: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
   const exploreCursor = useCursorHandlers('explore');
   const externalCursor = useCursorHandlers('external');
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const displayProjects = useMemo(() => {
     return projects.map((project) => ({
@@ -25,102 +20,76 @@ export const ProjectShowcase: React.FC = () => {
     }));
   }, []);
 
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    const ctx = gsap.context(() => {
-      const stages = gsap.utils.toArray('.project-stage') as HTMLElement[];
-      
-      stages.forEach((stage: HTMLElement) => {
-        const visual = stage.querySelector('.project-visual img');
-        
-        // Main stage transformation
-        gsap.to(stage, {
-          scale: 1,
-          opacity: 1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: stage,
-            start: 'top 75%',
-            end: 'top 25%',
-            scrub: 1,
-          }
-        });
-
-        // Subtitle visual parallax/rotation
-        if (visual) {
-          gsap.fromTo(visual, 
-            { scale: 1.05, rotation: -2 },
-            { 
-              scale: 1,
-              rotation: 2,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: stage,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-              }
-            }
-          );
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  const activeProject = displayProjects[activeIndex];
 
   return (
-    <div className="project-showcase" ref={containerRef}>
-      {displayProjects.map((proj) => (
-        <div key={proj.id} className="project-stage">
-          <div className="project-stage-content">
-            <div className="project-info">
-              <span className="project-role">{proj.role}</span>
-              <h3 className="project-title">{proj.title}</h3>
-              
-              <div className="project-tech">
-                {proj.technology?.map((tech: string) => (
-                  <span key={tech} className="tech-tag">{tech}</span>
-                ))}
-              </div>
-              
-              <p className="project-desc mt-4">
-                <strong>System:</strong> {proj.problem}
-              </p>
+    <div className="w-full relative flex flex-col lg:flex-row items-center justify-between min-h-[80vh] gap-12 lg:gap-20 py-20 px-6 max-w-[1400px] mx-auto overflow-hidden">
+      
+      {/* Visual Entry Point - Carousel */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
+        <CardFanCarousel 
+          projects={displayProjects} 
+          activeIndex={activeIndex} 
+          onIndexChange={setActiveIndex} 
+        />
+      </div>
 
-              <div className="project-links mt-6">
-                {proj.caseStudyRoute && (
-                  <Link href={proj.caseStudyRoute} {...exploreCursor}>
-                    <Button variant="primary">EXPLORE SYSTEM</Button>
-                  </Link>
-                )}
-                {proj.liveUrl && proj.liveUrl !== '#' && (
-                  <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Live demo for ${proj.title}`} {...externalCursor}>
-                    <Button variant="outline">LIVE</Button>
-                  </a>
-                )}
-                {proj.githubUrl && proj.githubUrl !== '#' && (
-                  <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`GitHub repository for ${proj.title}`} {...externalCursor}>
-                    <Button variant="outline">SOURCE</Button>
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div className="project-visual">
-              <Image 
-                src={proj.image} 
-                alt={proj.alt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 500px"
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-          </div>
+      {/* Project Information Panel */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center gap-6 order-2 lg:order-1 max-w-xl">
+        <div className="flex flex-col gap-2">
+          <span className="font-technical text-sm tracking-widest text-muted-foreground uppercase">
+            {activeProject.category}
+          </span>
+          <h3 className="font-display text-4xl lg:text-5xl uppercase leading-none text-foreground">
+            {activeProject.title}
+          </h3>
         </div>
-      ))}
+
+        <p className="font-body text-lg text-secondary-foreground leading-relaxed">
+          {activeProject.problem}
+        </p>
+
+        <div className="flex flex-wrap gap-2 pt-2">
+          {activeProject.technology?.map((tech: string) => (
+            <span 
+              key={tech} 
+              className="font-technical text-xs px-3 py-1 border border-border rounded-full text-secondary-foreground bg-background/50"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-4 pt-6 mt-2 border-t border-border">
+          {activeProject.caseStudyRoute && (
+            <Link href={activeProject.caseStudyRoute} {...exploreCursor}>
+              <Button variant="primary">EXPLORE SYSTEM</Button>
+            </Link>
+          )}
+          {activeProject.liveUrl && activeProject.liveUrl !== '#' && (
+            <a 
+              href={activeProject.liveUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label={`Live demo for ${activeProject.title}`} 
+              {...externalCursor}
+            >
+              <Button variant="outline">LIVE</Button>
+            </a>
+          )}
+          {activeProject.githubUrl && activeProject.githubUrl !== '#' && (
+            <a 
+              href={activeProject.githubUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label={`GitHub repository for ${activeProject.title}`} 
+              {...externalCursor}
+            >
+              <Button variant="outline">SOURCE</Button>
+            </a>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
