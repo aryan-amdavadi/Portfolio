@@ -104,21 +104,21 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
 
   return (
     <div 
-      className="relative flex flex-col items-center justify-center w-full h-[60vh] max-h-[600px] perspective-1000"
+      className="fan-carousel"
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       {...exploreCursor}
       aria-label="Project carousel. Use left and right arrow keys to navigate."
     >
-      <div className="relative w-full max-w-[320px] aspect-[4/5] mx-auto z-10" aria-roledescription="carousel">
+      <div className="fan-cards-wrapper" aria-roledescription="carousel">
         {projects.map((proj, i) => {
           const isActive = i === activeIndex;
           return (
             <div
               key={proj.id}
               ref={el => { cardsRef.current[i] = el; }}
-              className="absolute inset-0 cursor-pointer will-change-transform rounded-2xl overflow-hidden border border-border shadow-2xl bg-card transition-colors"
+              className={`fan-card ${isActive ? 'active' : ''}`}
               onClick={() => {
                 if (!isActive) onIndexChange(i);
               }}
@@ -130,24 +130,24 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
                 alt={proj.alt}
                 fill
                 sizes="(max-width: 768px) 100vw, 320px"
-                className="object-cover pointer-events-none"
+                className="fan-card-image"
                 priority={isActive || Math.abs(i - activeIndex) === 1}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+              <div className="fan-card-gradient" />
               
-              <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col gap-1 pointer-events-none text-white">
-                <span className="text-xs tracking-widest font-technical opacity-80 uppercase">{proj.category}</span>
-                <h3 className="text-2xl font-display uppercase leading-none">{proj.title}</h3>
+              <div className="fan-card-content">
+                <span className="fan-card-category">{proj.category}</span>
+                <h3 className="fan-card-title">{proj.title}</h3>
               </div>
             </div>
           );
         })}
       </div>
 
-      <div className="absolute bottom-4 z-50 flex items-center gap-6" onClick={(e) => e.stopPropagation()}>
+      <div className="fan-controls" onClick={(e) => e.stopPropagation()}>
         <button 
           onClick={handlePrev}
-          className="p-3 rounded-full bg-background/50 backdrop-blur-md border border-border hover:bg-muted transition-colors focus:ring-2 focus:ring-primary focus:outline-none"
+          className="fan-nav-btn"
           aria-label="Previous project"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -155,7 +155,7 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
           </svg>
         </button>
         
-        <div className="flex gap-2" role="tablist">
+        <div className="fan-pagination" role="tablist">
           {projects.map((proj, i) => (
             <button
               key={i}
@@ -163,14 +163,14 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
               aria-selected={i === activeIndex}
               aria-label={`Go to ${proj.title}`}
               onClick={() => onIndexChange(i)}
-              className={`w-2 h-2 rounded-full transition-all focus:ring-2 focus:ring-primary focus:outline-none ${i === activeIndex ? 'bg-primary scale-125' : 'bg-muted-foreground/30 hover:bg-muted-foreground/60'}`}
+              className={`fan-dot ${i === activeIndex ? 'active' : ''}`}
             />
           ))}
         </div>
 
         <button 
           onClick={handleNext}
-          className="p-3 rounded-full bg-background/50 backdrop-blur-md border border-border hover:bg-muted transition-colors focus:ring-2 focus:ring-primary focus:outline-none"
+          className="fan-nav-btn"
           aria-label="Next project"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

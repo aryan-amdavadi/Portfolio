@@ -6,6 +6,7 @@ import { projects } from '@/data/projects';
 import { Button } from '../ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { CardFanCarousel } from './CardFanCarousel';
+import './ProjectShowcase.css';
 
 export const ProjectShowcase: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,10 +40,10 @@ export const ProjectShowcase: React.FC = () => {
   };
 
   return (
-    <div className="w-full relative flex flex-col lg:flex-row items-center justify-between min-h-[80vh] gap-12 lg:gap-20 py-20 px-6 max-w-[1400px] mx-auto overflow-hidden">
+    <div className="project-showcase">
       
       {/* Visual Entry Point - Carousel */}
-      <div className={`w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2 transition-transform duration-300 ${isNavigating ? 'scale-105' : 'scale-100'}`}>
+      <div className={`project-carousel-container ${isNavigating ? 'navigating' : ''}`}>
         <CardFanCarousel 
           projects={displayProjects} 
           activeIndex={activeIndex} 
@@ -51,38 +52,38 @@ export const ProjectShowcase: React.FC = () => {
       </div>
 
       {/* Project Information Panel */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center gap-6 order-2 lg:order-1 max-w-xl">
-        <div key={activeProject.id} className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-          <div className="flex flex-col gap-2">
-            <span className="font-technical text-sm tracking-widest text-muted-foreground uppercase flex items-center gap-3">
+      <div className="project-info-container">
+        <div key={activeProject.id} className="project-info-wrapper">
+          <div className="project-meta">
+            <span className="project-category">
               {activeProject.category}
-              <span className="w-4 h-px bg-border" />
+              <span className="project-category-separator" />
               {activeProject.role}
             </span>
-            <h3 className="font-display text-4xl lg:text-5xl uppercase leading-none text-foreground">
+            <h3 className="project-title">
               {activeProject.title}
             </h3>
           </div>
 
-          <p className="font-body text-lg text-secondary-foreground leading-relaxed">
+          <p className="project-desc">
             {activeProject.solution || activeProject.problem}
           </p>
 
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="project-tech">
             {activeProject.technology?.map((tech: string) => (
               <span 
                 key={tech} 
-                className="font-technical text-xs px-3 py-1 border border-border rounded-full text-secondary-foreground bg-background/50 uppercase tracking-widest"
+                className="tech-tag"
               >
                 {tech}
               </span>
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-4 pt-6 mt-2 border-t border-border">
-            <button onClick={handleExplore} {...openCursor}>
-              <Button variant="primary">EXPLORE SYSTEM</Button>
-            </button>
+          <div className="project-links">
+            <Button variant="primary" onClick={handleExplore} className="btn-wrapper" {...openCursor}>
+              EXPLORE SYSTEM
+            </Button>
             
             {activeProject.liveUrl && activeProject.liveUrl !== '#' && (
               <a 
