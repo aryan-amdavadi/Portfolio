@@ -60,9 +60,10 @@
 }
 
 .projects-section {
-  min-height: 150vh;
-  justify-content: flex-start;
-  padding-top: 20vh;
+  min-height: 100vh;
+  justify-content: center;
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
 }
 
 .connect-section {
