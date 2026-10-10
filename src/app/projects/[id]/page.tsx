@@ -19,16 +19,22 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const project = projects.find((p) => p.id === id);
   if (!project) return {};
+
   return {
-    title: `${project.title} - Aryan Amdavadi`,
-    description: project.caseStudy?.problem || project.problem
+    title: `${project.title} — Case Study | Aryan Amdavadi`,
+    description: project.caseStudy?.problem || project.problem,
+    openGraph: {
+      title: `${project.title} — Case Study`,
+      description: project.caseStudy?.problem || project.problem,
+      images: project.image ? [{ url: project.image, alt: project.alt }] : [],
+    },
   };
 }
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const projectIndex = projects.findIndex((p) => p.id === id);
-  
+
   if (projectIndex === -1) {
     notFound();
   }
@@ -43,63 +49,65 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
   const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
 
   return (
-    <main className="w-full min-h-screen pt-32 pb-16 px-6 max-w-4xl mx-auto flex flex-col gap-24">
+    <main className="case-study-page">
+      {/* 1. Identity, Overview, and Artwork */}
       <CaseStudyHero project={project} />
 
-      <CaseStudySection number="01" title="THE PROBLEM">
-        <p className="text-xl md:text-2xl text-foreground font-body leading-relaxed max-w-3xl">
+      {/* 2. Problem and Constraints */}
+      <CaseStudySection number="01" title="THE PROBLEM" id="problem">
+        <p className="cs-prose">
           {caseStudy.problem}
         </p>
       </CaseStudySection>
 
-      <CaseStudySection number="02" title="THE IDEA">
-        <p className="text-xl md:text-2xl text-secondary-foreground font-body leading-relaxed max-w-3xl">
+      {/* 3. Engineering Approach */}
+      <CaseStudySection number="02" title="THE APPROACH" id="approach">
+        <p className="cs-prose">
           {caseStudy.idea}
         </p>
       </CaseStudySection>
 
-      <CaseStudySection number="03" title="THE SYSTEM">
-        <p className="text-lg md:text-xl text-secondary-foreground font-body leading-relaxed max-w-3xl mb-12">
+      {/* 4. Architecture & System Flow */}
+      <CaseStudySection number="03" title="ARCHITECTURE & SYSTEM FLOW" id="architecture">
+        <p className="cs-prose" style={{ marginBottom: 'var(--space-6)' }}>
           {caseStudy.system}
         </p>
         {caseStudy.architecture && (
-          <div className="w-full">
-            <InteractiveDiagram 
-              nodes={caseStudy.architecture.nodes} 
-              edges={caseStudy.architecture.edges} 
-            />
-          </div>
+          <InteractiveDiagram
+            nodes={caseStudy.architecture.nodes}
+            edges={caseStudy.architecture.edges}
+          />
         )}
       </CaseStudySection>
 
-      <CaseStudySection number="04" title="ENGINEERING CHALLENGE">
-        <div className="p-8 md:p-12 border border-border bg-card rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-          <p className="text-lg md:text-xl text-card-foreground font-body leading-relaxed">
+      {/* 5. Concrete Technical Challenge */}
+      <CaseStudySection number="04" title="TECHNICAL CHALLENGE" id="challenge">
+        <div className="cs-challenge-card">
+          <p className="cs-challenge-text">
             {caseStudy.challenge}
           </p>
         </div>
       </CaseStudySection>
 
-      <CaseStudySection number="05" title="THE SOLUTION">
-        <p className="text-lg md:text-xl text-secondary-foreground font-body leading-relaxed max-w-3xl mb-12">
+      {/* 6. Solution & Resolution (with AlgorithmVisualizer for SplitSphere) */}
+      <CaseStudySection number="05" title="SOLUTION & RESOLUTION" id="solution">
+        <p className="cs-prose" style={{ marginBottom: project.id === 'splitsphere' ? 'var(--space-6)' : '0' }}>
           {caseStudy.solution}
         </p>
         {project.id === 'splitsphere' && (
-          <div className="w-full border border-border rounded-2xl overflow-hidden">
-            <AlgorithmVisualizer />
-          </div>
+          <AlgorithmVisualizer />
         )}
       </CaseStudySection>
 
-      <CaseStudySection number="06" title="ENGINEERING DETAILS">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
+      {/* 7. Important Implementation Decisions */}
+      <CaseStudySection number="06" title="IMPLEMENTATION DECISIONS" id="decisions">
+        <div className="cs-details-grid">
           {caseStudy.details.map((detail, index) => (
-            <div key={index} className="flex flex-col gap-3">
-              <h3 className="font-technical text-sm tracking-widest text-primary uppercase">
+            <div key={index} className="cs-detail-card">
+              <h3 className="cs-detail-title">
                 {detail.title}
               </h3>
-              <p className="text-secondary-foreground font-body leading-relaxed">
+              <p className="cs-detail-content">
                 {detail.content}
               </p>
             </div>
@@ -107,23 +115,25 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         </div>
       </CaseStudySection>
 
-      <CaseStudySection number="07" title="RESULT">
-        <p className="text-xl md:text-2xl text-foreground font-body leading-relaxed max-w-3xl">
+      {/* 8. Current State & Verified Functionality */}
+      <CaseStudySection number="07" title="CURRENT STATE & VERIFIED RESULTS" id="results">
+        <p className="cs-prose">
           {caseStudy.result}
         </p>
       </CaseStudySection>
 
-      <CaseStudySection number="08" title="TECHNOLOGY">
+      {/* 9. Technology Stack */}
+      <CaseStudySection number="08" title="TECHNOLOGY STACK" id="technology">
         <TechnologyEvidence technologies={project.technology} />
       </CaseStudySection>
 
-      <CaseStudySection number="09" title="SOURCE / LIVE">
+      {/* 10. Repository & Live Access */}
+      <CaseStudySection number="09" title="SOURCE CODE & ARTIFACTS" id="artifacts">
         <ProjectLinks githubUrl={project.githubUrl} liveUrl={project.liveUrl} />
       </CaseStudySection>
 
-      <div className="mt-12 pt-12 border-t border-border">
-        <CaseStudyNavigation prevProject={prevProject} nextProject={nextProject} />
-      </div>
+      {/* 11. Contextual Previous / Next Navigation */}
+      <CaseStudyNavigation prevProject={prevProject} nextProject={nextProject} />
     </main>
   );
 }

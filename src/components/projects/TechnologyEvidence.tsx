@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ScrollReveal } from '@/components/text/ScrollReveal';
 
@@ -7,15 +9,15 @@ interface TechnologyEvidenceProps {
 
 export const TechnologyEvidence: React.FC<TechnologyEvidenceProps> = ({ technologies }) => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="cs-tech-tags-group">
       {technologies.map((tech) => (
-        <ScrollReveal 
-          key={tech} 
-          baseOpacity={0} 
-          baseRotation={2}
-          blurStrength={2} 
+        <ScrollReveal
+          key={tech}
+          baseOpacity={0}
+          baseRotation={1}
+          blurStrength={2}
         >
-          <span className="inline-block px-4 py-2 font-technical text-xs tracking-widest text-secondary-foreground bg-muted/50 border border-border rounded-full uppercase">
+          <span className="cs-tech-tag">
             {tech}
           </span>
         </ScrollReveal>

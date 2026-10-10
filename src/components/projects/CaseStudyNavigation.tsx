@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Project } from '@/data/projects';
@@ -9,31 +11,40 @@ interface CaseStudyNavigationProps {
 
 export const CaseStudyNavigation: React.FC<CaseStudyNavigationProps> = ({ prevProject, nextProject }) => {
   return (
-    <nav className="w-full flex flex-wrap items-center justify-between gap-6 py-8">
+    <nav className="cs-nav-container" aria-label="Project Case Study Navigation">
       {prevProject ? (
-        <Link 
-          href={prevProject.caseStudyRoute || `/projects/${prevProject.id}`} 
-          className="font-technical text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors flex-1"
+        <Link
+          href={prevProject.caseStudyRoute || `/projects/${prevProject.id}`}
+          className="cs-nav-link"
+          aria-label={`Previous project: ${prevProject.title}`}
         >
-          ← PREV
+          <span className="cs-nav-direction">← PREVIOUS CASE STUDY</span>
+          <span className="cs-nav-project-title">{prevProject.title}</span>
         </Link>
-      ) : <div className="flex-1" />}
+      ) : (
+        <div />
+      )}
 
-      <Link 
-        href="/#work" 
-        className="font-technical text-sm tracking-widest text-foreground hover:text-primary transition-colors whitespace-nowrap"
+      <Link
+        href="/#work"
+        className="cs-nav-center-link"
+        aria-label="Return to all projects in portfolio"
       >
-        BACK TO WORK
+        BACK TO ALL WORK
       </Link>
 
       {nextProject ? (
-        <Link 
-          href={nextProject.caseStudyRoute || `/projects/${nextProject.id}`} 
-          className="font-technical text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors flex-1 text-right"
+        <Link
+          href={nextProject.caseStudyRoute || `/projects/${nextProject.id}`}
+          className="cs-nav-link next"
+          aria-label={`Next project: ${nextProject.title}`}
         >
-          NEXT →
+          <span className="cs-nav-direction">NEXT CASE STUDY →</span>
+          <span className="cs-nav-project-title">{nextProject.title}</span>
         </Link>
-      ) : <div className="flex-1" />}
+      ) : (
+        <div />
+      )}
     </nav>
   );
 };

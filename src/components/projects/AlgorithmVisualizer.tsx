@@ -1,106 +1,196 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ScrollReveal } from '@/components/text/ScrollReveal';
+import React, { useState, useEffect, useCallback } from 'react';
+
+interface StepData {
+  number: string;
+  title: string;
+  description: string;
+  type: 'transactions' | 'balances' | 'debtors_creditors' | 'processing' | 'settlement';
+  items?: {
+    primary: string;
+    secondary?: string;
+    tag?: string;
+    highlight?: 'debtor' | 'creditor' | 'neutral' | 'success';
+  }[];
+}
+
+const ALGO_STEPS: StepData[] = [
+  {
+    number: '01 / 05',
+    title: 'Input: Cyclic Group Expenses',
+    description: 'A shared trip generates 5 separate expense transfers between 4 participants, creating circular debt cycles.',
+    type: 'transactions',
+    items: [
+      { primary: 'Alice → Bob', secondary: '$100.00', tag: 'Transfer' },
+      { primary: 'Bob → Charlie', secondary: '$150.00', tag: 'Transfer' },
+      { primary: 'Charlie → Alice', secondary: '$50.00', tag: 'Transfer' },
+      { primary: 'Charlie → Dana', secondary: '$50.00', tag: 'Transfer' },
+      { primary: 'Dana → Alice', secondary: '$50.00', tag: 'Transfer' }
+    ]
+  },
+  {
+    number: '02 / 05',
+    title: 'Ledger Aggregation: Net Balance Vector',
+    description: 'The engine sums all incoming and outgoing payments for each member to obtain a net financial position.',
+    type: 'balances',
+    items: [
+      { primary: 'Alice', secondary: '-$50.00 (Net Owed)', highlight: 'debtor' },
+      { primary: 'Bob', secondary: '-$50.00 (Net Owed)', highlight: 'debtor' },
+      { primary: 'Charlie', secondary: '+$100.00 (Net Surplus)', highlight: 'creditor' },
+      { primary: 'Dana', secondary: '$0.00 (Settled)', highlight: 'neutral' }
+    ]
+  },
+  {
+    number: '03 / 05',
+    title: 'Partitioning: Debtors vs Creditors',
+    description: 'Members with net zero are eliminated. Remaining members are sorted into maximum debtor and maximum creditor heaps.',
+    type: 'debtors_creditors',
+    items: [
+      { primary: 'Alice (Debtor)', secondary: 'Owes $50.00', highlight: 'debtor', tag: 'Debtor' },
+      { primary: 'Bob (Debtor)', secondary: 'Owes $50.00', highlight: 'debtor', tag: 'Debtor' },
+      { primary: 'Charlie (Creditor)', secondary: 'Owed $100.00', highlight: 'creditor', tag: 'Creditor' }
+    ]
+  },
+  {
+    number: '04 / 05',
+    title: 'Execution: Recursive minCashFlow()',
+    description: 'The greedy solver identifies max debtor (Alice) and max creditor (Charlie), transfers min(50, 100) = $50, and recurses.',
+    type: 'processing'
+  },
+  {
+    number: '05 / 05',
+    title: 'Output: Optimized Settlement Plan',
+    description: 'Cyclic debt completely resolved. Total transactions reduced from 5 down to 2, with zero leftover balances.',
+    type: 'settlement',
+    items: [
+      { primary: 'Alice → Charlie', secondary: '$50.00', tag: 'Optimal Transfer', highlight: 'success' },
+      { primary: 'Bob → Charlie', secondary: '$50.00', tag: 'Optimal Transfer', highlight: 'success' }
+    ]
+  }
+];
 
 export const AlgorithmVisualizer: React.FC = () => {
-  const [step, setStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setStep((prev) => (prev + 1) % 5);
-    }, 3000);
-    return () => clearInterval(timer);
+  const nextStep = useCallback(() => {
+    setCurrentStep((prev) => (prev + 1) % ALGO_STEPS.length);
   }, []);
 
-  const steps = [
-    {
-      title: "1. Raw Expenses",
-      desc: "Users create a tangled web of shared expenses.",
-      graph: [
-        { from: "A", to: "B", amount: 100 },
-        { from: "B", to: "C", amount: 150 },
-        { from: "C", to: "A", amount: 50 },
-        { from: "C", to: "D", amount: 50 },
-        { from: "D", to: "A", amount: 50 }
-      ]
-    },
-    {
-      title: "2. Individual Balances",
-      desc: "Calculate what everyone owes vs what they paid.",
-      graph: [
-        { node: "A", balance: -50 },
-        { node: "B", balance: -50 },
-        { node: "C", balance: 100 },
-        { node: "D", balance: 0 }
-      ]
-    },
-    {
-      title: "3. Net Balances",
-      desc: "Identify net debtors (-) and net creditors (+).",
-      graph: [
-        { node: "A", type: "Debtor", amount: 50 },
-        { node: "B", type: "Debtor", amount: 50 },
-        { node: "C", type: "Creditor", amount: 100 }
-      ]
-    },
-    {
-      title: "4. Minimum Cash Flow Reduction",
-      desc: "Graph algorithms find the shortest path to zero.",
-      graph: "ALGORITHM_PROCESSING"
-    },
-    {
-      title: "5. Optimized Settlement",
-      desc: "Only two transactions needed to settle a 5-transaction cycle.",
-      graph: [
-        { from: "A", to: "C", amount: 50 },
-        { from: "B", to: "C", amount: 50 }
-      ]
-    }
-  ];
+  const prevStep = useCallback(() => {
+    setCurrentStep((prev) => (prev - 1 + ALGO_STEPS.length) % ALGO_STEPS.length);
+  }, []);
 
-  const current = steps[step];
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      setCurrentStep((prev) => {
+        if (prev >= ALGO_STEPS.length - 1) {
+          setIsPlaying(false);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 3200);
+    return () => clearInterval(timer);
+  }, [isPlaying]);
+
+  const step = ALGO_STEPS[currentStep];
 
   return (
-    <div className="w-full bg-muted/30 p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="font-technical text-lg tracking-wide uppercase text-foreground">{current.title}</h3>
-        <div className="flex gap-2">
-          {[0, 1, 2, 3, 4].map(i => (
-            <div 
-              key={i} 
-              className={`w-2 h-2 rounded-full transition-colors duration-300 ${step === i ? 'bg-primary' : 'bg-border'}`}
-            />
-          ))}
+    <div className="algo-visualizer" role="region" aria-label="SplitSphere Algorithm Interactive Visualizer">
+      {/* Header and Step Information */}
+      <div className="algo-header">
+        <div className="algo-title-group">
+          <span className="algo-step-badge">{step.number}</span>
+          <h3 className="algo-step-title">{step.title}</h3>
+        </div>
+
+        {/* Interactive Controls */}
+        <div className="algo-controls">
+          <button
+            type="button"
+            className="algo-ctrl-btn"
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            aria-label="Previous algorithm step"
+          >
+            ← PREV
+          </button>
+
+          <button
+            type="button"
+            className="algo-ctrl-btn"
+            onClick={() => setIsPlaying(!isPlaying)}
+            aria-label={isPlaying ? 'Pause auto walkthrough' : 'Play auto walkthrough'}
+          >
+            {isPlaying ? 'PAUSE ❚❚' : 'PLAY ▶'}
+          </button>
+
+          <button
+            type="button"
+            className="algo-ctrl-btn"
+            onClick={nextStep}
+            disabled={currentStep === ALGO_STEPS.length - 1}
+            aria-label="Next algorithm step"
+          >
+            NEXT →
+          </button>
+
+          <div className="algo-pills" role="tablist" aria-label="Step indicators">
+            {ALGO_STEPS.map((_, index) => (
+              <button
+                type="button"
+                key={index}
+                className={`algo-pill-dot ${index === currentStep ? 'active' : ''}`}
+                onClick={() => {
+                  setCurrentStep(index);
+                  setIsPlaying(false);
+                }}
+                aria-label={`Jump to step ${index + 1}`}
+                role="tab"
+                aria-selected={index === currentStep}
+              />
+            ))}
+          </div>
         </div>
       </div>
-      
-      <p className="font-body text-secondary-foreground mb-8">{current.desc}</p>
-      
-      <div className="min-h-[200px] flex items-center justify-center font-technical text-sm md:text-base tracking-widest uppercase">
-        <ScrollReveal baseOpacity={0} blurStrength={0} baseRotation={0} key={step}>
-          {Array.isArray(current.graph) ? (
-            <div className="flex flex-col gap-3">
-              {current.graph.map((item: { from?: string; to?: string; amount?: number; type?: string; node?: string; balance?: number }, i) => (
-                <div key={i} className="px-6 py-3 border border-border rounded-lg bg-card text-card-foreground">
-                  {item.from ? (
-                    <span>User {item.from} → User {item.to} : ${item.amount}</span>
-                  ) : item.type ? (
-                    <span className={item.type === 'Debtor' ? 'text-destructive' : 'text-primary'}>
-                      User {item.node} : {item.type} (${item.amount})
-                    </span>
-                  ) : (
-                    <span>User {item.node} : Balance ${item.balance}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-primary animate-pulse">
-              {'[ RECALCULATING DIRECTED ACYCLIC GRAPH... ]'}
-            </div>
-          )}
-        </ScrollReveal>
+
+      {/* Narrative explanation */}
+      <p className="algo-desc">{step.description}</p>
+
+      {/* Stage Visualizer */}
+      <div className="algo-stage">
+        {step.type === 'processing' ? (
+          <div className="algo-calculating-msg" aria-live="polite">
+            [ RUNNING minCashFlow(netBalances) → RECURSIVE GREEDY GRAPH REDUCTION ]
+          </div>
+        ) : (
+          <div className="algo-cards-container">
+            {step.items?.map((item, idx) => (
+              <div
+                key={idx}
+                className={`algo-card-row ${item.highlight === 'success' ? 'optimized' : ''}`}
+              >
+                <span>{item.primary}</span>
+                <span
+                  className={
+                    item.highlight === 'debtor'
+                      ? 'algo-debtor'
+                      : item.highlight === 'creditor'
+                      ? 'algo-creditor'
+                      : item.highlight === 'success'
+                      ? 'algo-creditor'
+                      : ''
+                  }
+                >
+                  {item.secondary}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
