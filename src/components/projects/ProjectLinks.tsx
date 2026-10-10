@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/ui/Button';
 
 interface ProjectLinksProps {
   githubUrl?: string;
@@ -26,10 +25,10 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ githubUrl, liveUrl }
           target="_blank" 
           rel="noopener noreferrer" 
           aria-label="View Live System"
+          className="btn btn-primary"
+          style={{ gap: '0.5rem' }}
         >
-          <Button variant="primary" className="gap-2">
-            View Live System ↗
-          </Button>
+          View Live System ↗
         </a>
       )}
       {hasGithub && (
@@ -38,10 +37,10 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ githubUrl, liveUrl }
           target="_blank" 
           rel="noopener noreferrer" 
           aria-label="View Source Code"
+          className="btn btn-outline"
+          style={{ gap: '0.5rem' }}
         >
-          <Button variant="outline" className="gap-2">
-            View Source Code ↗
-          </Button>
+          View Source Code ↗
         </a>
       )}
     </div>

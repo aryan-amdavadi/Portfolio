@@ -7,11 +7,11 @@ import { ThemeToggle } from './ThemeToggle';
 import { FlowingMenu } from './FlowingMenu';
 
 const MENU_ITEMS = [
-  { link: '#work', text: 'WORK', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop' },
-  { link: '#thinking', text: 'THINKING', image: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2564&auto=format&fit=crop' },
-  { link: '#about', text: 'ABOUT', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop' },
-  { link: '#code', text: 'CODE', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2564&auto=format&fit=crop' },
-  { link: '#contact', text: 'CONTACT', image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2564&auto=format&fit=crop' },
+  { link: '/#work', text: 'WORK', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop' },
+  { link: '/#problem-system', text: 'SYSTEMS', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop' },
+  { link: '/#thinking', text: 'PROCESS', image: 'https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2564&auto=format&fit=crop' },
+  { link: '/#builder', text: 'BUILDER', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2564&auto=format&fit=crop' },
+  { link: '/#connect', text: 'CONNECT', image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2564&auto=format&fit=crop' },
 ];
 
 export const Navigation: React.FC = () => {

@@ -95,12 +95,23 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrev();
+      const isFocused = containerRef.current && (
+        containerRef.current === document.activeElement || 
+        containerRef.current.contains(document.activeElement)
+      );
+      if (!isHovered && !isFocused) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleNext();
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrev();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNext, handlePrev]);
+  }, [handleNext, handlePrev, isHovered]);
 
   return (
     <div 
@@ -122,6 +133,14 @@ export const CardFanCarousel: React.FC<CardFanCarouselProps> = ({ projects, acti
               onClick={() => {
                 if (!isActive) onIndexChange(i);
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  if (!isActive) onIndexChange(i);
+                }
+              }}
+              role="button"
+              aria-label={`Project card: ${proj.title}`}
               aria-hidden={!isActive}
               tabIndex={isActive ? 0 : -1}
             >

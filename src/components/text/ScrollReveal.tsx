@@ -34,9 +34,11 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const splitText = useMemo(() => {
-    const text = typeof children === 'string' ? children : '';
-    return text.split(/(\s+)/).map((word, index) => {
+  const isString = typeof children === 'string';
+
+  const content = useMemo(() => {
+    if (!isString) return children;
+    return (children as string).split(/(\s+)/).map((word, index) => {
       if (word.match(/^\s+$/)) return word;
       return (
         <span className="scroll-reveal-word" key={index}>
@@ -44,7 +46,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
         </span>
       );
     });
-  }, [children]);
+  }, [children, isString]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -76,21 +78,37 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
         0
       );
 
-      tl.fromTo(
-        wordElements,
-        { 
-          opacity: baseOpacity, 
-          willChange: 'opacity, filter',
-          filter: enableBlur ? `blur(${blurStrength}px)` : 'none'
-        },
-        {
-          ease: 'none',
-          opacity: 1,
-          filter: enableBlur ? 'blur(0px)' : 'none',
-          stagger: 0.05
-        },
-        0
-      );
+      if (wordElements.length > 0) {
+        tl.fromTo(
+          wordElements,
+          { 
+            opacity: baseOpacity, 
+            willChange: 'opacity, filter',
+            filter: enableBlur ? `blur(${blurStrength}px)` : 'none'
+          },
+          {
+            ease: 'none',
+            opacity: 1,
+            filter: enableBlur ? 'blur(0px)' : 'none',
+            stagger: 0.05
+          },
+          0
+        );
+      } else {
+        tl.fromTo(
+          el,
+          {
+            opacity: baseOpacity,
+            filter: enableBlur ? `blur(${blurStrength}px)` : 'none'
+          },
+          {
+            ease: 'none',
+            opacity: 1,
+            filter: enableBlur ? 'blur(0px)' : 'none'
+          },
+          0
+        );
+      }
     }, el);
 
     return () => ctx.revert();
@@ -98,7 +116,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <div ref={containerRef} className={`scroll-reveal ${containerClassName}`}>
-      <div className={`scroll-reveal-text ${textClassName}`}>{splitText}</div>
+      <div className={`scroll-reveal-text ${textClassName}`}>{content}</div>
     </div>
   );
 };

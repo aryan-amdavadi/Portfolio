@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import gsap from 'gsap';
-import { Button } from '@/components/ui/Button';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { ProjectShowcase } from '@/components/projects/ProjectShowcase';
 import { MaskedHeading } from '@/components/text/MaskedHeading';
@@ -110,13 +109,13 @@ export default function Home() {
 
             <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
               <div className="hero-cta">
-                <a href="#work" {...exploreCursor}>
-                  <Button variant="primary">EXPLORE WORK</Button>
+                <a href="#work" className="btn btn-primary" {...exploreCursor}>
+                  EXPLORE WORK
                 </a>
               </div>
               <div className="hero-cta">
-                <a href="#connect" {...linkCursor}>
-                  <Button variant="outline">LET&apos;S BUILD</Button>
+                <a href="#connect" className="btn btn-outline" {...linkCursor}>
+                  LET&apos;S BUILD
                 </a>
               </div>
             </div>

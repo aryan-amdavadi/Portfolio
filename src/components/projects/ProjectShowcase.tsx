@@ -91,9 +91,10 @@ export const ProjectShowcase: React.FC = () => {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label={`Live demo for ${activeProject.title}`} 
+                className="btn btn-outline"
                 {...viewCursor}
               >
-                <Button variant="outline">LIVE</Button>
+                LIVE
               </a>
             )}
             {activeProject.githubUrl && activeProject.githubUrl !== '#' && (
@@ -102,9 +103,10 @@ export const ProjectShowcase: React.FC = () => {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label={`GitHub repository for ${activeProject.title}`} 
+                className="btn btn-outline"
                 {...viewCursor}
               >
-                <Button variant="outline">SOURCE</Button>
+                SOURCE
               </a>
             )}
           </div>
