@@ -49,7 +49,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
   const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
 
   return (
-    <main className="case-study-page">
+    <main
+      className="case-study-page"
+      data-project={project.id}
+      style={{
+        '--project-accent': project.accentColor || 'var(--accent-base)',
+        '--project-accent-light': project.accentColorLight || 'var(--accent-hover)'
+      } as React.CSSProperties}
+    >
       {/* 1. Identity, Overview, and Artwork */}
       <CaseStudyHero project={project} />
 
@@ -83,20 +90,21 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       {/* 5. Concrete Technical Challenge */}
       <CaseStudySection number="04" title="TECHNICAL CHALLENGE" id="challenge">
         <div className="cs-challenge-card">
+          <div className="cs-challenge-header">
+            <span className="cs-challenge-badge">ENGINEERING CONSTRAINT // COMPLEXITY FACTOR</span>
+          </div>
           <p className="cs-challenge-text">
             {caseStudy.challenge}
           </p>
         </div>
       </CaseStudySection>
 
-      {/* 6. Solution & Resolution (with AlgorithmVisualizer for SplitSphere) */}
+      {/* 6. Solution & Resolution (Pipeline Visualizer for all projects) */}
       <CaseStudySection number="05" title="SOLUTION & RESOLUTION" id="solution">
-        <p className="cs-prose" style={{ marginBottom: project.id === 'splitsphere' ? 'var(--space-6)' : '0' }}>
+        <p className="cs-prose" style={{ marginBottom: 'var(--space-6)' }}>
           {caseStudy.solution}
         </p>
-        {project.id === 'splitsphere' && (
-          <AlgorithmVisualizer />
-        )}
+        <AlgorithmVisualizer key={project.id} projectId={project.id} />
       </CaseStudySection>
 
       {/* 7. Important Implementation Decisions */}
@@ -104,6 +112,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         <div className="cs-details-grid">
           {caseStudy.details.map((detail, index) => (
             <div key={index} className="cs-detail-card">
+              <span className="cs-detail-num">DECISION // 0{index + 1}</span>
               <h3 className="cs-detail-title">
                 {detail.title}
               </h3>

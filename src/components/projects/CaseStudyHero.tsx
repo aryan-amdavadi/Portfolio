@@ -17,30 +17,43 @@ export const CaseStudyHero: React.FC<CaseStudyHeroProps> = ({ project }) => {
 
   return (
     <header className="cs-hero">
-      {/* Breadcrumb / Back link */}
+      {/* Editorial Breadcrumb Navigation */}
       <div className="cs-breadcrumb-nav">
         <Link href="/#work" className="cs-back-link" aria-label="Return to all projects">
-          ← BACK TO ALL WORK
+          <span className="cs-back-arrow" aria-hidden="true">←</span>
+          <span>BACK TO ALL WORK</span>
         </Link>
       </div>
 
       <ScrollReveal baseOpacity={0} blurStrength={6} baseRotation={1}>
         <div className="cs-hero-header">
-          <span className="cs-category-badge">
-            {project.category}
-          </span>
+          <div className="cs-category-row">
+            <span className="cs-category-badge">
+              {project.category}
+            </span>
+            <span className="cs-index-stamp">
+              REC // 0{project.artifactIndex + 1}
+            </span>
+          </div>
+
           <h1 className="cs-title">
             {project.title}
           </h1>
+
           <p className="cs-tagline">
             {project.solution || project.problem}
           </p>
         </div>
       </ScrollReveal>
 
-      {/* Prominent Art-Directed Project Artwork */}
+      {/* Art-Directed Project Artwork with Architectural Technical Stamp */}
       {project.image && (
         <div className="cs-hero-artwork-frame">
+          <div className="cs-frame-corner top-left" aria-hidden="true" />
+          <div className="cs-frame-corner top-right" aria-hidden="true" />
+          <div className="cs-frame-corner bottom-left" aria-hidden="true" />
+          <div className="cs-frame-corner bottom-right" aria-hidden="true" />
+
           <Image
             src={project.image}
             alt={project.alt || `${project.title} technical architecture and project visual`}
@@ -50,6 +63,12 @@ export const CaseStudyHero: React.FC<CaseStudyHeroProps> = ({ project }) => {
             className="cs-hero-image"
           />
           <div className="cs-hero-artwork-overlay" />
+
+          {/* Technical Publication Figure Badge */}
+          <div className="cs-hero-figure-badge">
+            <span className="cs-figure-dot" aria-hidden="true" />
+            <span>{project.figureLabel || `FIG. 0${project.artifactIndex + 1} // ARCHITECTURAL SUBSTRATE`}</span>
+          </div>
         </div>
       )}
 

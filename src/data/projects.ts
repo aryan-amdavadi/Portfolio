@@ -1,6 +1,7 @@
 export interface DiagramNode {
   id: string;
   label: string;
+  category?: string;
   x: number;
   y: number;
   description: string;
@@ -9,6 +10,7 @@ export interface DiagramNode {
 export interface DiagramEdge {
   source: string;
   target: string;
+  label?: string;
   animated: boolean;
 }
 
@@ -40,6 +42,9 @@ export interface Project {
   artifactIndex: number;
   image: string;
   alt: string;
+  figureLabel?: string;
+  accentColor?: string;
+  accentColorLight?: string;
   caseStudy?: CaseStudyData;
 }
 
@@ -57,22 +62,25 @@ export const projects: Project[] = [
     artifactIndex: 0,
     image: '/images/projects/splitsphere.webp',
     alt: 'SplitSphere architectural balance flow and node graph installation',
+    figureLabel: 'FIG. 01 // DIRECTED DEBT GRAPH & SETTLEMENT ENGINE',
+    accentColor: '#00A896',
+    accentColorLight: '#006466',
     caseStudy: {
       problem: 'When individuals share expenses in highly connected social groups, the resulting obligations form a dense directed graph with cyclic debt paths. Naive pairwise settlement requires up to N*(N-1)/2 individual transactions, creating high friction for participants and messy financial reconciliation.',
       idea: 'A collaborative financial coordination platform that ingests group expenses, calculates net individual balances, and automatically runs a graph-simplification algorithm to settle group debts in at most N - 1 discrete transactions.',
       system: 'The backend is built with Node.js and Express in TypeScript. Session security uses Better Auth with HTTP-only cookies and a PostgreSQL-backed persistent session store. Expense splits are stored in normalized relational tables via Prisma ORM, and the settlement engine operates on in-memory net balance vectors derived from transaction ledgers.',
       architecture: {
         nodes: [
-          { id: 'auth', label: 'Better Auth Session', x: 15, y: 50, description: 'Manages user authentication and HTTP-only session tokens persisted in PostgreSQL.' },
-          { id: 'api', label: 'Express REST API', x: 38, y: 30, description: 'Validates group membership, ingests expense payloads, and exposes Swagger documentation.' },
-          { id: 'engine', label: 'minCashFlow Engine', x: 62, y: 70, description: 'Extracts net balances and executes recursive greedy matching between max debtors and max creditors.' },
-          { id: 'db', label: 'PostgreSQL (Prisma)', x: 85, y: 50, description: 'Relational data store persisting users, groups, expense items, and itemized participant splits.' }
+          { id: 'auth', label: 'Better Auth Session', category: 'AUTH', x: 14, y: 50, description: 'Manages user authentication and HTTP-only session tokens persisted in PostgreSQL.' },
+          { id: 'api', label: 'Express REST Gateway', category: 'API', x: 38, y: 28, description: 'Validates group membership, ingests expense payloads, and exposes Swagger documentation.' },
+          { id: 'engine', label: 'minCashFlow Engine', category: 'ALGO', x: 62, y: 72, description: 'Extracts net balances and executes recursive greedy matching between max debtors and max creditors.' },
+          { id: 'db', label: 'PostgreSQL & Prisma', category: 'STORAGE', x: 86, y: 50, description: 'Relational data store persisting users, groups, expense items, and itemized participant splits.' }
         ],
         edges: [
-          { source: 'auth', target: 'api', animated: true },
-          { source: 'api', target: 'engine', animated: true },
-          { source: 'engine', target: 'db', animated: false },
-          { source: 'api', target: 'db', animated: false }
+          { source: 'auth', target: 'api', label: 'Session Token', animated: true },
+          { source: 'api', target: 'engine', label: 'Balance Vector', animated: true },
+          { source: 'engine', target: 'db', label: 'Acyclic Plan', animated: false },
+          { source: 'api', target: 'db', label: 'Ledger Writes', animated: false }
         ]
       },
       challenge: 'Resolving multi-payer group expenses without creating orphaned fractions or circular transfers, ensuring that settlement amounts sum exactly to zero across all participating members.',
@@ -98,21 +106,24 @@ export const projects: Project[] = [
     artifactIndex: 1,
     image: '/images/projects/rapaport.webp',
     alt: 'Rapaport crystalline diamond pricing matrix coordinate structure',
+    figureLabel: 'FIG. 02 // 2D CARAT-CLARITY PRICING MATRIX PIPELINE',
+    accentColor: '#4EA8DE',
+    accentColorLight: '#1D6996',
     caseStudy: {
       problem: 'Diamond market pricing depends on the Rapaport Price List, a dense grid structured across weight tiers, color grades, and clarity ratings. Market operators frequently perform pricing calculations manually or through brittle spreadsheets, increasing the likelihood of input errors in high-value transactions.',
       idea: 'A specialized pricing engine and search workflow that parses 2D matrix sheets directly into a normalized relational database, providing instant coordinate lookups, custom discount formulas, and historical calculation logs.',
       system: 'The frontend is engineered with Next.js and TanStack Table for rapid client-side filtering and sorting. Input payloads are validated with Zod schemas. The backend parses workbook sheets into normalized coordinate vectors and stores them in PostgreSQL using Prisma batch operations.',
       architecture: {
         nodes: [
-          { id: 'excel', label: 'Matrix Ingestion', x: 15, y: 50, description: 'Parses 2D pricing grids across carat brackets, clarity grades, and color tiers.' },
-          { id: 'api', label: 'Zod Validation Layer', x: 38, y: 30, description: 'Sanitizes matrix coordinates and verifies numerical consistency across pricing vectors.' },
-          { id: 'db', label: 'PostgreSQL Store', x: 62, y: 70, description: 'Persists normalized price entries and calculation audit records using Prisma transactions.' },
-          { id: 'ui', label: 'Next.js & TanStack Table', x: 85, y: 50, description: 'Renders high-density pricing tables with instant filtering, discount multipliers, and history.' }
+          { id: 'excel', label: 'Matrix Ingestion', category: 'INGEST', x: 14, y: 50, description: 'Parses 2D pricing grids across carat brackets, clarity grades, and color tiers.' },
+          { id: 'api', label: 'Zod Validation Layer', category: 'VALIDATOR', x: 38, y: 28, description: 'Sanitizes matrix coordinates and verifies numerical consistency across pricing vectors.' },
+          { id: 'db', label: 'PostgreSQL Store', category: 'STORAGE', x: 62, y: 72, description: 'Persists normalized price entries and calculation audit records using Prisma transactions.' },
+          { id: 'ui', label: 'TanStack Table UI', category: 'CLIENT', x: 86, y: 50, description: 'Renders high-density pricing tables with instant filtering, discount multipliers, and history.' }
         ],
         edges: [
-          { source: 'excel', target: 'api', animated: true },
-          { source: 'api', target: 'db', animated: false },
-          { source: 'db', target: 'ui', animated: true }
+          { source: 'excel', target: 'api', label: 'Workbook Sheets', animated: true },
+          { source: 'api', target: 'db', label: 'Atomic Batch', animated: false },
+          { source: 'db', target: 'ui', label: 'Fast Lookup', animated: true }
         ]
       },
       challenge: 'Parsing denormalized 2D matrix spreadsheets where column and row headers represent continuous ranges (e.g., 0.90–0.99 ct) without losing precision or failing on malformed rows.',
@@ -138,21 +149,24 @@ export const projects: Project[] = [
     artifactIndex: 2,
     image: '/images/projects/secretspeak.webp',
     alt: 'SecretSpeak symbolic typographic glyphs and modular language sculpture',
+    figureLabel: 'FIG. 03 // DETERMINISTIC TOKEN-SYMBOL BINDING',
+    accentColor: '#A855F7',
+    accentColorLight: '#6B21A8',
     caseStudy: {
       problem: 'Direct text encoding schemes (like base64 or hexadecimal) produce immediate structural patterns that make the underlying payload obvious. Exploring alternative visual and syntactic representations requires a deterministic system capable of mapping text into novel symbolic forms and back without data loss.',
       idea: 'An exploratory studio for deterministic procedural language generation that maps input text through seeded dictionaries to generate syntactically coherent symbolic passages.',
       system: 'Built on Next.js with TypeScript and backed by PostgreSQL via Prisma. A procedural mapping engine segments input strings, resolves tokens against persisted dictionary matrices, and generates symbolic representations that can be reliably reversed.',
       architecture: {
         nodes: [
-          { id: 'input', label: 'Token Ingestion', x: 15, y: 50, description: 'Accepts source text, normalizes character casings, and segments input into token arrays.' },
-          { id: 'engine', label: 'Procedural Mapping Engine', x: 38, y: 30, description: 'Applies deterministic translation rules using seeded dictionary matrices.' },
-          { id: 'db', label: 'PostgreSQL Dictionary', x: 62, y: 70, description: 'Stores persisted symbol tables, grammar templates, and reverse mapping lookups.' },
-          { id: 'output', label: 'Bidirectional Decoder', x: 85, y: 50, description: 'Emits structured symbolic passages and supports exact lossless reverse reconstruction.' }
+          { id: 'input', label: 'Token Ingestion', category: 'INPUT', x: 14, y: 50, description: 'Accepts source text, normalizes character casings, and segments input into token arrays.' },
+          { id: 'engine', label: 'Procedural Mapping Engine', category: 'ALGO', x: 38, y: 28, description: 'Applies deterministic translation rules using seeded dictionary matrices.' },
+          { id: 'db', label: 'PostgreSQL Dictionary', category: 'STORAGE', x: 62, y: 72, description: 'Stores persisted symbol tables, grammar templates, and reverse mapping lookups.' },
+          { id: 'output', label: 'Bidirectional Decoder', category: 'DECODER', x: 86, y: 50, description: 'Emits structured symbolic passages and supports exact lossless reverse reconstruction.' }
         ],
         edges: [
-          { source: 'input', target: 'engine', animated: true },
-          { source: 'db', target: 'engine', animated: false },
-          { source: 'engine', target: 'output', animated: true }
+          { source: 'input', target: 'engine', label: 'Token Chunks', animated: true },
+          { source: 'db', target: 'engine', label: 'Symbol Matrices', animated: false },
+          { source: 'engine', target: 'output', label: 'Bijective Pass', animated: true }
         ]
       },
       challenge: 'Ensuring that the procedural translation is strictly bijective and deterministic: every token must map to an unambiguous symbolic construct that reconstructs the exact original text upon decoding.',
@@ -177,22 +191,25 @@ export const projects: Project[] = [
     artifactIndex: 3,
     image: '/images/projects/tabster.webp',
     alt: 'Tabster transactional order state machine and modular commerce trays',
+    figureLabel: 'FIG. 04 // ASYNCHRONOUS PAYMENT STATE MACHINE',
+    accentColor: '#F4A261',
+    accentColorLight: '#BC6C25',
     caseStudy: {
       problem: 'E-commerce transactional flows become brittle when multiple settlement factors—such as promotional discount codes, gift card balances, and third-party credit card authorizations—must be reconciled before inventory is decremented. Client-side network drops during checkout can leave orders in limbo.',
       idea: 'A full-stack commerce engine designed around an asynchronous order state machine that defers final database commits until verified payment webhooks are received.',
       system: 'A React single-page frontend communicates with an Express/Node.js backend API. Relational product and customer data is stored in MySQL. External payments are processed via Stripe PaymentIntents, with order lifecycle transitions driven by cryptographically verified webhook events.',
       architecture: {
         nodes: [
-          { id: 'react', label: 'React Client', x: 15, y: 50, description: 'Manages catalog browsing, shopping cart state, discount inputs, and Stripe Elements checkout.' },
-          { id: 'api', label: 'Express Order API', x: 38, y: 30, description: 'Validates cart totals, reserves inventory locks, and initializes Stripe PaymentIntents.' },
-          { id: 'mysql', label: 'MySQL Ledger', x: 62, y: 70, description: 'ACID storage for products, orders, coupon usage, and customer balance ledgers.' },
-          { id: 'stripe', label: 'Stripe Webhook Gateway', x: 85, y: 50, description: 'Dispatches signed webhook events to transition orders from pending to completed.' }
+          { id: 'react', label: 'React Storefront', category: 'CLIENT', x: 14, y: 50, description: 'Manages catalog browsing, shopping cart state, discount inputs, and Stripe Elements checkout.' },
+          { id: 'api', label: 'Express Order API', category: 'API', x: 38, y: 28, description: 'Validates cart totals, reserves inventory locks, and initializes Stripe PaymentIntents.' },
+          { id: 'mysql', label: 'MySQL Ledger', category: 'STORAGE', x: 62, y: 72, description: 'ACID storage for products, orders, coupon usage, and customer balance ledgers.' },
+          { id: 'stripe', label: 'Stripe Webhook Gateway', category: 'GATEWAY', x: 86, y: 50, description: 'Dispatches signed webhook events to transition orders from pending to completed.' }
         ],
         edges: [
-          { source: 'react', target: 'api', animated: true },
-          { source: 'api', target: 'mysql', animated: false },
-          { source: 'api', target: 'stripe', animated: true },
-          { source: 'stripe', target: 'api', animated: true }
+          { source: 'react', target: 'api', label: 'Checkout Session', animated: true },
+          { source: 'api', target: 'mysql', label: 'Pending Hold', animated: false },
+          { source: 'api', target: 'stripe', label: 'PaymentIntent', animated: true },
+          { source: 'stripe', target: 'api', label: 'Signed Webhooks', animated: true }
         ]
       },
       challenge: 'Preventing race conditions where user cart manipulation or double-submissions could cause duplicate discount deductions or invalid inventory counts during asynchronous payment processing.',
@@ -217,21 +234,24 @@ export const projects: Project[] = [
     artifactIndex: 4,
     image: '/images/projects/pulsesync.webp',
     alt: 'PulseSync analog telemetry waveform ribbon and hardware sensor substrate',
+    figureLabel: 'FIG. 05 // DUAL-CORE FREERTOS TELEMETRY FLOW',
+    accentColor: '#FF5964',
+    accentColorLight: '#C1121F',
     caseStudy: {
       problem: 'Continuous physiological monitoring requires deterministic, high-frequency analog-to-digital sampling. When single-threaded microcontrollers attempt to update an I2C/SPI display while reading analog sensors, display refresh latencies introduce timing jitter that distorts the recorded waveforms.',
       idea: 'An embedded physiological sensor monitoring prototype built on the dual-core ESP32, using FreeRTOS symmetric multiprocessing to pin sensor data acquisition to one core and telemetry display to the other.',
       system: 'The hardware setup pairs an ESP32 microcontroller with a MAX30102 pulse oximeter (I2C) and an AD8232 single-lead ECG monitor (analog ADC). Firmware is written in C++ under the ESP-IDF/Arduino framework, utilizing FreeRTOS queues for inter-task communication.',
       architecture: {
         nodes: [
-          { id: 'sensors', label: 'Biosensors (MAX/AD)', x: 15, y: 50, description: 'MAX30102 pulse oximeter (I2C) and AD8232 analog ECG sensor electrodes.' },
-          { id: 'core0', label: 'Core 0: Sampling Task', x: 38, y: 30, description: 'Dedicated FreeRTOS task running high-frequency ADC sampling and ring-buffer filtering.' },
-          { id: 'core1', label: 'Core 1: Waveform & Display', x: 62, y: 70, description: 'Drives SSD1306 OLED waveform rendering and serial/Bluetooth telemetry streaming.' },
-          { id: 'app', label: 'Monitoring Layer', x: 85, y: 50, description: 'Visualizes real-time pulse and cardiac rhythm traces for testing and validation.' }
+          { id: 'sensors', label: 'Biosensors (MAX/AD)', category: 'HARDWARE', x: 14, y: 50, description: 'MAX30102 pulse oximeter (I2C) and AD8232 analog ECG sensor electrodes.' },
+          { id: 'core0', label: 'ADC Sampling Task', category: 'RTOS C0', x: 38, y: 28, description: 'Dedicated FreeRTOS task running high-frequency ADC sampling and ring-buffer filtering.' },
+          { id: 'core1', label: 'Waveform & Display', category: 'RTOS C1', x: 62, y: 72, description: 'Drives SSD1306 OLED waveform rendering and serial/Bluetooth telemetry streaming.' },
+          { id: 'app', label: 'Monitoring Layer', category: 'CLIENT', x: 86, y: 50, description: 'Visualizes real-time pulse and cardiac rhythm traces for testing and validation.' }
         ],
         edges: [
-          { source: 'sensors', target: 'core0', animated: true },
-          { source: 'core0', target: 'core1', animated: true },
-          { source: 'core1', target: 'app', animated: true }
+          { source: 'sensors', target: 'core0', label: 'ADC Interrupt', animated: true },
+          { source: 'core0', target: 'core1', label: 'Queue / Ring Buffer', animated: true },
+          { source: 'core1', target: 'app', label: 'Serial Stream', animated: true }
         ]
       },
       challenge: 'Eliminating sampling rate instability caused by blocking I2C screen-refresh routines, ensuring that ECG waveform features remain intact during continuous operation.',
@@ -256,21 +276,24 @@ export const projects: Project[] = [
     artifactIndex: 5,
     image: '/images/projects/enginexus.webp',
     alt: 'EngiNexus spatial knowledge graph constellation and academic entity network',
+    figureLabel: 'FIG. 06 // 15-MODEL RELATIONAL CAMPUS ONTOLOGY',
+    accentColor: '#2A9D8F',
+    accentColorLight: '#1B4D3E',
     caseStudy: {
       problem: 'Universities frequently operate in departmental silos: engineering laboratories underutilize high-cost testing equipment, while interdisciplinary student teams struggle to find peers with complementary technical skills or access to relevant fabrication facilities.',
       idea: 'An institutional intelligence platform developed as a prototype for SIH to map relationships between academic talent, active research projects, and physical laboratory resources.',
       system: 'Built on Next.js 15 with TypeScript and PostgreSQL. The application is centered around a 15-model Prisma relational schema that normalizes student profiles, skill taxonomies, laboratory equipment schedules, and project collaborations into a unified queryable graph.',
       architecture: {
         nodes: [
-          { id: 'sources', label: 'Academic Entity Ingestion', x: 15, y: 50, description: 'Captures student skill vectors, department project listings, and lab equipment inventories.' },
-          { id: 'schema', label: '15-Model Relational Core', x: 38, y: 30, description: 'Normalized PostgreSQL schema via Prisma modeling students, labs, equipment, and projects.' },
-          { id: 'analytics', label: 'Analytics & Matching Engine', x: 62, y: 70, description: 'Aggregates facility utilization metrics and computes skill-match compatibility scores.' },
-          { id: 'ui', label: 'Next.js Analytics Dashboard', x: 85, y: 50, description: 'Interactive visualization interfaces for resource allocation and collaborative project discovery.' }
+          { id: 'sources', label: 'Entity Ingestion', category: 'DATA', x: 14, y: 50, description: 'Captures student skill vectors, department project listings, and lab equipment inventories.' },
+          { id: 'schema', label: '15-Model Schema', category: 'CORE', x: 38, y: 28, description: 'Normalized PostgreSQL schema via Prisma modeling students, labs, equipment, and projects.' },
+          { id: 'analytics', label: 'Matching Engine', category: 'ALGO', x: 62, y: 72, description: 'Aggregates facility utilization metrics and computes skill-match compatibility scores.' },
+          { id: 'ui', label: 'Analytics Dashboard', category: 'CLIENT', x: 86, y: 50, description: 'Interactive visualization interfaces for resource allocation and collaborative project discovery.' }
         ],
         edges: [
-          { source: 'sources', target: 'schema', animated: true },
-          { source: 'schema', target: 'analytics', animated: true },
-          { source: 'analytics', target: 'ui', animated: true }
+          { source: 'sources', target: 'schema', label: 'Campus Rosters', animated: true },
+          { source: 'schema', target: 'analytics', label: 'Relational Graph', animated: true },
+          { source: 'analytics', target: 'ui', label: 'Matchmaking Views', animated: true }
         ]
       },
       challenge: 'Structuring a relational schema capable of handling many-to-many associations between students, multidisciplinary projects, faculty advisors, and lab facilities without degrading query performance.',
