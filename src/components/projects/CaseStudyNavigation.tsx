@@ -25,13 +25,23 @@ export const CaseStudyNavigation: React.FC<CaseStudyNavigationProps> = ({ prevPr
         <div />
       )}
 
-      <Link
-        href="/#work"
-        className="cs-nav-center-link"
-        aria-label="Return to all projects in portfolio"
-      >
-        BACK TO ALL WORK
-      </Link>
+      <div className="cs-nav-center-group">
+        <Link
+          href="/#work"
+          className="cs-nav-center-link"
+          aria-label="Return to showcase on homepage"
+        >
+          SHOWCASE
+        </Link>
+        <span className="cs-nav-center-sep" aria-hidden="true">•</span>
+        <Link
+          href="/projects"
+          className="cs-nav-center-link"
+          aria-label="View all projects archive directory"
+        >
+          ALL PROJECTS
+        </Link>
+      </div>
 
       {nextProject ? (
         <Link
