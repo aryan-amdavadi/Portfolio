@@ -104,7 +104,7 @@ export const ProjectShowcase: React.FC = () => {
               fill
               sizes="(min-width: 1440px) 760px, (min-width: 1024px) 58vw, (min-width: 768px) 90vw, 100vw"
               className="editorial-artwork-img"
-              priority={selectedIndex === 0 || selectedIndex === 1}
+              priority
             />
             <div className="artwork-vignette" />
           </div>
@@ -127,7 +127,7 @@ export const ProjectShowcase: React.FC = () => {
               aria-label="Previous project"
               {...linkCursor}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
               <span className="btn-label-desktop">PREV</span>
@@ -149,7 +149,7 @@ export const ProjectShowcase: React.FC = () => {
               {...linkCursor}
             >
               <span className="btn-label-desktop">NEXT</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </button>

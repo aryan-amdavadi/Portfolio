@@ -67,6 +67,7 @@ export const InteractiveDiagram: React.FC<InteractiveDiagramProps> = ({ nodes, e
         className="diagram-desktop-view"
         role="region"
         aria-label="Interactive Architecture Diagram"
+        onMouseLeave={() => setActiveNode(null)}
       >
         <div className="diagram-schematic-header">
           <span className="diagram-schematic-tag">SCHEMATIC CAD VIEW // INTERACTIVE TOPOLOGY</span>
