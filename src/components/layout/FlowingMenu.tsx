@@ -7,7 +7,6 @@ import './FlowingMenu.css';
 interface MenuItemData {
   link: string;
   text: string;
-  image: string;
 }
 
 interface FlowingMenuProps {
@@ -69,7 +68,6 @@ export const FlowingMenu: React.FC<FlowingMenuProps> = ({
 const MenuItem: React.FC<MenuItemProps> = ({
   link,
   text,
-  image,
   speed,
   textColor,
   marqueeBgColor,
@@ -106,14 +104,14 @@ const MenuItem: React.FC<MenuItemProps> = ({
       if (!marqueeContent) return;
       const contentWidth = marqueeContent.offsetWidth;
       const viewportWidth = window.innerWidth;
-      const needed = Math.ceil(viewportWidth / contentWidth) + 2;
+      const needed = Math.ceil(viewportWidth / (contentWidth || 300)) + 2;
       setRepetitions(Math.max(4, needed));
     };
 
     calculateRepetitions();
     window.addEventListener('resize', calculateRepetitions);
     return () => window.removeEventListener('resize', calculateRepetitions);
-  }, [text, image]);
+  }, [text]);
 
   useEffect(() => {
     const setupMarquee = () => {
@@ -142,7 +140,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
         animationRef.current.kill();
       }
     };
-  }, [text, image, repetitions, speed]);
+  }, [text, repetitions, speed]);
 
   const handleMouseEnter = (ev: React.MouseEvent<HTMLAnchorElement>) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
@@ -190,7 +188,13 @@ const MenuItem: React.FC<MenuItemProps> = ({
             {[...Array(repetitions)].map((_, idx) => (
               <div className="marquee__part" key={idx} style={{ color: marqueeTextColor }}>
                 <span>{text}</span>
-                <div className="marquee__img" style={{ backgroundImage: `url(${image})` }} />
+                <span className="marquee__glyph" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="12" cy="12" r="8" strokeDasharray="3 2" />
+                    <line x1="12" y1="4" x2="12" y2="20" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                  </svg>
+                </span>
               </div>
             ))}
           </div>

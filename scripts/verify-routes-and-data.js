@@ -79,12 +79,53 @@ componentsToCheck.forEach(relPath => {
   }
 });
 
-// 6. Summary
+// 6. Verify Image-Free UI Guarantee
+function scanFilesRecursively(dir, filterFn) {
+  let results = [];
+  const list = fs.readdirSync(dir);
+  list.forEach(file => {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      results = results.concat(scanFilesRecursively(fullPath, filterFn));
+    } else if (filterFn(fullPath)) {
+      results.push(fullPath);
+    }
+  });
+  return results;
+}
+
+const uiFiles = scanFilesRecursively(path.join(rootDir, 'src'), fp => /\.(tsx|jsx|css)$/.test(fp));
+let nextImageImportCount = 0;
+let imageTagCount = 0;
+let backgroundImageCount = 0;
+
+uiFiles.forEach(file => {
+  const fileContent = fs.readFileSync(file, 'utf8');
+  if (/from ['"]next\/image['"]/g.test(fileContent)) {
+    nextImageImportCount++;
+    console.error(`❌ Image-free violation: next/image imported in ${file}`);
+  }
+  if (/<(Image|img)\b/g.test(fileContent)) {
+    imageTagCount++;
+    console.error(`❌ Image-free violation: <Image> or <img> rendered in ${file}`);
+  }
+  if (/background-image\s*:/g.test(fileContent) || /backgroundImage\s*:/g.test(fileContent)) {
+    backgroundImageCount++;
+    console.error(`❌ Image-free violation: background-image declared in ${file}`);
+  }
+});
+
+assert(nextImageImportCount === 0, 'Zero next/image imports in UI source tree');
+assert(imageTagCount === 0, 'Zero <Image> or <img> tags rendered in UI source tree');
+assert(backgroundImageCount === 0, 'Zero CSS background-image declarations in UI source tree');
+
+// 7. Summary
 console.log('\n--------------------------------------------------');
 if (failed) {
   console.error('❌ REGRESSION TEST FAILED: One or more assertions did not pass.');
   process.exit(1);
 } else {
-  console.log('✨ ALL REGRESSION CHECKS PASSED: Route mappings, catalog data, and asset integrity verified.');
+  console.log('✨ ALL REGRESSION CHECKS PASSED: Route mappings, catalog data, asset integrity, and image-free UI verified.');
   process.exit(0);
 }

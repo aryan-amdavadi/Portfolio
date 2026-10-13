@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Project } from '@/data/projects';
 import { ScrollReveal } from '@/components/text/ScrollReveal';
 import { TechnologyEvidence } from '@/components/projects/TechnologyEvidence';
 import { ProjectLinks } from '@/components/projects/ProjectLinks';
+import { ProjectSystemVisual } from '@/components/projects/ProjectSystemVisual';
 
 interface CaseStudyHeroProps {
   project: Project;
@@ -32,7 +32,7 @@ export const CaseStudyHero: React.FC<CaseStudyHeroProps> = ({ project }) => {
               {project.category}
             </span>
             <span className="cs-index-stamp">
-              REC // 0{project.artifactIndex + 1}
+              {`REC // 0${project.artifactIndex + 1}`}
             </span>
           </div>
 
@@ -46,31 +46,10 @@ export const CaseStudyHero: React.FC<CaseStudyHeroProps> = ({ project }) => {
         </div>
       </ScrollReveal>
 
-      {/* Art-Directed Project Artwork with Architectural Technical Stamp */}
-      {project.image && (
-        <div className="cs-hero-artwork-frame">
-          <div className="cs-frame-corner top-left" aria-hidden="true" />
-          <div className="cs-frame-corner top-right" aria-hidden="true" />
-          <div className="cs-frame-corner bottom-left" aria-hidden="true" />
-          <div className="cs-frame-corner bottom-right" aria-hidden="true" />
-
-          <Image
-            src={project.image}
-            alt={project.alt || `${project.title} technical architecture and project visual`}
-            fill
-            sizes="(max-width: 1024px) 100vw, 960px"
-            priority
-            className="cs-hero-image"
-          />
-          <div className="cs-hero-artwork-overlay" />
-
-          {/* Technical Publication Figure Badge */}
-          <div className="cs-hero-figure-badge">
-            <span className="cs-figure-dot" aria-hidden="true" />
-            <span>{project.figureLabel || `FIG. 0${project.artifactIndex + 1} // ARCHITECTURAL SUBSTRATE`}</span>
-          </div>
-        </div>
-      )}
+      {/* Engineering Atlas Architectural System Map (Image-Free) */}
+      <div className="cs-hero-system-visual">
+        <ProjectSystemVisual project={project} />
+      </div>
 
       {/* Engineering Metadata Grid */}
       <div className="cs-meta-grid">

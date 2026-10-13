@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
 
 export const metadata: Metadata = {
   title: 'All Projects & Systems — Aryan Amdavadi',
-  description: 'A comprehensive architectural catalog of production applications, deterministic algorithms, embedded systems, and case studies.',
+  description: 'An architectural catalog of production applications, deterministic algorithms, embedded systems, and case studies.',
   openGraph: {
     title: 'All Projects & Systems — Aryan Amdavadi',
     description: 'An architectural catalog of engineered systems, algorithms, and technical prototypes.',
@@ -45,75 +44,91 @@ export default function ProjectsIndexPage() {
 
       {/* Project Grid */}
       <section className="archive-grid" aria-label="Project Case Studies Catalog">
-        {projects.map((project, index) => (
-          <article key={project.id} className="archive-card" data-project={project.id}>
-            {/* Project Artwork Frame */}
-            <div className="archive-card-image-box">
-              <span className="archive-card-badge">
-                {`0${index + 1} // ${project.category.toUpperCase()}`}
-              </span>
-              <Image
-                src={project.image}
-                alt={project.alt || `${project.title} technical architecture visualization`}
-                fill
-                sizes="(min-width: 1024px) 520px, (min-width: 768px) 50vw, 100vw"
-                className="archive-card-img"
-              />
-            </div>
+        {projects.map((project, index) => {
+          const isProduction = Boolean(project.liveUrl && project.liveUrl !== '#' && !project.liveUrl.includes('localhost'));
 
-            {/* Project Body */}
-            <div className="archive-card-body">
-              <div className="archive-card-meta">
-                <span>{project.role}</span>
-                <span className="cs-status-indicator">
-                  <span className="cs-status-dot" />
-                  {project.liveUrl && project.liveUrl !== '#' ? 'Active' : 'Completed'}
-                </span>
+          return (
+            <article key={project.id} className="archive-card" data-project={project.id}>
+              {/* Engineering Atlas Typographic Register Bar */}
+              <div className="archive-card-spec-header">
+                <div className="archive-card-spec-meta">
+                  <span className="archive-spec-index">{`REC // 0${index + 1}`}</span>
+                  <span className="archive-spec-sep" aria-hidden="true">/</span>
+                  <span className="archive-spec-cat">{project.category.toUpperCase()}</span>
+                </div>
+                <div className="archive-card-spec-status">
+                  <span className="archive-status-pip" aria-hidden="true" />
+                  <span>{isProduction ? 'PRODUCTION' : 'PROTOTYPE'}</span>
+                </div>
               </div>
 
-              <h2 className="archive-card-title">
-                {project.title}
-              </h2>
-
-              <p className="archive-card-problem">
-                {project.problem}
-              </p>
-
-              {/* Technologies */}
-              <div className="cs-tech-tags-group">
-                {project.technology.slice(0, 4).map((tech) => (
-                  <span key={tech} className="cs-tech-tag" style={{ fontSize: '11px', padding: '2px 8px' }}>
-                    {tech}
+              {/* Project Body */}
+              <div className="archive-card-body">
+                <div className="archive-card-meta">
+                  <span>ROLE: {project.role.toUpperCase()}</span>
+                  <span className="cs-status-indicator">
+                    <span className="cs-status-dot" />
+                    {isProduction ? 'Active' : 'Completed'}
                   </span>
-                ))}
-              </div>
+                </div>
 
-              {/* Footer CTA */}
-              <div className="archive-card-footer">
-                <Link
-                  href={project.caseStudyRoute || `/projects/${project.id}`}
-                  className="btn btn-primary"
-                  style={{ fontSize: 'var(--text-xs)' }}
-                  aria-label={`Read case study for ${project.title}`}
-                >
-                  VIEW CASE STUDY ↗
-                </Link>
+                <h2 className="archive-card-title">
+                  {project.title}
+                </h2>
 
-                {project.githubUrl && project.githubUrl !== '#' && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link-technical"
-                    aria-label={`GitHub repository for ${project.title}`}
+                <p className="archive-card-problem">
+                  {project.problem}
+                </p>
+
+                {/* Technologies */}
+                <div className="cs-tech-tags-group">
+                  {project.technology.slice(0, 5).map((tech) => (
+                    <span key={tech} className="cs-tech-tag" style={{ fontSize: '11px', padding: '2px 8px' }}>
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Footer CTA */}
+                <div className="archive-card-footer">
+                  <Link
+                    href={project.caseStudyRoute || `/projects/${project.id}`}
+                    className="btn btn-primary"
+                    style={{ fontSize: 'var(--text-xs)' }}
+                    aria-label={`Read case study for ${project.title}`}
                   >
-                    CODE ↗
-                  </a>
-                )}
+                    VIEW CASE STUDY ↗
+                  </Link>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                    {project.githubUrl && project.githubUrl !== '#' && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link-technical"
+                        aria-label={`GitHub repository for ${project.title}`}
+                      >
+                        CODE ↗
+                      </a>
+                    )}
+                    {project.liveUrl && project.liveUrl !== '#' && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link-technical"
+                        aria-label={`Live system for ${project.title}`}
+                      >
+                        LIVE ↗
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </section>
 
       {/* Archive Bottom Navigation */}

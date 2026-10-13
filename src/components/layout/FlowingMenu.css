@@ -89,12 +89,15 @@
   padding: 0 1vw;
 }
 
-.marquee__img {
-  width: 200px;
-  height: 7vh;
-  margin: 2em 2vw;
-  padding: 1em 0;
-  border-radius: 50px;
-  background-size: cover;
-  background-position: 50% 50%;
+.marquee__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2vw;
+  opacity: 0.6;
+}
+
+.marquee__glyph svg {
+  width: 2.5vh;
+  height: 2.5vh;
 }

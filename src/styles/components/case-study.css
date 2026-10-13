@@ -160,82 +160,17 @@
   margin: 0;
 }
 
-/* Hero Artwork Frame with Architectural Crosshair Brackets */
-.cs-hero-artwork-frame {
+/* Hero System Visualizer (Image-Free Engineering Atlas) */
+.cs-hero-system-visual {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
   margin-top: var(--space-2);
   box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-sm);
 }
 
-@media (max-width: 640px) {
-  .cs-hero-artwork-frame {
-    aspect-ratio: 4 / 3;
-  }
-}
-
-.cs-hero-image {
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cs-hero-artwork-frame:hover .cs-hero-image {
-  transform: scale(1.02);
-}
-
-.cs-hero-artwork-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(11, 25, 44, 0.6) 100%);
-  pointer-events: none;
-}
-
-[data-theme="light"] .cs-hero-artwork-overlay {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(40, 54, 24, 0.4) 100%);
-}
-
-/* Corner Alignment Brackets */
-.cs-frame-corner {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.cs-frame-corner.top-left {
-  top: 8px;
-  left: 8px;
-  border-top: 1.5px solid var(--text-primary);
-  border-left: 1.5px solid var(--text-primary);
-}
-
-.cs-frame-corner.top-right {
-  top: 8px;
-  right: 8px;
-  border-top: 1.5px solid var(--text-primary);
-  border-right: 1.5px solid var(--text-primary);
-}
-
-.cs-frame-corner.bottom-left {
-  bottom: 8px;
-  left: 8px;
-  border-bottom: 1.5px solid var(--text-primary);
-  border-left: 1.5px solid var(--text-primary);
-}
-
-.cs-frame-corner.bottom-right {
-  bottom: 8px;
-  right: 8px;
-  border-bottom: 1.5px solid var(--text-primary);
-  border-right: 1.5px solid var(--text-primary);
+[data-theme="light"] .cs-hero-system-visual {
+  box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.08);
 }
 
 /* Technical Publication Figure Badge */
@@ -1218,45 +1153,55 @@
   box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.35);
 }
 
-.archive-card-image-box {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  background-color: var(--bg-base);
+.archive-card-spec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--bg-surface-elevated);
   border-bottom: 1px solid var(--border-subtle);
-  overflow: hidden;
-}
-
-.archive-card-img {
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.archive-card:hover .archive-card-img {
-  transform: scale(1.04);
-}
-
-.archive-card-badge {
-  position: absolute;
-  top: var(--space-3);
-  left: var(--space-3);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
-  background: rgba(11, 25, 44, 0.85);
-  border: 1px solid var(--border-subtle);
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  backdrop-filter: blur(6px);
-  z-index: 2;
+  font-size: var(--text-xs);
+  box-sizing: border-box;
 }
 
-[data-theme="light"] .archive-card-badge {
-  background: rgba(248, 245, 215, 0.9);
+.archive-card-spec-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.archive-spec-index {
   color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+}
+
+.archive-spec-sep {
+  color: var(--border-strong);
+  opacity: 0.5;
+}
+
+.archive-spec-cat {
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-widest);
+  font-size: 0.7rem;
+}
+
+.archive-card-spec-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+}
+
+.archive-status-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-base);
 }
 
 .archive-card-body {
@@ -1324,9 +1269,6 @@
     animation: none !important;
   }
 
-  .cs-hero-image {
-    transform: none !important;
-  }
 
   .algo-calculating-msg {
     animation: none !important;
