@@ -146,6 +146,18 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
     setSelectedNodeId((prev) => (prev === nodeId ? null : nodeId));
   };
 
+  const handlePillKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      setIsPlaying(false);
+      setActiveStepIndex((prev) => (prev + 1) % flowSteps.length);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      setIsPlaying(false);
+      setActiveStepIndex((prev) => (prev - 1 + flowSteps.length) % flowSteps.length);
+    }
+  };
+
   return (
     <div
       className={`workbench-container ${mode === 'compact' ? 'mode-compact' : 'mode-full'}`}
@@ -471,6 +483,7 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
                       setIsPlaying(false);
                       setActiveStepIndex(idx);
                     }}
+                    onKeyDown={handlePillKeyDown}
                     {...linkCursor}
                   >
                     <span>{s.stepNumber}</span>

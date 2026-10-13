@@ -1073,6 +1073,27 @@
   max-height: 440px;
 }
 
+/* Mobile Responsive Refinements */
+@media (max-width: 640px) {
+  .workbench-node-btn {
+    width: 125px;
+    padding: var(--space-1) var(--space-2);
+  }
+  .node-label {
+    font-size: 0.68rem;
+  }
+  .node-tech {
+    display: none;
+  }
+  .workbench-chrome {
+    padding: var(--space-2) var(--space-3);
+  }
+  .workbench-tab-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.62rem;
+  }
+}
+
 /* Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
   .workbench-container,
