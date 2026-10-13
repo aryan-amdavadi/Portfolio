@@ -166,7 +166,7 @@ export class AntigravityField {
   public update(time: number, pointer: { x: number, y: number }, isReducedMotion: boolean = false) {
     // 1. Determine theme target color
     const isLight = EngineState.theme === 'light';
-    const desiredColorHex = isLight ? 0x606C38 : 0xFF9FFC;
+    const desiredColorHex = isLight ? 0x0F5B54 : 0xFF9FFC;
     
     // Smoothly lerp color (CPU side, only done once per frame for the uniform)
     this.targetColor.lerp(new THREE.Color(desiredColorHex), 0.05);

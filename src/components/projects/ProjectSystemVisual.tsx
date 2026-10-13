@@ -14,7 +14,7 @@ interface ProjectSystemVisualProps {
  * using inline SVG and semantic CSS surfaces.
  */
 export const ProjectSystemVisual: React.FC<ProjectSystemVisualProps> = ({ project }) => {
-  const accentColor = project.accentColor || 'var(--accent-base)';
+  const accentColor = 'var(--project-accent-color)';
 
   const renderVisual = () => {
     switch (project.id) {
@@ -40,7 +40,10 @@ export const ProjectSystemVisual: React.FC<ProjectSystemVisualProps> = ({ projec
       className="atlas-system-visual"
       data-project-id={project.id}
       aria-label={`${project.title} Architectural System Diagram`}
-      style={{ '--project-accent-color': accentColor } as React.CSSProperties}
+      style={{
+        '--project-accent-dark': project.accentColor || 'var(--accent-base)',
+        '--project-accent-light': project.accentColorLight || 'var(--accent-base)'
+      } as React.CSSProperties}
     >
       <div className="atlas-visual-chrome">
         <div className="chrome-left">

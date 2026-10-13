@@ -20,7 +20,7 @@ export class OrbitalNodes {
 
     const geometry = new THREE.SphereGeometry(0.05, 8, 8);
     this.material = new THREE.MeshPhysicalMaterial({
-      color: 0xDDA15E, // Accent color
+      color: 0x202522, // Neutral graphite base
       metalness: 0.5,
       roughness: 0.2,
       transparent: true,
@@ -47,7 +47,7 @@ export class OrbitalNodes {
   public update(time: number) {
     // Theme colors
     const isLight = EngineState.theme === 'light';
-    const targetColor = isLight ? new THREE.Color(0x283618) : new THREE.Color(0x1B3A4B);
+    const targetColor = isLight ? new THREE.Color(0x202522) : new THREE.Color(0x1B3A4B);
     this.material.color.lerp(targetColor, 0.05);
 
     // Sync overall opacity with EngineState

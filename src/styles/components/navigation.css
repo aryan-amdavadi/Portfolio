@@ -77,7 +77,7 @@
 }
 
 [data-theme="light"] .nav-overlay {
-  background-color: rgba(254, 250, 224, 0.95);
+  background-color: rgba(244, 244, 240, 0.97);
 }
 
 .nav-overlay[data-state="open"] {

@@ -27,14 +27,14 @@ export const GhostFibersBackground = () => {
   return (
     <div style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', zIndex: -10, pointerEvents: 'none' }}>
       <GhostFibers 
-        speed={0.2}
-        lineColor={isLight ? "#606C38" : "#A8B1FF"}
-        glowColor={isLight ? "#283618" : "#3437A0"}
+        speed={0.16}
+        lineColor={isLight ? "#202522" : "#A8B1FF"}
+        glowColor={isLight ? "#38443E" : "#3437A0"}
         layers={isLight ? 2 : 3}
-        brightness={isLight ? 1.0 : 2.0}
-        vignette={isLight ? 0.4 : 0.8}
-        lineSharpness={isLight ? 8 : 12}
-        grain={isLight ? 0.01 : 0.02}
+        brightness={isLight ? 0.65 : 2.0}
+        vignette={isLight ? 0.25 : 0.8}
+        lineSharpness={isLight ? 9 : 12}
+        grain={isLight ? 0.008 : 0.02}
         lightMode={isLight}
       />
     </div>

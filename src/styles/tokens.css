@@ -15,13 +15,17 @@
   --color-dark-violet-2: #3E1F47;
   --color-dark-violet-3: #4D194D;
 
-  /* LIGHT THEME */
-  --color-light-bg: #FEFAE0;
-  --color-light-primary: #283618;
-  --color-light-secondary: #606C38;
-  --color-light-accent: #606C38; /* olive */
-  --color-light-highlight: #BC6C25; /* copper/clay */
-  --color-light-ambient: #DDA15E;
+  /* LIGHT THEME: PORCELAIN & GRAPHITE TECHNICAL PUBLICATION */
+  --color-light-canvas: #F4F4F0;        /* Soft neutral porcelain substrate */
+  --color-light-surface: #EBEBE6;       /* Restrained pale stone surface */
+  --color-light-elevated: #FFFFFF;      /* Clean neutral white card well */
+  --color-light-primary: #202522;       /* Deep graphite (13.3:1 contrast against canvas) */
+  --color-light-secondary: #4E5652;     /* Muted graphite body copy (6.4:1 contrast) */
+  --color-light-muted: #6B7570;         /* Monospace metadata stamps (4.6:1 contrast) */
+  --color-light-accent: #0F5B54;        /* Deep restrained forest teal (6.5:1 contrast) */
+  --color-light-highlight: #166E66;     /* Active focus and hover indicator */
+  --color-light-ambient-1: #E6E8E3;     /* Cool atmospheric light */
+  --color-light-ambient-2: #D5DAD2;
 
   /* --- SEMANTIC THEME VARIABLES (Dark Mode Default) --- */
   --bg-base: var(--color-dark-bg-1);
@@ -73,26 +77,27 @@
 }
 
 [data-theme="light"] {
-  --bg-base: var(--color-light-bg);
-  --bg-surface: #F8F5D7;
-  --bg-surface-elevated: #EFE7BC;
+  --bg-base: var(--color-light-canvas);
+  --bg-surface: var(--color-light-surface);
+  --bg-surface-elevated: var(--color-light-elevated);
 
   --text-primary: var(--color-light-primary);
   --text-secondary: var(--color-light-secondary);
-  --text-muted: rgba(40, 54, 24, 0.5);
+  --text-muted: var(--color-light-muted);
 
   --accent-base: var(--color-light-accent);
   --accent-hover: var(--color-light-highlight);
 
-  --ambient-light-1: var(--color-light-ambient);
-  --ambient-light-2: var(--color-light-highlight);
+  --ambient-light-1: var(--color-light-ambient-1);
+  --ambient-light-2: var(--color-light-ambient-2);
 
-  --border-subtle: rgba(40, 54, 24, 0.1);
-  --border-strong: rgba(40, 54, 24, 0.3);
-  --border-focus: var(--color-light-highlight);
+  --border-subtle: rgba(32, 37, 34, 0.10);
+  --border-strong: rgba(32, 37, 34, 0.24);
+  --border-focus: var(--color-light-accent);
 }
+
 /* Theme Transition class added to body when theme switches */
 body.theme-transitioning,
 body.theme-transitioning * {
-  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
 }

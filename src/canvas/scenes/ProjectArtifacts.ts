@@ -22,7 +22,7 @@ export class ProjectArtifacts {
     this.group.position.set(4, 0, -2);
 
     this.material = new THREE.MeshPhysicalMaterial({
-      color: 0xBC6C25, // Highlight color
+      color: 0x0F5B54, // Restrained teal accent
       metalness: 0.9,
       roughness: 0.1,
       transparent: true,
@@ -61,7 +61,7 @@ export class ProjectArtifacts {
   public update(time: number) {
     // Theme colors
     const isLight = EngineState.theme === 'light';
-    const targetColor = isLight ? new THREE.Color(0xBC6C25) : new THREE.Color(0x065A60);
+    const targetColor = isLight ? new THREE.Color(0x0F5B54) : new THREE.Color(0x065A60);
     this.material.color.lerp(targetColor, 0.05);
 
     this.material.opacity = EngineState.artifactsOpacity;

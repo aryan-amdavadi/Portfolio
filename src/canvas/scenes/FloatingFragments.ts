@@ -52,7 +52,7 @@ export class FloatingFragments {
   public update(time: number) {
     // Theme colors
     const isLight = EngineState.theme === 'light';
-    const targetColor = isLight ? new THREE.Color(0xDDA15E) : new THREE.Color(0x312244);
+    const targetColor = isLight ? new THREE.Color(0x6B7570) : new THREE.Color(0x312244);
     this.material.color.lerp(targetColor, 0.05);
 
     this.mesh.visible = EngineState.fragmentsOpacity > 0.01;

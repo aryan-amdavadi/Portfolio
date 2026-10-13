@@ -40,7 +40,7 @@ export class PrimarySculpture {
   public update(time: number, pointer: { x: number, y: number }) {
     // Theme colors
     const isLight = EngineState.theme === 'light';
-    const targetColor = isLight ? new THREE.Color(0x606C38) : new THREE.Color(0x006466);
+    const targetColor = isLight ? new THREE.Color(0x0F5B54) : new THREE.Color(0x006466);
     
     if (this.material) {
       this.material.color.lerp(targetColor, 0.05);

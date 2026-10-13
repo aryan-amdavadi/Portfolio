@@ -148,20 +148,20 @@ export class SceneDirector {
 
     // Theme colors
     const darkFogColor = new THREE.Color(0x312244);
-    const lightFogColor = new THREE.Color(0xFEFAE0); // Warm off-white
+    const lightFogColor = new THREE.Color(0xF4F4F0); // Porcelain canvas match
     
     const darkDirColor = new THREE.Color(0x006466); // Cool teal
-    const lightDirColor = new THREE.Color(0x606C38); // Olive
+    const lightDirColor = new THREE.Color(0x0F5B54); // Deep forest teal
     
     const darkFillColor = new THREE.Color(0x4D194D); // Violet
-    const lightFillColor = new THREE.Color(0xDDA15E); // Copper
+    const lightFillColor = new THREE.Color(0x4E5652); // Muted graphite
     
     const isLight = EngineState.theme === 'light';
     const targetFog = isLight ? lightFogColor : darkFogColor;
-    const targetFogDensity = isLight ? EngineState.fogDensity * 0.5 : EngineState.fogDensity; // Lower fog density in light mode
+    const targetFogDensity = isLight ? EngineState.fogDensity * 0.4 : EngineState.fogDensity; // Lower fog density in light mode
     const targetDir = isLight ? lightDirColor : darkDirColor;
     const targetFill = isLight ? lightFillColor : darkFillColor;
-    const targetAmbient = isLight ? EngineState.ambientIntensity * 1.5 : EngineState.ambientIntensity; // Brighter ambient
+    const targetAmbient = isLight ? EngineState.ambientIntensity * 1.3 : EngineState.ambientIntensity; // Balanced ambient
 
     // Sync camera and environment from GSAP controlled EngineState
     this.camera.position.z = EngineState.cameraZ;

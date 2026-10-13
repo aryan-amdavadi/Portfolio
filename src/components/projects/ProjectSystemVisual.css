@@ -3,6 +3,7 @@
    ========================================================================== */
 
 .atlas-system-visual {
+  --project-accent-color: var(--project-accent-dark, var(--active-project-accent, var(--accent-base)));
   width: 100%;
   position: relative;
   background-color: var(--bg-surface);
@@ -12,7 +13,11 @@
   flex-direction: column;
   overflow: hidden;
   box-sizing: border-box;
-  transition: border-color var(--duration-fast) ease;
+  transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+}
+
+[data-theme='light'] .atlas-system-visual {
+  --project-accent-color: var(--project-accent-light, var(--active-project-accent-light, var(--accent-base)));
 }
 
 .atlas-system-visual:hover {

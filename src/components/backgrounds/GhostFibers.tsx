@@ -88,8 +88,9 @@ float layeredGrain(vec2 fragmentPixel) {
 void main() {
   vec2 resolution = max(uResolution, vec2(1.0));
   vec2 uv = (2.0 * gl_FragCoord.xy - resolution) / resolution.y;
-  float time = uTime * uSpeed;
-  vec3 backdrop = mix(vec3(0.070588, 0.058824, 0.090196), vec3(1.0), step(0.5, uLightMode));
+  vec3 darkBackdrop = vec3(0.070588, 0.058824, 0.090196);
+  vec3 lightBackdrop = vec3(0.95686, 0.95686, 0.94118); // #F4F4F0 porcelain canvas match
+  vec3 backdrop = mix(darkBackdrop, lightBackdrop, step(0.5, uLightMode));
   vec3 centerTone = max(uLineColor * 0.85567 - uGlowColor * 0.06186, vec3(0.0));
   vec3 cloudTone = uLineColor * 0.19588 + uGlowColor * 0.2268;
   vec2 p = uv;
@@ -133,12 +134,12 @@ void main() {
   if (uLightMode > 0.5) {
     float edgeFade = mix(1.0 - uVignette, 1.0, vignette);
     float fibers = pow(smoothstep(0.12, 1.05, fiberField) * edgeFade, 1.5);
-    float atmosphere = (center * 0.025 + cloud * 0.015) * edgeFade;
-    vec3 fiberInk = mix(backdrop, uLineColor, 0.52);
-    vec3 airColor = mix(backdrop, uGlowColor, 0.16);
+    float atmosphere = (center * 0.02 + cloud * 0.01) * edgeFade;
+    vec3 fiberInk = mix(backdrop, uLineColor, 0.38);
+    vec3 airColor = mix(backdrop, uGlowColor, 0.08);
 
     outputColor = mix(backdrop, airColor, atmosphere);
-    outputColor = mix(outputColor, fiberInk, fibers * 0.3);
+    outputColor = mix(outputColor, fiberInk, fibers * 0.22);
   } else {
     outputColor = backdrop + color;
   }

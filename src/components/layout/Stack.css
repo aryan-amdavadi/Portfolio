@@ -103,7 +103,7 @@
 }
 
 [data-theme="light"] .stack-artifact-overlay {
-  background: linear-gradient(to top, rgba(254, 250, 224, 0.95) 0%, rgba(254, 250, 224, 0.4) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(244, 244, 240, 0.95) 0%, rgba(244, 244, 240, 0.4) 60%, transparent 100%);
 }
 
 .stack-artifact-title {

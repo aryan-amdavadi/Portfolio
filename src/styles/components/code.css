@@ -69,7 +69,8 @@
 }
 
 [data-theme="light"] .github-repo-card:hover {
-  background: rgba(221, 161, 94, 0.05);
+  background: rgba(15, 91, 84, 0.04);
+  border-color: var(--accent-base);
 }
 
 .github-repo-card h3 {

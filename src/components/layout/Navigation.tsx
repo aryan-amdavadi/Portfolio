@@ -80,6 +80,7 @@ export const Navigation: React.FC = () => {
           textColor="var(--text-primary)"
           marqueeBgColor="var(--text-primary)"
           marqueeTextColor="var(--bg-base)"
+          borderColor="var(--border-subtle)"
         />
       </div>
     </>

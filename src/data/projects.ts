@@ -193,7 +193,7 @@ export const projects: Project[] = [
     alt: 'Tabster transactional order state machine and modular commerce trays',
     figureLabel: 'FIG. 04 // ASYNCHRONOUS PAYMENT STATE MACHINE',
     accentColor: '#F4A261',
-    accentColorLight: '#BC6C25',
+    accentColorLight: '#9A3412',
     caseStudy: {
       problem: 'E-commerce transactional flows become brittle when multiple settlement factors—such as promotional discount codes, gift card balances, and third-party credit card authorizations—must be reconciled before inventory is decremented. Client-side network drops during checkout can leave orders in limbo.',
       idea: 'A full-stack commerce engine designed around an asynchronous order state machine that defers final database commits until verified payment webhooks are received.',
