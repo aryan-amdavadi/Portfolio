@@ -63,6 +63,7 @@ routeMatches.forEach(route => {
 // 5. Check for forbidden placeholder links (href="#") in core project components
 const componentsToCheck = [
   'src/components/projects/ProjectShowcase.tsx',
+  'src/components/projects/EngineeringWorkbench.tsx',
   'src/components/projects/CaseStudyHero.tsx',
   'src/components/projects/CaseStudyNavigation.tsx',
   'src/components/projects/ProjectLinks.tsx',
@@ -120,12 +121,29 @@ assert(nextImageImportCount === 0, 'Zero next/image imports in UI source tree');
 assert(imageTagCount === 0, 'Zero <Image> or <img> tags rendered in UI source tree');
 assert(backgroundImageCount === 0, 'Zero CSS background-image declarations in UI source tree');
 
-// 7. Summary
+// 7. Verify Engineering Workbench Data & Schemas
+const workbenchPath = path.join(rootDir, 'src/data/workbench.ts');
+assert(fs.existsSync(workbenchPath), 'Workbench data file (src/data/workbench.ts) exists');
+
+const workbenchContent = fs.readFileSync(workbenchPath, 'utf8');
+expectedProjects.forEach(pid => {
+  const hasProjectKey = new RegExp(`['"]?${pid}['"]?\\s*:\\s*{`).test(workbenchContent);
+  assert(hasProjectKey, `Workbench data contains verified configuration for '${pid}'`);
+});
+
+// Verify workbench contains required schema properties
+assert(workbenchContent.includes('primaryConstraint:'), 'Workbench defines primaryConstraint for systems');
+assert(workbenchContent.includes('nodes:'), 'Workbench defines architectural nodes');
+assert(workbenchContent.includes('flowSteps:'), 'Workbench defines verified flowSteps (inputs, processing, outputs)');
+assert(workbenchContent.includes('decisions:'), 'Workbench defines architectural trade-offs & decisions');
+assert(workbenchContent.includes('getWorkbenchData('), 'Workbench exports getWorkbenchData fallback lookup helper');
+
+// 8. Summary
 console.log('\n--------------------------------------------------');
 if (failed) {
   console.error('❌ REGRESSION TEST FAILED: One or more assertions did not pass.');
   process.exit(1);
 } else {
-  console.log('✨ ALL REGRESSION CHECKS PASSED: Route mappings, catalog data, asset integrity, and image-free UI verified.');
+  console.log('✨ ALL REGRESSION CHECKS PASSED: Route mappings, catalog data, asset integrity, image-free UI, and Engineering Workbench verified.');
   process.exit(0);
 }

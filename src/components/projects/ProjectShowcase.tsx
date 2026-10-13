@@ -6,10 +6,12 @@ import { projects } from '@/data/projects';
 import { useCursorHandlers } from '@/hooks/useCursorState';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { ProjectSystemVisual } from './ProjectSystemVisual';
+import { EngineeringWorkbench } from './EngineeringWorkbench';
 import './ProjectShowcase.css';
 
 export const ProjectShowcase: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [stageMode, setStageMode] = useState<'schematic' | 'workbench'>('schematic');
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const isReducedMotion = useReducedMotion();
 
@@ -183,9 +185,53 @@ export const ProjectShowcase: React.FC = () => {
             <div className="stage-hairline-rule" />
           </div>
 
-          {/* Bespoke Image-Free System Visualizer */}
+          {/* Visual Mode Selector: Schematic vs Interactive Workbench */}
+          <div className="stage-mode-selector-bar">
+            <div className="stage-mode-toggle-group" role="tablist" aria-label="Visual Exploration Mode">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={stageMode === 'schematic'}
+                className={`stage-mode-toggle-btn ${stageMode === 'schematic' ? 'active' : ''}`}
+                onClick={() => setStageMode('schematic')}
+                {...linkCursor}
+              >
+                <span className="mode-toggle-dot" />
+                <span>01 // SYSTEM SCHEMATIC</span>
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                aria-selected={stageMode === 'workbench'}
+                className={`stage-mode-toggle-btn ${stageMode === 'workbench' ? 'active' : ''}`}
+                onClick={() => setStageMode('workbench')}
+                {...linkCursor}
+              >
+                <span className="workbench-icon">⚙</span>
+                <span>02 // INTERACTIVE WORKBENCH</span>
+              </button>
+            </div>
+
+            <span className="stage-mode-hint">
+              {stageMode === 'workbench'
+                ? 'SYSTEM PIPELINE EXPLORER ACTIVE'
+                : 'CLICK WORKBENCH TO INSPECT INPUTS, FLOW & TRADE-OFFS'}
+            </span>
+          </div>
+
+          {/* Active Visualizer: Schematic View or Full Engineering Workbench */}
           <div className="stage-visual-wrapper">
-            <ProjectSystemVisual key={activeProject.id} project={activeProject} />
+            {stageMode === 'schematic' ? (
+              <ProjectSystemVisual key={activeProject.id} project={activeProject} />
+            ) : (
+              <EngineeringWorkbench
+                key={activeProject.id}
+                project={activeProject}
+                mode="compact"
+                onClose={() => setStageMode('schematic')}
+              />
+            )}
           </div>
 
           {/* Engineering Dossier: Technical Findings, Solutions & Core Stack */}
@@ -223,6 +269,19 @@ export const ProjectShowcase: React.FC = () => {
               <span>INSPECT CASE STUDY</span>
               <span className="cta-arrow" aria-hidden="true">→</span>
             </Link>
+
+            <button
+              type="button"
+              onClick={() => setStageMode((prev) => (prev === 'workbench' ? 'schematic' : 'workbench'))}
+              className={`btn btn-outline stage-cta-secondary stage-workbench-action ${
+                stageMode === 'workbench' ? 'active' : ''
+              }`}
+              aria-label={stageMode === 'workbench' ? 'Return to schematic visual' : 'Open engineering workbench explorer'}
+              {...exploreCursor}
+            >
+              <span>{stageMode === 'workbench' ? 'SCHEMATIC VIEW' : 'EXPLORE WORKBENCH'}</span>
+              <span className="cta-arrow" aria-hidden="true">{stageMode === 'workbench' ? '⌃' : '⚙'}</span>
+            </button>
 
             {activeProject.githubUrl && activeProject.githubUrl !== '#' && (
               <a

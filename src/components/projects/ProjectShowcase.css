@@ -354,6 +354,73 @@
   margin-top: var(--space-2);
 }
 
+/* Stage Mode Selector Bar (Schematic vs Workbench) */
+.stage-mode-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+  flex-wrap: wrap;
+}
+
+.stage-mode-toggle-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.stage-mode-toggle-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: all var(--duration-fast) ease;
+}
+
+.stage-mode-toggle-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-elevated);
+}
+
+.stage-mode-toggle-btn.active {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-elevated);
+  font-weight: 600;
+  border-bottom: 2px solid var(--active-project-accent, var(--accent-base));
+}
+
+.mode-toggle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--active-project-accent, var(--accent-base));
+}
+
+.workbench-icon {
+  font-size: 0.8rem;
+  color: var(--active-project-accent, var(--accent-base));
+}
+
+.stage-mode-hint {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+}
+
 /* Visualizer Wrapper */
 .stage-visual-wrapper {
   width: 100%;
@@ -453,6 +520,12 @@
   padding: var(--space-3) var(--space-5);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
+}
+
+.stage-workbench-action.active {
+  border-color: var(--active-project-accent, var(--accent-base));
+  color: var(--active-project-accent, var(--accent-base));
+  background-color: var(--bg-surface-elevated);
 }
 
 .cta-arrow {

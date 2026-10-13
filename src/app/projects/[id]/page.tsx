@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { projects } from '@/data/projects';
-import { InteractiveDiagram } from '@/components/projects/InteractiveDiagram';
+import { EngineeringWorkbench } from '@/components/projects/EngineeringWorkbench';
 import { CaseStudyHero } from '@/components/projects/CaseStudyHero';
 import { CaseStudySection } from '@/components/projects/CaseStudySection';
 import { TechnologyEvidence } from '@/components/projects/TechnologyEvidence';
@@ -79,12 +79,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         <p className="cs-prose" style={{ marginBottom: 'var(--space-6)' }}>
           {caseStudy.system}
         </p>
-        {caseStudy.architecture && (
-          <InteractiveDiagram
-            nodes={caseStudy.architecture.nodes}
-            edges={caseStudy.architecture.edges}
-          />
-        )}
+        <EngineeringWorkbench project={project} mode="full" />
       </CaseStudySection>
 
       {/* 5. Concrete Technical Challenge */}
