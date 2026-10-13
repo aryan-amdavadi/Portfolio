@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { useCursorHandlers } from '@/hooks/useCursorState';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ProjectSystemVisual } from './ProjectSystemVisual';
 import './ProjectShowcase.css';
 
 export const ProjectShowcase: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const touchStartXRef = useRef<number | null>(null);
+  const isReducedMotion = useReducedMotion();
 
   const exploreCursor = useCursorHandlers('explore');
   const externalCursor = useCursorHandlers('external');
@@ -27,14 +28,14 @@ export const ProjectShowcase: React.FC = () => {
     setSelectedIndex((prev) => (prev - 1 + totalProjects) % totalProjects);
   }, [totalProjects]);
 
-  // Focus management when navigating tabs with keyboard
-  const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
+  // Keyboard navigation through project index
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     let targetIndex: number | null = null;
 
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
       e.preventDefault();
       targetIndex = (index + 1) % totalProjects;
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       e.preventDefault();
       targetIndex = (index - 1 + totalProjects) % totalProjects;
     } else if (e.key === 'Home') {
@@ -51,159 +52,176 @@ export const ProjectShowcase: React.FC = () => {
     }
   };
 
-  // Touch swipe support for mobile stage navigation
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchEndX - touchStartXRef.current;
-    
-    if (Math.abs(diff) > 50) {
-      if (diff < 0) {
-        handleNext();
-      } else {
-        handlePrev();
-      }
-    }
-    touchStartXRef.current = null;
-  };
-
   return (
-    <div className="editorial-showcase" aria-label="Engineering Projects Showcase">
-      {/* 1. Header Metadata Bar */}
-      <div className="editorial-header-bar">
-        <div className="editorial-header-title">
-          <span className="editorial-header-badge">{'INDEX // REPOSITORY CATALOG'}</span>
+    <div
+      className="atlas-showcase"
+      aria-label="Engineering Atlas: Project Index and System Schematics"
+      style={{
+        '--active-project-accent': activeProject.accentColor || 'var(--accent-base)',
+        '--active-project-accent-light': activeProject.accentColorLight || 'var(--accent-hover)'
+      } as React.CSSProperties}
+    >
+      {/* 1. ATLAS HEADER / TOP REGISTER */}
+      <header className="atlas-header-row">
+        <div className="atlas-header-badge-group">
+          <span className="atlas-pill">ATLAS REGISTER // 03. THE WORK</span>
+          <span className="atlas-badge-divider">/</span>
+          <span className="atlas-status-indicator">SYSTEM STATUS: VERIFIED</span>
         </div>
-        <div className="editorial-header-counter">
-          <span className="current-num">0{selectedIndex + 1}</span>
-          <span className="separator">/</span>
-          <span className="total-num">0{totalProjects}</span>
+
+        <div className="atlas-header-counter-group" aria-label={`Project ${selectedIndex + 1} of ${totalProjects}`}>
+          <span className="atlas-counter-current">0{selectedIndex + 1}</span>
+          <span className="atlas-counter-sep">OF</span>
+          <span className="atlas-counter-total">0{totalProjects}</span>
+
+          {/* Restrained Progress Indicator */}
+          <div className="atlas-progress-track" aria-hidden="true">
+            {projects.map((proj, idx) => (
+              <span
+                key={proj.id}
+                className={`atlas-progress-notch ${idx === selectedIndex ? 'active' : ''}`}
+                onClick={() => setSelectedIndex(idx)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* 2. Main Active Project Stage (Artwork 58% + Information 42%) */}
-      <div 
-        className="editorial-stage" 
-        role="tabpanel"
-        id={`project-panel-${activeProject.id}`}
-        aria-labelledby={`project-tab-${activeProject.id}`}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Left Column: Dedicated High-Resolution Artwork Stage */}
-        <div className="editorial-artwork-panel">
-          <div className="artwork-image-container">
-            <Image
-              key={activeProject.id}
-              src={activeProject.image}
-              alt={activeProject.alt || `${activeProject.title} architectural visualization`}
-              fill
-              sizes="(min-width: 1440px) 760px, (min-width: 1024px) 58vw, (min-width: 768px) 90vw, 100vw"
-              className="editorial-artwork-img"
-              priority
-            />
-            <div className="artwork-vignette" />
-          </div>
+      {/* 2. ASYMMETRICAL ATLAS GRID: SLIM INDEX (LEFT) + EXPANSIVE STAGE (RIGHT) */}
+      <div className="atlas-grid-container">
+        {/* Left Column: Numbered Project Register Index */}
+        <aside
+          className="atlas-sidebar-index"
+          role="tablist"
+          aria-label="Project Index Navigation"
+        >
+          <div className="atlas-index-title">CATALOG INDEX</div>
+          {projects.map((proj, idx) => {
+            const isActive = idx === selectedIndex;
+            return (
+              <button
+                key={proj.id}
+                ref={(el) => { tabRefs.current[idx] = el; }}
+                role="tab"
+                id={`atlas-tab-${proj.id}`}
+                aria-controls={`atlas-panel-${proj.id}`}
+                aria-selected={isActive}
+                tabIndex={isActive ? 0 : -1}
+                onClick={() => setSelectedIndex(idx)}
+                onKeyDown={(e) => handleKeyDown(e, idx)}
+                className={`atlas-index-item ${isActive ? 'active' : ''}`}
+                {...linkCursor}
+              >
+                <div className="index-item-num">0{idx + 1}</div>
+                <div className="index-item-body">
+                  <div className="index-item-title">{proj.title}</div>
+                  <div className="index-item-category">{proj.category}</div>
+                </div>
+                <div className="index-item-status" aria-hidden="true">
+                  <span className="index-pip" />
+                </div>
+              </button>
+            );
+          })}
 
-          {/* Top Overlays */}
-          <div className="artwork-top-bar">
-            <span className="artwork-chip">
-              {`FIG. 0${selectedIndex + 1} // ARCHITECTURE`}
-            </span>
-            <span className="artwork-chip technical">
-              {activeProject.category.toUpperCase()}
-            </span>
-          </div>
-
-          {/* Stage Quick Controls */}
-          <div className="artwork-stage-controls">
+          {/* Quick Prev / Next Navigator on sidebar */}
+          <div className="atlas-sidebar-controls">
             <button
+              type="button"
               onClick={handlePrev}
-              className="artwork-nav-btn"
-              aria-label="Previous project"
+              className="atlas-ctrl-btn"
+              aria-label="Previous project in catalog"
               {...linkCursor}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
-              <span className="btn-label-desktop">PREV</span>
+              <span>PREV</span>
             </button>
-
-            <div className="artwork-progress-indicator" aria-hidden="true">
-              {projects.map((_, idx) => (
-                <span
-                  key={idx}
-                  className={`progress-pip ${idx === selectedIndex ? 'active' : ''}`}
-                />
-              ))}
-            </div>
-
+            <span className="atlas-ctrl-sep" aria-hidden="true">|</span>
             <button
+              type="button"
               onClick={handleNext}
-              className="artwork-nav-btn"
-              aria-label="Next project"
+              className="atlas-ctrl-btn"
+              aria-label="Next project in catalog"
               {...linkCursor}
             >
-              <span className="btn-label-desktop">NEXT</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <span>NEXT</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </button>
           </div>
-        </div>
+        </aside>
 
-        {/* Right Column: Project Information & Actions */}
-        <div className="editorial-info-panel">
-          <div className="info-top">
-            <div className="project-classification">
-              <span className="classification-cat">{activeProject.category}</span>
-              <span className="classification-sep">•</span>
-              <span className="classification-role">{activeProject.role}</span>
+        {/* Right Column: Active Project Main Stage */}
+        <main
+          className="atlas-main-stage"
+          role="tabpanel"
+          id={`atlas-panel-${activeProject.id}`}
+          aria-labelledby={`atlas-tab-${activeProject.id}`}
+        >
+          {/* Top Stage Registration Info */}
+          <div className="stage-top-register">
+            <div className="stage-category-stamp">
+              <span className="category-code">CLASS:</span>
+              <span className="category-val">{activeProject.category}</span>
+              <span className="stamp-bullet">{'//'}</span>
+              <span className="role-code">ROLE:</span>
+              <span className="role-val">{activeProject.role}</span>
             </div>
+            <div className="stage-ref-tag">
+              REF // 0{selectedIndex + 1}-ENG
+            </div>
+          </div>
 
-            <h3 className="editorial-project-title">
+          {/* Enormous Typographic Identity */}
+          <div className="stage-identity-block">
+            <h3 className={`stage-project-name ${isReducedMotion ? 'no-motion' : ''}`}>
               {activeProject.title}
             </h3>
+            <div className="stage-hairline-rule" />
           </div>
 
-          <div className="editorial-statements">
-            <div className="statement-block">
-              <span className="statement-label">{'PROBLEM STATEMENT //'}</span>
-              <p className="statement-text">
-                {activeProject.problem}
-              </p>
+          {/* Bespoke Image-Free System Visualizer */}
+          <div className="stage-visual-wrapper">
+            <ProjectSystemVisual key={activeProject.id} project={activeProject} />
+          </div>
+
+          {/* Engineering Dossier: Technical Findings, Solutions & Core Stack */}
+          <div className="stage-dossier-grid">
+            <div className="dossier-column problem-column">
+              <div className="dossier-heading">PROBLEM CONSTRAINT //</div>
+              <p className="dossier-text">{activeProject.problem}</p>
             </div>
 
-            <div className="statement-block">
-              <span className="statement-label">{'SYSTEM ARCHITECTURE //'}</span>
-              <p className="statement-text">
-                {activeProject.solution}
-              </p>
+            <div className="dossier-column solution-column">
+              <div className="dossier-heading">ENGINEERING APPROACH //</div>
+              <p className="dossier-text">{activeProject.solution}</p>
             </div>
           </div>
 
-          <div className="editorial-tech-section">
-            <span className="tech-section-label">CORE TECHNOLOGIES</span>
-            <div className="editorial-tech-grid">
+          {/* Core Technologies Specification */}
+          <div className="stage-tech-specification">
+            <span className="tech-spec-label">SPECIFICATION // STACK:</span>
+            <div className="tech-chips-list">
               {activeProject.technology?.map((tech) => (
-                <span key={tech} className="editorial-tech-pill">
+                <span key={tech} className="tech-chip">
                   {tech}
                 </span>
               ))}
             </div>
           </div>
 
-          <div className="editorial-actions-bar">
+          {/* Action CTAs */}
+          <div className="stage-actions-bar">
             <Link
               href={activeProject.caseStudyRoute || `/projects/${activeProject.id}`}
-              className="btn btn-primary editorial-primary-cta"
+              className="btn btn-primary stage-cta-primary"
               {...exploreCursor}
             >
-              EXPLORE CASE STUDY ↗
+              <span>INSPECT CASE STUDY</span>
+              <span className="cta-arrow" aria-hidden="true">→</span>
             </Link>
 
             {activeProject.githubUrl && activeProject.githubUrl !== '#' && (
@@ -211,11 +229,12 @@ export const ProjectShowcase: React.FC = () => {
                 href={activeProject.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
+                className="btn btn-outline stage-cta-secondary"
                 aria-label={`Source repository for ${activeProject.title}`}
                 {...externalCursor}
               >
-                SOURCE ↗
+                <span>SOURCE REPOSITORY</span>
+                <span className="cta-arrow" aria-hidden="true">↗</span>
               </a>
             )}
 
@@ -224,49 +243,17 @@ export const ProjectShowcase: React.FC = () => {
                 href={activeProject.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
-                aria-label={`Live demo for ${activeProject.title}`}
+                className="btn btn-outline stage-cta-secondary"
+                aria-label={`Live deployment for ${activeProject.title}`}
                 {...externalCursor}
               >
-                LIVE ↗
+                <span>LIVE SYSTEM</span>
+                <span className="cta-arrow" aria-hidden="true">↗</span>
               </a>
             )}
           </div>
-        </div>
+        </main>
       </div>
-
-      {/* 3. Numbered Project Navigator (Editorial Table of Contents) */}
-      <nav 
-        className="editorial-navigator" 
-        role="tablist" 
-        aria-label="Project index navigation"
-      >
-        {projects.map((proj, idx) => {
-          const isActive = idx === selectedIndex;
-          return (
-            <button
-              key={proj.id}
-              ref={(el) => { tabRefs.current[idx] = el; }}
-              role="tab"
-              id={`project-tab-${proj.id}`}
-              aria-controls={`project-panel-${proj.id}`}
-              aria-selected={isActive}
-              tabIndex={isActive ? 0 : -1}
-              onClick={() => setSelectedIndex(idx)}
-              onKeyDown={(e) => handleTabKeyDown(e, idx)}
-              className={`editorial-nav-card ${isActive ? 'active' : ''}`}
-              {...linkCursor}
-            >
-              <div className="nav-card-header">
-                <span className="nav-card-num">0{idx + 1}</span>
-                <span className="nav-card-indicator" aria-hidden="true" />
-              </div>
-              <div className="nav-card-title">{proj.title}</div>
-              <div className="nav-card-category">{proj.category}</div>
-            </button>
-          );
-        })}
-      </nav>
     </div>
   );
 };

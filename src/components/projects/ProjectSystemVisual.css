@@ -1,0 +1,164 @@
+/* ==========================================================================
+   ATLAS SYSTEM VISUAL: BESPOKE IMAGE-FREE ARCHITECTURAL SCHEMATICS
+   ========================================================================== */
+
+.atlas-system-visual {
+  width: 100%;
+  position: relative;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: border-color var(--duration-fast) ease;
+}
+
+.atlas-system-visual:hover {
+  border-color: var(--border-strong);
+}
+
+/* Chrome / Blueprint Header Bar */
+.atlas-visual-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  box-sizing: border-box;
+}
+
+.chrome-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chrome-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--project-accent-color, var(--accent-base));
+}
+
+.chrome-label {
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.chrome-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.chrome-status-badge {
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-widest);
+  color: var(--project-accent-color, var(--accent-base));
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme='light'] .chrome-status-badge {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Stage Area Containing the SVG Canvas */
+.atlas-visual-stage {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  box-sizing: border-box;
+  background-color: var(--bg-surface);
+}
+
+.visual-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atlas-svg {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  display: block;
+  user-select: none;
+  animation: atlasVisualReveal 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes atlasVisualReveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Chrome Footer Bar */
+.atlas-visual-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .atlas-visual-stage {
+    padding: var(--space-2);
+    min-height: 220px;
+  }
+
+  .atlas-visual-chrome {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .chrome-label {
+    font-size: 0.7rem;
+  }
+
+  .chrome-status-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.35rem;
+  }
+
+  .atlas-visual-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .atlas-svg {
+    animation: none !important;
+    transform: none !important;
+  }
+}
