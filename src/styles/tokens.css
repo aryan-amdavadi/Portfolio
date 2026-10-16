@@ -15,19 +15,7 @@
   --color-dark-violet-2: #3E1F47;
   --color-dark-violet-3: #4D194D;
 
-  /* LIGHT THEME: PORCELAIN & GRAPHITE TECHNICAL PUBLICATION */
-  --color-light-canvas: #F4F4F0;        /* Soft neutral porcelain substrate */
-  --color-light-surface: #EBEBE6;       /* Restrained pale stone surface */
-  --color-light-elevated: #FFFFFF;      /* Clean neutral white card well */
-  --color-light-primary: #202522;       /* Deep graphite (13.3:1 contrast against canvas) */
-  --color-light-secondary: #4E5652;     /* Muted graphite body copy (6.4:1 contrast) */
-  --color-light-muted: #6B7570;         /* Monospace metadata stamps (4.6:1 contrast) */
-  --color-light-accent: #0F5B54;        /* Deep restrained forest teal (6.5:1 contrast) */
-  --color-light-highlight: #166E66;     /* Active focus and hover indicator */
-  --color-light-ambient-1: #E6E8E3;     /* Cool atmospheric light */
-  --color-light-ambient-2: #D5DAD2;
-
-  /* --- SEMANTIC THEME VARIABLES (Dark Mode Default) --- */
+  /* --- SEMANTIC THEME VARIABLES (Dark Mode) --- */
   --bg-base: var(--color-dark-bg-1);
   --bg-surface: var(--color-dark-bg-2);
   --bg-surface-elevated: var(--color-dark-structural);
@@ -76,28 +64,40 @@
   --z-cursor: 9999;
 }
 
+/* ==========================================================================
+   LIGHT THEME (White Mode): ARCHITECTURAL PORCELAIN & OBSIDIAN GRAPHITE
+   Designed from scratch for editorial legibility, immaculate contrast,
+   and visual harmony with the WebGL GhostFibers background and 3D scenes.
+   ========================================================================== */
 [data-theme="light"] {
-  --bg-base: var(--color-light-canvas);
-  --bg-surface: var(--color-light-surface);
-  --bg-surface-elevated: var(--color-light-elevated);
+  /* Substrates & Elevated Cards */
+  --bg-base: #F4F4F0;              /* Soft neutral porcelain canvas */
+  --bg-surface: #FFFFFF;           /* Crisp clean white surface */
+  --bg-surface-elevated: #FCFCFA;  /* Subtle elevated white panel */
 
-  --text-primary: var(--color-light-primary);
-  --text-secondary: var(--color-light-secondary);
-  --text-muted: var(--color-light-muted);
+  /* Text & Typography */
+  --text-primary: #141716;         /* Deep obsidian graphite (15.5:1 contrast against canvas) */
+  --text-secondary: #49524D;       /* Refined warm charcoal (6.8:1 contrast) */
+  --text-muted: #747D78;           /* Neutral stone graphite (4.6:1 contrast) */
 
-  --accent-base: var(--color-light-accent);
-  --accent-hover: var(--color-light-highlight);
+  /* Accents & Brand Direction */
+  --accent-base: #0F5B54;          /* Deep architectural forest teal (6.5:1 contrast) */
+  --accent-hover: #15776E;
 
-  --ambient-light-1: var(--color-light-ambient-1);
-  --ambient-light-2: var(--color-light-ambient-2);
+  /* Atmospheric Lights */
+  --ambient-light-1: #E7E9E4;      /* Cool atmospheric light */
+  --ambient-light-2: #D7DCD5;
 
-  --border-subtle: rgba(32, 37, 34, 0.10);
-  --border-strong: rgba(32, 37, 34, 0.24);
-  --border-focus: var(--color-light-accent);
+  /* Structural Rules & Borders */
+  --border-subtle: rgba(20, 23, 22, 0.08);
+  --border-strong: rgba(20, 23, 22, 0.20);
+  --border-focus: #0F5B54;
 }
 
-/* Theme Transition class added to body when theme switches */
-body.theme-transitioning,
-body.theme-transitioning * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
+/* Smooth Theme Transitions */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease !important;
 }

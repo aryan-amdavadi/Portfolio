@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useId, useMemo } from 'react';
+import React, { useState, useEffect, useId, useMemo, useRef } from 'react';
 import { Project } from '@/data/projects';
 import {
   ProjectWorkbench,
@@ -18,6 +18,23 @@ interface EngineeringWorkbenchProps {
 
 type WorkbenchTab = 'flow' | 'topology' | 'decisions';
 
+// SVG Diagram Canvas Coordinate Space
+const SVG_WIDTH = 960;
+const SVG_HEIGHT = 480;
+const NODE_WIDTH = 180;
+const NODE_HEIGHT = 88;
+
+// Color mapping for pipeline stages
+const STAGE_COLORS: Record<string, string> = {
+  input: '#38BDF8', // Ingress Blue
+  processing: 'var(--wb-accent)', // Algorithmic Accent
+  hardware: '#A78BFA', // Hardware Violet
+  storage: '#FBBF24', // Storage Amber
+  buffer: '#F472B6', // Buffer Pink
+  output: '#34D399', // Egress Emerald
+  gateway: '#2DD4BF' // Gateway Cyan
+};
+
 export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
   project,
   mode = 'full',
@@ -32,61 +49,102 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [highlightedDecisionId, setHighlightedDecisionId] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const uniqueId = useId();
   const linkCursor = useCursorHandlers('link');
   const exploreCursor = useCursorHandlers('explore');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const nodes = useMemo(() => workbenchData?.nodes || [], [workbenchData]);
   const edges = useMemo(() => workbenchData?.edges || [], [workbenchData]);
   const flowSteps = useMemo(() => workbenchData?.flowSteps || [], [workbenchData]);
   const decisions = useMemo(() => workbenchData?.decisions || [], [workbenchData]);
-  const systemTitle = workbenchData?.systemTitle || '';
-  const subsystem = workbenchData?.subsystem || '';
+  const systemTitle = workbenchData?.systemTitle || project?.title || 'System Architecture';
+  const subsystem = workbenchData?.subsystem || 'Core Pipeline';
   const primaryConstraint = workbenchData?.primaryConstraint || '';
   const verifiedScopeNote = workbenchData?.verifiedScopeNote;
 
   const activeStep = flowSteps[activeStepIndex] || flowSteps[0];
 
-  // Handle play/pause timer for flow step walkthrough
+  // Fullscreen management: handle body overflow & Escape key
+  const toggleFullscreen = () => {
+    setIsFullscreen((prev) => !prev);
+  };
+
   useEffect(() => {
-    if (!isPlaying || flowSteps.length === 0) return;
-    const interval = setInterval(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    const handleGlobalKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+    return () => window.removeEventListener('keydown', handleGlobalKey);
+  }, [isFullscreen]);
+
+  // Automated step progression when playing
+  useEffect(() => {
+    if (!isPlaying || flowSteps.length === 0) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
       setActiveStepIndex((prev) => {
         if (prev >= flowSteps.length - 1) {
           setIsPlaying(false);
-          return prev;
+          return 0; // Return to start when complete
         }
         return prev + 1;
       });
-    }, 3800);
-    return () => clearInterval(interval);
+    }, 4200);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [isPlaying, flowSteps.length]);
 
-  // Active elements derived from current step or manual node selection
+  // Compute active nodes for highlighting
   const highlightedNodeIds = useMemo(() => {
+    if (highlightedDecisionId) {
+      return new Set(nodes.map((n) => n.id));
+    }
+    if (selectedNodeId) {
+      const connectedPeerIds = edges
+        .filter((e) => e.source === selectedNodeId || e.target === selectedNodeId)
+        .map((e) => (e.source === selectedNodeId ? e.target : e.source));
+      return new Set([selectedNodeId, ...connectedPeerIds]);
+    }
     if (activeTab === 'flow' && activeStep) {
       return new Set(activeStep.activeNodeIds);
     }
-    if (activeTab === 'topology' && selectedNodeId) {
-      const peerIds = edges
-        .filter((e) => e.source === selectedNodeId || e.target === selectedNodeId)
-        .map((e) => (e.source === selectedNodeId ? e.target : e.source));
-      return new Set([selectedNodeId, ...peerIds]);
-    }
     return new Set<string>();
-  }, [activeTab, activeStep, selectedNodeId, edges]);
+  }, [activeTab, activeStep, selectedNodeId, edges, highlightedDecisionId, nodes]);
 
+  // Compute active edges for highlighting
   const highlightedEdgeIds = useMemo(() => {
-    if (activeTab === 'flow' && activeStep) {
-      return new Set(activeStep.activeEdgeIds);
-    }
-    if (activeTab === 'topology' && selectedNodeId) {
+    if (selectedNodeId) {
       return new Set(
         edges
           .filter((e) => e.source === selectedNodeId || e.target === selectedNodeId)
           .map((e) => e.id)
       );
+    }
+    if (activeTab === 'flow' && activeStep) {
+      return new Set(activeStep.activeEdgeIds);
     }
     return new Set<string>();
   }, [activeTab, activeStep, selectedNodeId, edges]);
@@ -95,9 +153,69 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
     (n) => n.id === selectedNodeId
   );
 
-  // Connected edges for the selected node
+  // Inbound & outbound channels for the selected node
   const nodeInboundEdges = edges.filter((e) => e.target === selectedNodeId);
   const nodeOutboundEdges = edges.filter((e) => e.source === selectedNodeId);
+
+  // Calculate pixel coordinates within the unified SVG space (960 x 480)
+  const nodeLayoutMap = useMemo(() => {
+    const map = new Map<string, { cx: number; cy: number; x: number; y: number }>();
+    nodes.forEach((node) => {
+      const cx = (node.x / 100) * SVG_WIDTH;
+      const cy = (node.y / 100) * SVG_HEIGHT;
+      map.set(node.id, {
+        cx,
+        cy,
+        x: cx - NODE_WIDTH / 2,
+        y: cy - NODE_HEIGHT / 2
+      });
+    });
+    return map;
+  }, [nodes]);
+
+  // Edge curve calculations (smooth cubic bezier)
+  const edgeCurves = useMemo(() => {
+    return edges.map((edge) => {
+      const sourceCoord = nodeLayoutMap.get(edge.source);
+      const targetCoord = nodeLayoutMap.get(edge.target);
+      if (!sourceCoord || !targetCoord) return null;
+
+      let startX: number;
+      let startY: number;
+      let endX: number;
+      let endY: number;
+
+      if (targetCoord.cx > sourceCoord.cx) {
+        // Forward flow: right center of source -> left center of target
+        startX = sourceCoord.cx + NODE_WIDTH / 2;
+        startY = sourceCoord.cy;
+        endX = targetCoord.cx - NODE_WIDTH / 2;
+        endY = targetCoord.cy;
+      } else {
+        // Reverse/loopback flow: bottom center to bottom center
+        startX = sourceCoord.cx;
+        startY = sourceCoord.cy + NODE_HEIGHT / 2;
+        endX = targetCoord.cx;
+        endY = targetCoord.cy + NODE_HEIGHT / 2;
+      }
+
+      const dx = Math.max(45, Math.abs(endX - startX) * 0.45);
+      const pathD = `M ${startX} ${startY} C ${startX + dx} ${startY}, ${endX - dx} ${endY}, ${endX} ${endY}`;
+      const midX = (startX + endX) / 2;
+      const midY = (startY + endY) / 2;
+
+      return {
+        edge,
+        pathD,
+        midX,
+        midY,
+        startX,
+        startY,
+        endX,
+        endY
+      };
+    }).filter(Boolean);
+  }, [edges, nodeLayoutMap]);
 
   // Graceful fallback for missing or incomplete workbench data
   if (!workbenchData || nodes.length === 0) {
@@ -137,47 +255,54 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
     setIsPlaying(false);
     setActiveStepIndex(0);
     setSelectedNodeId(null);
+    setHighlightedDecisionId(null);
   };
 
   const handleNodeClick = (nodeId: string) => {
-    if (activeTab !== 'topology') {
-      setActiveTab('topology');
-    }
     setSelectedNodeId((prev) => (prev === nodeId ? null : nodeId));
   };
 
-  const handlePillKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight') {
       e.preventDefault();
-      setIsPlaying(false);
-      setActiveStepIndex((prev) => (prev + 1) % flowSteps.length);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      handleNextStep();
+    } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      setIsPlaying(false);
-      setActiveStepIndex((prev) => (prev - 1 + flowSteps.length) % flowSteps.length);
+      handlePrevStep();
+    } else if (e.key === ' ') {
+      e.preventDefault();
+      setIsPlaying((prev) => !prev);
     }
   };
 
   return (
     <div
-      className={`workbench-container ${mode === 'compact' ? 'mode-compact' : 'mode-full'}`}
+      ref={containerRef}
+      className={`workbench-container ${mode === 'compact' ? 'mode-compact' : 'mode-full'} ${
+        isFullscreen ? 'is-fullscreen' : ''
+      }`}
       role="region"
       aria-label={`${systemTitle} Interactive Engineering Workbench`}
+      onKeyDown={handleKeyDown}
+      style={{
+        '--workbench-accent': project.accentColor || 'var(--accent-base)',
+        '--workbench-accent-light': project.accentColorLight || 'var(--accent-base)'
+      } as React.CSSProperties}
     >
-      {/* 1. Chrome / Header Bar */}
+      {/* 1. Command Center Chrome / Telemetry Bar */}
       <header className="workbench-chrome">
         <div className="workbench-chrome-left">
           <div className="workbench-badge-group">
-            <span className="workbench-status-dot" aria-hidden="true" />
-            <span className="workbench-badge">WORKBENCH // EXPLORER</span>
+            <span className="workbench-status-dot pulse" aria-hidden="true" />
+            <span className="workbench-badge">SYSTEM WORKBENCH</span>
             <span className="workbench-sep">/</span>
             <span className="workbench-subsystem">{subsystem}</span>
           </div>
           <h4 className="workbench-title">{systemTitle}</h4>
         </div>
 
-        <div className="workbench-chrome-right">
-          {/* Mode Selector Tabs */}
+        {/* Center: Lens Navigation Tabs */}
+        <div className="workbench-chrome-center">
           <div className="workbench-tabs" role="tablist" aria-label="Workbench Exploration Modes">
             <button
               type="button"
@@ -188,11 +313,12 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               className={`workbench-tab-btn ${activeTab === 'flow' ? 'active' : ''}`}
               onClick={() => {
                 setActiveTab('flow');
-                setSelectedNodeId(null);
+                setHighlightedDecisionId(null);
               }}
               {...linkCursor}
             >
-              <span>01 // SYSTEM FLOW</span>
+              <span className="tab-num">01</span>
+              <span>EXECUTION FLOW</span>
             </button>
 
             <button
@@ -202,10 +328,14 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               aria-selected={activeTab === 'topology'}
               aria-controls={`${uniqueId}-panel-topology`}
               className={`workbench-tab-btn ${activeTab === 'topology' ? 'active' : ''}`}
-              onClick={() => setActiveTab('topology')}
+              onClick={() => {
+                setActiveTab('topology');
+                setHighlightedDecisionId(null);
+              }}
               {...linkCursor}
             >
-              <span>02 // TOPOLOGY</span>
+              <span className="tab-num">02</span>
+              <span>TOPOLOGY</span>
             </button>
 
             <button
@@ -221,29 +351,65 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               }}
               {...linkCursor}
             >
-              <span>03 // TRADE-OFFS</span>
+              <span className="tab-num">03</span>
+              <span>TRADE-OFFS</span>
             </button>
           </div>
+        </div>
 
-          {/* Reset Control */}
+        {/* Right: Fullscreen, Reset & Telemetry Actions */}
+        <div className="workbench-chrome-right">
+          <div className="workbench-telemetry-badge" title="Active registered components">
+            <span className="telemetry-key">NODES:</span>
+            <span className="telemetry-val">{nodes.length}</span>
+            <span className="telemetry-key">PIPELINE:</span>
+            <span className="telemetry-val">{flowSteps.length} STEPS</span>
+          </div>
+
+          {/* Full Screen Toggle Button */}
+          <button
+            type="button"
+            className={`workbench-fullscreen-btn ${isFullscreen ? 'active' : ''}`}
+            onClick={toggleFullscreen}
+            aria-label={isFullscreen ? 'Exit full screen mode (Esc)' : 'Expand workbench to full screen'}
+            title={isFullscreen ? 'Exit full screen (Esc)' : 'Expand to full screen mode'}
+            {...linkCursor}
+          >
+            {isFullscreen ? (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                </svg>
+                <span className="btn-label">EXIT FULLSCREEN</span>
+              </>
+            ) : (
+              <>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                </svg>
+                <span className="btn-label">FULLSCREEN</span>
+              </>
+            )}
+          </button>
+
           <button
             type="button"
             className="workbench-reset-btn"
             onClick={handleReset}
-            title="Reset active step and component selections"
+            title="Reset active flow step and component selection"
             aria-label="Reset workbench view"
             {...linkCursor}
           >
             <span>↺ RESET</span>
           </button>
 
-          {/* Close button if provided */}
           {onClose && (
             <button
               type="button"
               className="workbench-close-btn"
               onClick={onClose}
               aria-label="Close workbench view"
+              title="Return to Schematic View"
               {...linkCursor}
             >
               ✕
@@ -252,47 +418,86 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
         </div>
       </header>
 
-      {/* Verified Architectural Scope Disclaimer (if present) */}
+      {/* Verified Architectural Scope Disclaimer */}
       {verifiedScopeNote && (
         <div className="workbench-scope-banner" role="note">
-          <span className="scope-tag">VERIFIED SCOPE NOTE //</span>
+          <span className="scope-tag">SCOPE SPECIFICATION //</span>
           <p className="scope-text">{verifiedScopeNote}</p>
         </div>
       )}
 
-      {/* 2. Main Workbench Workspace (Split Stage: SVG Canvas + Contextual Inspector) */}
+      {/* 2. Main Workbench Workspace (Split Stage: Vector Canvas + Contextual Inspector) */}
       <div className="workbench-workspace">
-        {/* Left: Interactive Diagram Stage (Inline SVG) */}
+        {/* Left Stage: Interactive SVG Vector Architecture Canvas */}
         <div className="workbench-stage-wrapper">
           <div className="stage-top-meta">
-            <span className="stage-meta-label">CANVAS // ARCHITECTURAL TOPOLOGY</span>
-            <span className="stage-meta-hint">
-              {activeTab === 'flow'
-                ? `STEP ${activeStep.stepNumber}: ${activeStep.phase}`
-                : selectedNodeId
-                ? `SELECTED: ${selectedNodeData?.label}`
-                : 'SELECT NODE TO INSPECT RESPONSIBILITY'}
-            </span>
+            <div className="stage-meta-left">
+              <span className="stage-meta-label">CANVAS // DIRECTED TOPOLOGY</span>
+              <span className="stage-meta-tag">1:1 VECTOR PROJECTION</span>
+            </div>
+            <div className="stage-meta-right">
+              {selectedNodeId ? (
+                <div className="stage-meta-selected-group">
+                  <span className="stage-meta-hint">
+                    SELECTED // {selectedNodeData?.label}
+                  </span>
+                  {activeTab !== 'topology' && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('topology')}
+                      className="stage-meta-jump-btn"
+                      title="Inspect component parameters and channels in dossier"
+                      {...linkCursor}
+                    >
+                      VIEW DOSSIER ➔
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedNodeId(null)}
+                    className="stage-meta-clear-btn"
+                    title="Deselect component"
+                    aria-label="Deselect component"
+                    {...linkCursor}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <span className="stage-meta-hint">
+                  {activeTab === 'flow'
+                    ? `STEP ${activeStep.stepNumber}: ${activeStep.phase} ACTIVE`
+                    : 'CLICK ANY NODE TO INSPECT CHANNELS'}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="workbench-svg-stage">
             <svg
               className="workbench-svg"
-              viewBox="0 0 100 100"
+              viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
               preserveAspectRatio="xMidYMid meet"
-              aria-label="Interactive architecture diagram"
+              aria-label="Interactive architecture topology diagram"
             >
               <defs>
+                {/* Glow Filter for Active Edges & Nodes */}
+                <filter id={`${uniqueId}-glow`} x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+
+                {/* Arrowhead Markers */}
                 <marker
-                  id={`${uniqueId}-arrow`}
+                  id={`${uniqueId}-arrow-active`}
                   viewBox="0 0 10 10"
                   refX="8"
                   refY="5"
-                  markerWidth="6"
-                  markerHeight="6"
+                  markerWidth="7"
+                  markerHeight="7"
                   orient="auto-start-reverse"
                 >
-                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--project-accent-color, var(--accent-base))" />
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--wb-accent)" />
                 </marker>
                 <marker
                   id={`${uniqueId}-arrow-subtle`}
@@ -305,117 +510,216 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
                 >
                   <path d="M 0 2 L 6 5 L 0 8 z" fill="var(--border-strong)" />
                 </marker>
+
+                {/* Architectural Blueprint Grid Pattern */}
+                <pattern id={`${uniqueId}-grid`} width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--border-subtle)" strokeWidth="0.6" strokeOpacity="0.4" />
+                  <circle cx="0" cy="0" r="1" fill="var(--border-strong)" opacity="0.6" />
+                </pattern>
               </defs>
 
-              {/* Grid Background Lines */}
-              <g className="stage-grid-lines" opacity="0.3">
-                <line x1="0" y1="25" x2="100" y2="25" stroke="var(--border-subtle)" strokeDasharray="1 3" />
-                <line x1="0" y1="50" x2="100" y2="50" stroke="var(--border-subtle)" strokeDasharray="1 3" />
-                <line x1="0" y1="75" x2="100" y2="75" stroke="var(--border-subtle)" strokeDasharray="1 3" />
-                <line x1="25" y1="0" x2="25" y2="100" stroke="var(--border-subtle)" strokeDasharray="1 3" />
-                <line x1="50" y1="0" x2="50" y2="100" stroke="var(--border-subtle)" strokeDasharray="1 3" />
-                <line x1="75" y1="0" x2="75" y2="100" stroke="var(--border-subtle)" strokeDasharray="1 3" />
+              {/* Blueprint Grid Background */}
+              <rect width="100%" height="100%" fill={`url(#${uniqueId}-grid)`} />
+
+              {/* Technical Corner Brackets */}
+              <g className="stage-corner-brackets" stroke="var(--border-strong)" strokeWidth="1.5" fill="none" opacity="0.5">
+                <path d="M 24 38 L 24 24 L 38 24" />
+                <path d="M 936 38 L 936 24 L 922 24" />
+                <path d="M 24 442 L 24 456 L 38 456" />
+                <path d="M 936 442 L 936 456 L 922 456" />
               </g>
 
-              {/* Render Connecting Edges */}
-              {edges.map((edge) => {
-                const sourceNode = nodes.find((n) => n.id === edge.source);
-                const targetNode = nodes.find((n) => n.id === edge.target);
-                if (!sourceNode || !targetNode) return null;
+              {/* Subtle Center Crosshairs */}
+              <g className="stage-crosshairs" opacity="0.2">
+                <line x1="480" y1="24" x2="480" y2="456" stroke="var(--border-subtle)" strokeDasharray="3 6" />
+                <line x1="24" y1="240" x2="936" y2="240" stroke="var(--border-subtle)" strokeDasharray="3 6" />
+              </g>
 
-                const isEdgeHighlighted = highlightedEdgeIds.has(edge.id);
-                const isEdgeDimmed =
-                  (highlightedEdgeIds.size > 0 && !isEdgeHighlighted) ||
-                  (activeTab === 'topology' && selectedNodeId && !highlightedEdgeIds.has(edge.id));
+              {/* Connecting Directed Edges (Orthogonal Bezier Paths) */}
+              <g className="workbench-edges-group">
+                {edgeCurves.map((curve) => {
+                  if (!curve) return null;
+                  const { edge, pathD, midX, midY } = curve;
+                  const isEdgeHighlighted = highlightedEdgeIds.has(edge.id);
+                  const isEdgeDimmed =
+                    highlightedEdgeIds.size > 0 && !isEdgeHighlighted;
 
-                // Calculate edge mid-point for label positioning
-                const midX = (sourceNode.x + targetNode.x) / 2;
-                const midY = (sourceNode.y + targetNode.y) / 2;
+                  return (
+                    <g
+                      key={edge.id}
+                      className={`workbench-edge-group ${isEdgeHighlighted ? 'active' : ''} ${
+                        isEdgeDimmed ? 'dimmed' : ''
+                      }`}
+                    >
+                      {/* Base Track Line */}
+                      <path
+                        d={pathD}
+                        className="edge-path-base"
+                        markerEnd={`url(#${uniqueId}-${isEdgeHighlighted ? 'arrow-active' : 'arrow-subtle'})`}
+                      />
 
-                return (
-                  <g
-                    key={edge.id}
-                    className={`workbench-edge ${isEdgeHighlighted ? 'active' : ''} ${isEdgeDimmed ? 'dimmed' : ''}`}
-                  >
-                    <line
-                      x1={sourceNode.x}
-                      y1={sourceNode.y}
-                      x2={targetNode.x}
-                      y2={targetNode.y}
-                      className="edge-path"
-                      markerEnd={`url(#${uniqueId}-${isEdgeHighlighted ? 'arrow' : 'arrow-subtle'})`}
-                    />
-                    {isEdgeHighlighted && (
-                      <g className="edge-payload-badge">
+                      {/* Illuminated Flow Track */}
+                      {isEdgeHighlighted && (
+                        <path d={pathD} className="edge-path-glow" filter={`url(#${uniqueId}-glow)`} />
+                      )}
+
+                      {/* Animated Flowing Data Packets on Active Paths */}
+                      {isEdgeHighlighted && (
+                        <>
+                          <circle r="4" fill="var(--wb-accent)">
+                            <animateMotion path={pathD} dur="2.4s" repeatCount="indefinite" />
+                          </circle>
+                          <circle r="2.2" fill="#FFFFFF" opacity="0.9">
+                            <animateMotion path={pathD} dur="2.4s" repeatCount="indefinite" begin="0.16s" />
+                          </circle>
+                        </>
+                      )}
+
+                      {/* Edge Protocol Badge */}
+                      <g
+                        className="edge-badge-anchor"
+                        transform={`translate(${midX}, ${midY})`}
+                      >
                         <rect
-                          x={midX - 14}
-                          y={midY - 3}
-                          width="28"
-                          height="6"
-                          rx="1.5"
-                          className="edge-badge-bg"
+                          x="-65"
+                          y="-11"
+                          width="130"
+                          height="22"
+                          rx="4"
+                          className="edge-badge-rect"
                         />
                         <text
-                          x={midX}
-                          y={midY + 1}
+                          x="0"
+                          y="4"
                           textAnchor="middle"
-                          className="edge-badge-text"
+                          className="edge-badge-label"
                         >
-                          {edge.label.length > 18 ? `${edge.label.slice(0, 16)}…` : edge.label}
+                          {edge.label}
                         </text>
                       </g>
-                    )}
-                  </g>
-                );
-              })}
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* Positioned Vector Architecture Node Cards */}
+              <g className="workbench-nodes-group">
+                {nodes.map((node) => {
+                  const coord = nodeLayoutMap.get(node.id);
+                  if (!coord) return null;
+
+                  const isNodeHighlighted = highlightedNodeIds.has(node.id);
+                  const isNodeSelected = selectedNodeId === node.id;
+                  const isNodeDimmed =
+                    highlightedNodeIds.size > 0 && !isNodeHighlighted && !isNodeSelected;
+                  const stageColor = STAGE_COLORS[node.stage] || 'var(--wb-accent)';
+
+                  return (
+                    <g
+                      key={node.id}
+                      transform={`translate(${coord.x}, ${coord.y})`}
+                      className={`workbench-node-group stage-${node.stage} ${isNodeSelected ? 'selected' : ''} ${
+                        isNodeHighlighted ? 'highlighted' : ''
+                      } ${isNodeDimmed ? 'dimmed' : ''}`}
+                      onClick={() => handleNodeClick(node.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleNodeClick(node.id);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isNodeSelected}
+                      aria-label={`${node.label} (${node.category}): ${node.responsibility}`}
+                      {...exploreCursor}
+                    >
+                      {/* Node Card Container Rect (No CSS Transform on hover = zero glitch) */}
+                      <rect
+                        width={NODE_WIDTH}
+                        height={NODE_HEIGHT}
+                        rx="8"
+                        className="node-card-rect"
+                        filter={isNodeHighlighted || isNodeSelected ? `url(#${uniqueId}-glow)` : undefined}
+                      />
+
+                      {/* Top Accent Strip per stage */}
+                      <rect
+                        width={NODE_WIDTH}
+                        height="3"
+                        rx="1.5"
+                        fill={stageColor}
+                        className="node-stage-strip"
+                      />
+
+                      {/* Category & Status Row */}
+                      <text x="12" y="20" className="node-cat-text">
+                        [{node.category}]
+                      </text>
+
+                      {/* Status Indicator LED */}
+                      <circle
+                        cx={NODE_WIDTH - 14}
+                        cy="16"
+                        r="3.5"
+                        fill={isNodeHighlighted || isNodeSelected ? stageColor : 'var(--border-strong)'}
+                        className="node-status-led"
+                      />
+
+                      {/* Component Label */}
+                      <text x="12" y="44" className="node-title-text">
+                        {node.label}
+                      </text>
+
+                      {/* Runtime Tech Stack Tag */}
+                      {node.tech && (
+                        <g transform="translate(12, 58)">
+                          <rect width={NODE_WIDTH - 24} height="18" rx="3" className="node-tech-rect" />
+                          <text x="6" y="12" className="node-tech-text">
+                            {node.tech.length > 26 ? `${node.tech.slice(0, 24)}…` : node.tech}
+                          </text>
+                        </g>
+                      )}
+
+                      {/* Connection Pips on Ingress/Egress Sides */}
+                      <circle cx="0" cy={NODE_HEIGHT / 2} r="3.5" className="node-pip left-pip" />
+                      <circle cx={NODE_WIDTH} cy={NODE_HEIGHT / 2} r="3.5" className="node-pip right-pip" />
+                    </g>
+                  );
+                })}
+              </g>
             </svg>
-
-            {/* Positioned HTML Nodes over SVG for full touch & keyboard accessibility */}
-            <div className="workbench-nodes-overlay" role="group" aria-label="System Components">
-              {nodes.map((node) => {
-                const isNodeHighlighted = highlightedNodeIds.has(node.id);
-                const isNodeSelected = selectedNodeId === node.id;
-                const isNodeDimmed =
-                  (highlightedNodeIds.size > 0 && !isNodeHighlighted && !isNodeSelected) ||
-                  (activeTab === 'topology' && selectedNodeId && !isNodeHighlighted);
-
-                return (
-                  <button
-                    key={node.id}
-                    type="button"
-                    style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                    className={`workbench-node-btn ${isNodeSelected ? 'selected' : ''} ${
-                      isNodeHighlighted ? 'highlighted' : ''
-                    } ${isNodeDimmed ? 'dimmed' : ''} stage-${node.stage}`}
-                    onClick={() => handleNodeClick(node.id)}
-                    aria-pressed={isNodeSelected}
-                    aria-label={`${node.label} (${node.category}): ${node.responsibility}`}
-                    {...exploreCursor}
-                  >
-                    <div className="node-badge-row">
-                      <span className="node-category">[{node.category}]</span>
-                      <span className="node-stage-tag">{node.stage.toUpperCase()}</span>
-                    </div>
-                    <div className="node-label">{node.label}</div>
-                    {node.tech && <div className="node-tech">{node.tech}</div>}
-                    <div className="node-anchor-pip" aria-hidden="true" />
-                  </button>
-                );
-              })}
-            </div>
           </div>
 
-          <div className="stage-footer-legend">
-            <span className="legend-item"><span className="legend-dot input-dot" /> INPUT</span>
-            <span className="legend-item"><span className="legend-dot proc-dot" /> PROCESSING</span>
-            <span className="legend-item"><span className="legend-dot store-dot" /> STORAGE / BUFFER</span>
-            <span className="legend-item"><span className="legend-dot out-dot" /> CLIENT / OUTPUT</span>
+          {/* Stage Footer: Architecture Legend & Quick Selector */}
+          <div className="stage-footer-bar">
+            <div className="stage-footer-legend">
+              <span className="legend-item"><span className="legend-dot input-dot" /> 01 INGRESS</span>
+              <span className="legend-item"><span className="legend-dot proc-dot" /> 02 COMPUTE</span>
+              <span className="legend-item"><span className="legend-dot store-dot" /> 03 STORAGE</span>
+              <span className="legend-item"><span className="legend-dot out-dot" /> 04 EGRESS</span>
+            </div>
+
+            <div className="stage-quick-chips">
+              <span className="quick-label">COMPONENTS //</span>
+              {nodes.map((n) => (
+                <button
+                  key={n.id}
+                  type="button"
+                  onClick={() => handleNodeClick(n.id)}
+                  className={`quick-node-chip ${selectedNodeId === n.id ? 'active' : ''}`}
+                  {...linkCursor}
+                >
+                  {n.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right: Contextual Inspector Panel */}
+        {/* Right Stage: Contextual Engineering Inspector Console */}
         <aside className="workbench-inspector" aria-live="polite">
-          {/* TAB 1: SYSTEM FLOW PIPELINE */}
+          {/* TAB 1: EXECUTION FLOW (Live Pipeline Walkthrough) */}
           {activeTab === 'flow' && (
             <div
               id={`${uniqueId}-panel-flow`}
@@ -423,54 +727,51 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               aria-labelledby={`${uniqueId}-tab-flow`}
               className="inspector-flow-panel"
             >
-              <div className="panel-header-row">
-                <div className="panel-step-indicator">
-                  <span className="panel-step-num">{activeStep.stepNumber}</span>
-                  <span className="panel-step-total">/ 0{flowSteps.length}</span>
-                  <span className="panel-step-phase">[{activeStep.phase}]</span>
+              {/* Stepper Header with Controls */}
+              <div className="flow-stepper-header">
+                <div className="stepper-step-info">
+                  <span className="step-num">STEP {activeStep.stepNumber}</span>
+                  <span className="step-total">OF 0{flowSteps.length}</span>
+                  <span className="step-phase-badge">[{activeStep.phase}]</span>
                 </div>
 
-                <div className="flow-step-controls">
+                <div className="flow-stepper-controls">
                   <button
                     type="button"
                     onClick={handlePrevStep}
                     disabled={activeStepIndex === 0}
-                    className="flow-ctrl-btn"
-                    aria-label="Previous step"
+                    className="stepper-btn"
+                    aria-label="Previous execution step"
                     {...linkCursor}
                   >
-                    ← PREV
+                    ◀ PREV
                   </button>
+
                   <button
                     type="button"
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="flow-ctrl-btn play-btn"
+                    className={`stepper-btn play-pause-btn ${isPlaying ? 'playing' : ''}`}
                     aria-label={isPlaying ? 'Pause automated walkthrough' : 'Play automated walkthrough'}
                     {...linkCursor}
                   >
                     {isPlaying ? 'PAUSE ❚❚' : 'PLAY ▶'}
                   </button>
+
                   <button
                     type="button"
                     onClick={handleNextStep}
                     disabled={activeStepIndex === flowSteps.length - 1}
-                    className="flow-ctrl-btn"
-                    aria-label="Next step"
+                    className="stepper-btn"
+                    aria-label="Next execution step"
                     {...linkCursor}
                   >
-                    NEXT →
+                    NEXT ▶
                   </button>
                 </div>
               </div>
 
-              {/* Step Title and Summary */}
-              <div className="flow-step-identity">
-                <h5 className="flow-step-title">{activeStep.title}</h5>
-                <p className="flow-step-summary">{activeStep.summary}</p>
-              </div>
-
-              {/* Step Navigation Pills */}
-              <div className="flow-step-pills" role="tablist" aria-label="Step progress index">
+              {/* Interactive Step Progress Pills */}
+              <div className="flow-scrubber-track" role="tablist" aria-label="Step progress index">
                 {flowSteps.map((s, idx) => (
                   <button
                     key={s.stepNumber}
@@ -478,55 +779,69 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
                     role="tab"
                     aria-selected={idx === activeStepIndex}
                     aria-label={`Jump to step ${s.stepNumber}: ${s.title}`}
-                    className={`flow-pill ${idx === activeStepIndex ? 'active' : ''}`}
+                    className={`scrubber-pill ${idx === activeStepIndex ? 'active' : ''} ${
+                      idx < activeStepIndex ? 'completed' : ''
+                    }`}
                     onClick={() => {
                       setIsPlaying(false);
                       setActiveStepIndex(idx);
                     }}
-                    onKeyDown={handlePillKeyDown}
                     {...linkCursor}
                   >
-                    <span>{s.stepNumber}</span>
+                    <span className="pill-num">{s.stepNumber}</span>
+                    <span className="pill-phase">{s.phase.slice(0, 4)}</span>
                   </button>
                 ))}
               </div>
 
-              {/* Concrete Verified Flow Cards: Input -> Processing -> Output */}
-              <div className="flow-card-stack">
+              {/* Step Overview */}
+              <div className="flow-step-hero">
+                <h5 className="flow-hero-title">{activeStep.title}</h5>
+                <p className="flow-hero-summary">{activeStep.summary}</p>
+              </div>
+
+              {/* Structured 3-Tier Data Flow Cards */}
+              <div className="flow-dossier-stack">
                 {activeStep.inputPayload && (
-                  <div className="flow-card input-card">
-                    <div className="flow-card-head">
-                      <span className="flow-card-code">IN //</span>
-                      <span className="flow-card-label">INPUT STATE & PAYLOAD</span>
+                  <div className="flow-dossier-card in-card">
+                    <div className="dossier-card-header">
+                      <span className="dossier-tag in-tag">01 // INPUT INGRESS</span>
+                      <span className="dossier-protocol">SOURCE STATE</span>
                     </div>
-                    <div className="flow-card-body">{activeStep.inputPayload}</div>
+                    <div className="dossier-card-body">
+                      <code className="dossier-code">{activeStep.inputPayload}</code>
+                    </div>
                   </div>
                 )}
 
                 {activeStep.processingAction && (
-                  <div className="flow-card processing-card">
-                    <div className="flow-card-head">
-                      <span className="flow-card-code">PROC //</span>
-                      <span className="flow-card-label">PROCESSING & TRANSFORMATION</span>
+                  <div className="flow-dossier-card proc-card">
+                    <div className="dossier-card-header">
+                      <span className="dossier-tag proc-tag">02 // COMPUTATIONAL ENGINE</span>
+                      <span className="dossier-protocol">TRANSFORMATION</span>
                     </div>
-                    <div className="flow-card-body">{activeStep.processingAction}</div>
+                    <div className="dossier-card-body">
+                      <p className="dossier-text">{activeStep.processingAction}</p>
+                    </div>
                   </div>
                 )}
 
                 {activeStep.outputResult && (
-                  <div className="flow-card output-card">
-                    <div className="flow-card-head">
-                      <span className="flow-card-code">OUT //</span>
-                      <span className="flow-card-label">VERIFIED OUTPUT STATE</span>
+                  <div className="flow-dossier-card out-card">
+                    <div className="dossier-card-header">
+                      <span className="dossier-tag out-tag">03 // VERIFIED OUTPUT</span>
+                      <span className="dossier-protocol">POST-CONDITION</span>
                     </div>
-                    <div className="flow-card-body">{activeStep.outputResult}</div>
+                    <div className="dossier-card-body">
+                      <p className="dossier-text">{activeStep.outputResult}</p>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* TAB 2: COMPONENT TOPOLOGY */}
+          {/* TAB 2: COMPONENT TOPOLOGY (Deep Inspection) */}
           {activeTab === 'topology' && (
             <div
               id={`${uniqueId}-panel-topology`}
@@ -535,53 +850,53 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               className="inspector-topology-panel"
             >
               <div className="panel-header-row">
-                <span className="panel-title-label">COMPONENT INSPECTOR</span>
+                <span className="panel-title-label">COMPONENT TELEMETRY</span>
                 <span className="panel-count-badge">{nodes.length} REGISTERED UNITS</span>
               </div>
 
               {selectedNodeData ? (
-                <div className="node-detail-card">
-                  <div className="node-detail-header">
-                    <div className="node-detail-title-group">
-                      <span className="node-detail-cat">[{selectedNodeData.category}]</span>
-                      <h5 className="node-detail-name">{selectedNodeData.label}</h5>
+                <div className="topology-card">
+                  <div className="topology-header">
+                    <div>
+                      <span className="topology-category">[{selectedNodeData.category}]</span>
+                      <h5 className="topology-name">{selectedNodeData.label}</h5>
                     </div>
-                    <span className="node-detail-stage">{selectedNodeData.stage.toUpperCase()}</span>
+                    <span className="topology-stage-badge">{selectedNodeData.stage.toUpperCase()}</span>
                   </div>
 
-                  <div className="node-detail-section">
-                    <span className="section-meta-label">PRIMARY RESPONSIBILITY //</span>
-                    <p className="section-meta-text">{selectedNodeData.responsibility}</p>
+                  <div className="topology-section">
+                    <span className="topology-label">PRIMARY ARCHITECTURAL RESPONSIBILITY //</span>
+                    <p className="topology-desc">{selectedNodeData.responsibility}</p>
                   </div>
 
                   {selectedNodeData.tech && (
-                    <div className="node-detail-section">
-                      <span className="section-meta-label">IMPLEMENTATION STACK //</span>
-                      <span className="node-tech-badge">{selectedNodeData.tech}</span>
+                    <div className="topology-section">
+                      <span className="topology-label">IMPLEMENTATION RUNTIME //</span>
+                      <span className="topology-tech-pill">{selectedNodeData.tech}</span>
                     </div>
                   )}
 
-                  {/* Connected Flows */}
-                  <div className="node-detail-flows">
-                    <div className="flow-channel-block">
-                      <span className="channel-meta-label">INBOUND DATA CHANNELS ({nodeInboundEdges.length})</span>
+                  {/* Channel Matrix */}
+                  <div className="topology-channels-grid">
+                    <div className="channel-box inbound-box">
+                      <span className="channel-header-tag">INBOUND CHANNELS ({nodeInboundEdges.length})</span>
                       {nodeInboundEdges.length === 0 ? (
-                        <span className="channel-empty">No inbound channels (System Ingress)</span>
+                        <span className="channel-empty-msg">No inbound channels (Ingress Source)</span>
                       ) : (
-                        <ul className="channel-list">
+                        <ul className="channel-items-list">
                           {nodeInboundEdges.map((e) => {
                             const sender = nodes.find((n) => n.id === e.source);
                             return (
-                              <li key={e.id} className="channel-item">
+                              <li key={e.id} className="channel-row">
                                 <button
                                   type="button"
                                   onClick={() => setSelectedNodeId(e.source)}
-                                  className="channel-link-btn"
+                                  className="channel-peer-btn"
                                   title={`Inspect sender ${sender?.label}`}
                                 >
                                   ← {sender?.label || e.source}
                                 </button>
-                                <span className="channel-protocol">[{e.label}]</span>
+                                <span className="channel-proto-tag">[{e.label}]</span>
                               </li>
                             );
                           })}
@@ -589,25 +904,25 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
                       )}
                     </div>
 
-                    <div className="flow-channel-block">
-                      <span className="channel-meta-label">OUTBOUND DATA CHANNELS ({nodeOutboundEdges.length})</span>
+                    <div className="channel-box outbound-box">
+                      <span className="channel-header-tag">OUTBOUND CHANNELS ({nodeOutboundEdges.length})</span>
                       {nodeOutboundEdges.length === 0 ? (
-                        <span className="channel-empty">No outbound channels (Terminal Egress)</span>
+                        <span className="channel-empty-msg">No outbound channels (Terminal Egress)</span>
                       ) : (
-                        <ul className="channel-list">
+                        <ul className="channel-items-list">
                           {nodeOutboundEdges.map((e) => {
                             const receiver = nodes.find((n) => n.id === e.target);
                             return (
-                              <li key={e.id} className="channel-item">
+                              <li key={e.id} className="channel-row">
                                 <button
                                   type="button"
                                   onClick={() => setSelectedNodeId(e.target)}
-                                  className="channel-link-btn"
+                                  className="channel-peer-btn"
                                   title={`Inspect receiver ${receiver?.label}`}
                                 >
                                   → {receiver?.label || e.target}
                                 </button>
-                                <span className="channel-protocol">[{e.label}]</span>
+                                <span className="channel-proto-tag">[{e.label}]</span>
                               </li>
                             );
                           })}
@@ -619,28 +934,28 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedNodeId(null)}
-                    className="clear-selection-btn"
+                    className="topology-clear-btn"
                   >
-                    ✕ CLEAR COMPONENT SELECTION
+                    ✕ CLEAR SELECTION
                   </button>
                 </div>
               ) : (
-                <div className="topology-selection-prompt">
-                  <div className="prompt-icon">❖</div>
-                  <h6 className="prompt-title">Select a Node to Inspect</h6>
-                  <p className="prompt-text">
-                    Click any component block in the diagram to inspect its exact system responsibility,
-                    technology runtime, and inbound/outbound communication channels.
+                <div className="topology-empty-state">
+                  <div className="empty-state-symbol">❖</div>
+                  <h6 className="empty-state-heading">Interactive Component Inspector</h6>
+                  <p className="empty-state-text">
+                    Click any node card in the vector stage to inspect its system boundaries, data contracts,
+                    runtime stack, and dependency routing.
                   </p>
-                  <div className="quick-node-list">
-                    <span className="quick-list-label">DIRECT SELECTION //</span>
-                    <div className="quick-chips">
+                  <div className="empty-state-chips">
+                    <span className="empty-chips-label">SELECT COMPONENT TO INSPECT:</span>
+                    <div className="chips-row">
                       {nodes.map((n) => (
                         <button
                           key={n.id}
                           type="button"
                           onClick={() => setSelectedNodeId(n.id)}
-                          className="quick-chip"
+                          className="quick-select-chip"
                           {...linkCursor}
                         >
                           {n.label}
@@ -661,41 +976,53 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
               aria-labelledby={`${uniqueId}-tab-decisions`}
               className="inspector-decisions-panel"
             >
-              {/* Primary Engineering Constraint */}
-              <div className="constraint-callout-card">
-                <div className="callout-head">
-                  <span className="callout-tag">ENGINEERING CONSTRAINT //</span>
-                  <span className="callout-title">CORE SYSTEM COMPLEXITY</span>
+              {/* Primary Engineering Constraint Banner */}
+              <div className="primary-constraint-card">
+                <div className="constraint-badge-row">
+                  <span className="constraint-badge">CORE ENGINEERING CHALLENGE //</span>
+                  <span className="constraint-status">SYSTEM DIFFICULTY FACTOR</span>
                 </div>
-                <p className="callout-body">{primaryConstraint}</p>
+                <p className="constraint-body">{primaryConstraint}</p>
               </div>
 
-              {/* Meaningful Decisions List */}
-              <div className="decisions-list">
-                <span className="decisions-section-label">VERIFIED ARCHITECTURAL CHOICES //</span>
-                {decisions.map((decision, idx) => (
-                  <div key={decision.id} className="decision-card">
-                    <div className="decision-header">
-                      <span className="decision-index">0{idx + 1}</span>
-                      <h6 className="decision-title">{decision.title}</h6>
-                    </div>
+              {/* Verified Decision Cards */}
+              <div className="decisions-feed">
+                <span className="decisions-feed-label">VERIFIED ARCHITECTURAL CHOICES ({decisions.length})</span>
+                {decisions.map((decision, idx) => {
+                  const isHovered = highlightedDecisionId === decision.id;
 
-                    <div className="decision-block">
-                      <span className="decision-sub-label">CHOSEN APPROACH //</span>
-                      <p className="decision-sub-text">{decision.choice}</p>
-                    </div>
+                  return (
+                    <div
+                      key={decision.id}
+                      className={`architectural-decision-card ${isHovered ? 'highlighted' : ''}`}
+                      onMouseEnter={() => setHighlightedDecisionId(decision.id)}
+                      onMouseLeave={() => setHighlightedDecisionId(null)}
+                    >
+                      <div className="decision-header-row">
+                        <span className="decision-num">0{idx + 1}</span>
+                        <h6 className="decision-heading">{decision.title}</h6>
+                      </div>
 
-                    <div className="decision-block">
-                      <span className="decision-sub-label">ENGINEERING RATIONALE //</span>
-                      <p className="decision-sub-text">{decision.rationale}</p>
-                    </div>
+                      <div className="decision-callout chosen-callout">
+                        <div className="callout-tag-row">
+                          <span className="tag-check">✓</span>
+                          <span className="callout-label">CHOSEN ARCHITECTURAL PATH //</span>
+                        </div>
+                        <p className="callout-text">{decision.choice}</p>
+                      </div>
 
-                    <div className="decision-tradeoff-block">
-                      <span className="tradeoff-sub-label">KEY TRADE-OFF & CONSTRAINTS //</span>
-                      <p className="tradeoff-sub-text">{decision.tradeOff}</p>
+                      <div className="decision-callout rationale-callout">
+                        <span className="callout-label">ENGINEERING RATIONALE //</span>
+                        <p className="callout-text">{decision.rationale}</p>
+                      </div>
+
+                      <div className="decision-callout tradeoff-callout">
+                        <span className="callout-label">KEY TRADE-OFF & CONSTRAINTS //</span>
+                        <p className="callout-text">{decision.tradeOff}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -704,3 +1031,4 @@ export const EngineeringWorkbench: React.FC<EngineeringWorkbenchProps> = ({
     </div>
   );
 };
+export default EngineeringWorkbench;

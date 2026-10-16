@@ -42,7 +42,7 @@ export const Navigation: React.FC = () => {
         <Link href="/" className="nav-brand" {...useCursorHandlers('link')}>
           ARYAN
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <ThemeToggle />
           <button 
             className="nav-trigger" 

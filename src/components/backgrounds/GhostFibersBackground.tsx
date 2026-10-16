@@ -12,10 +12,9 @@ export const GhostFibersBackground = () => {
     const handleThemeChange = (e: CustomEvent) => {
       setTheme(e.detail.theme);
     };
-    
-    // Initial check
+
     if (document.documentElement.getAttribute('data-theme') === 'light') {
-      setTimeout(() => setTheme('light'), 0);
+      setTheme('light');
     }
 
     window.addEventListener('themechange', handleThemeChange as EventListener);
@@ -31,7 +30,7 @@ export const GhostFibersBackground = () => {
         lineColor={isLight ? "#202522" : "#A8B1FF"}
         glowColor={isLight ? "#38443E" : "#3437A0"}
         layers={isLight ? 2 : 3}
-        brightness={isLight ? 0.65 : 2.0}
+        brightness={isLight ? 0.7 : 2.0}
         vignette={isLight ? 0.25 : 0.8}
         lineSharpness={isLight ? 9 : 12}
         grain={isLight ? 0.008 : 0.02}

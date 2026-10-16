@@ -93,6 +93,7 @@ void main() {
   vec3 backdrop = mix(darkBackdrop, lightBackdrop, step(0.5, uLightMode));
   vec3 centerTone = max(uLineColor * 0.85567 - uGlowColor * 0.06186, vec3(0.0));
   vec3 cloudTone = uLineColor * 0.19588 + uGlowColor * 0.2268;
+  float time = uTime * uSpeed;
   vec2 p = uv;
   p /= max(uScale, 0.05);
   p = rotate2d(radians(uRotation) + time * uRotationSpeed) * p;
@@ -226,6 +227,7 @@ const GhostFibers: React.FC<GhostFibersProps> = ({
       dpr: Math.min(Math.max(dpr, 0.5), 2)
     });
     const gl = renderer.gl;
+    if (!gl) return;
     const canvas = gl.canvas;
     canvas.style.width = '100%';
     canvas.style.height = '100%';
@@ -278,7 +280,10 @@ const GhostFibers: React.FC<GhostFibersProps> = ({
     let isPageVisible = !document.hidden;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const render = () => renderer.render({ scene: mesh });
+    const render = () => {
+      if (!program.uniformLocations) return;
+      renderer.render({ scene: mesh });
+    };
     const stop = () => {
       if (frameId !== 0) cancelAnimationFrame(frameId);
       frameId = 0;
